@@ -2,7 +2,8 @@ import styled from 'styled-components'
 import React from 'react'
 import { CELL_LENGTH } from '../constants/pageSize'
 import { UnsettledBlock, unsettledBlockAction, unsettledBlockSelectors } from '../states/unsettledBlock'
-import { Block } from '../states/block'
+import { Block, blocksActions } from '../states/block'
+import { handleOnClick, handleOnInput, handleOnKeyDown, handleOnPaste } from '../utils/unsettledBlock'
 
 const StyledUnsettledBlockWrapper = styled.div<{ block: Block }>`
   top: ${(props) => props.block.position.row * CELL_LENGTH}px;
@@ -43,29 +44,29 @@ function UnsettledBlockJSX({ userId }: Props) {
   const unsettledBlock = unsettledBlockSelectors.useUnsettledBlockById(userId) as UnsettledBlock
   const changeUnsettledBlockSize = unsettledBlockAction.useUnsettledBlockSize()
   const changeUnsettledBlockPos = unsettledBlockAction.useChangeUnsettledBlockPos()
+  const addBlock = blocksActions.useAddBlock()
 
   return (
-    <div />
-    // <StyledUnsettledBlockWrapper
-    //   id={`unsettled-block-${userId}-cursor`}
-    //   block={unsettledBlock.block}
-    //   onClick={(e: React.MouseEvent<HTMLDivElement>) => handleOnClick({ e, userId })}
-    //   onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) =>
-    //     handleOnKeyDown({
-    //       e,
-    //       userId,
-    //       unsettledBlock,
-    //       changeUnsettledBlockPos,
-    //     })
-    //   }
-    // >
-    //   <StyledUnsettledBlock
-    //     id={`unsettled-block-${userId}`}
-    //     contentEditable
-    //     onInput={(e: React.FormEvent<HTMLDivElement>) => handleOnInput({ e, userId, changeUnsettledBlockSize })}
-    //     onPaste={(e: React.ClipboardEvent<HTMLDivElement>) => handleOnPaste({ e })}
-    //   />
-    // </StyledUnsettledBlockWrapper>
+    <StyledUnsettledBlockWrapper
+      id={`unsettled-block-${userId}-cursor`}
+      block={unsettledBlock.block}
+      onClick={(e: React.MouseEvent<HTMLDivElement>) => handleOnClick({ e, userId })}
+      onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) =>
+        handleOnKeyDown({
+          e,
+          userId,
+          unsettledBlock,
+          changeUnsettledBlockPos,
+        })
+      }
+    >
+      <StyledUnsettledBlock
+        id={`unsettled-block-${userId}`}
+        contentEditable
+        onInput={(e: React.FormEvent<HTMLDivElement>) => handleOnInput({ e, userId, changeUnsettledBlockSize })}
+        onPaste={(e: React.ClipboardEvent<HTMLDivElement>) => handleOnPaste({ e })}
+      />
+    </StyledUnsettledBlockWrapper>
   )
 }
 

@@ -19,5 +19,12 @@ export const composeBlock = (
   content,
 })
 
-export const emptyBlock = ({ id, position }: { id: string; position: Position }) =>
-  composeBlock(id, 0, position, 1, 1, null, null)
+export const emptyBlock = ({
+  id,
+  position,
+  content,
+}: {
+  id: string
+  position: Position
+  content: HTMLDivElement | null
+}) => composeBlock(id, 0, position, 1, 1, null, content)

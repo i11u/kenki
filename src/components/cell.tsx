@@ -2,7 +2,9 @@ import styled from 'styled-components'
 import React from 'react'
 import { CELL_LENGTH, MAX_COL, MAX_ROW } from '../constants/pageSize'
 import { CellUtil } from '../utils/cellUtil'
-import { currentBlockActions } from '../states/block'
+import { UnsettledBlock, unsettledBlockAction, unsettledBlockSelectors } from '../states/unsettledBlock'
+import { getUserId } from '../utils/authUtil'
+import { blocksActions } from '../states/block'
 
 const StyledCell = styled.textarea`
   width: ${CELL_LENGTH - 1}px;
@@ -34,14 +36,26 @@ function CellJSX({ row, col }: Props) {
     borderRight: isLastCol ? `1px solid lightgrey` : '',
   }
 
-  const changeCurrentBlockPosition = currentBlockActions.useChangeCurrentBlockPosition()
+  const userId = getUserId()
+  const changeUnsettledBlockPosition = unsettledBlockAction.useChangeUnsettledBlockPos()
+  const unsettledBlock = unsettledBlockSelectors.useUnsettledBlockById(userId) as UnsettledBlock
+  const changeUnsettledBlockSize = unsettledBlockAction.useUnsettledBlockSize()
+  const addBlock = blocksActions.useAddBlock()
 
   return (
     <StyledCell
       id={`cell-${row}-${col}`}
       style={style}
       onMouseDown={() => {
-        CellUtil.handleOnMouseDown({ row, col, changeCurrentBlockPosition })
+        CellUtil.handleOnMouseDown({
+          row,
+          col,
+          userId,
+          unsettledBlock,
+          changeUnsettledBlockPosition,
+          changeUnsettledBlockSize,
+          addBlock,
+        })
       }}
       readOnly
     />

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { useEffect } from 'react'
+import React from 'react'
 import { CELL_LENGTH } from '../constants/pageSize'
 import { Block, blocksActions, blocksSelectors } from '../states/block'
 
@@ -34,15 +34,11 @@ type Props = {
 function BlockJSX({ id }: { id: string }) {
   const block = blocksSelectors.useBlockById(id) as Block
   const changeBlockSize = blocksActions.useChangeBlockPosition()
-
-  useEffect(() => {
-    const blockdiv = document.getElementById(`block-${id}`) as HTMLDivElement
-    setTimeout(() => blockdiv.focus(), 0)
-  }, [id])
+  const content = block.content?.innerHTML as string
 
   return (
     <StyledBlockWrapper id={`block-${id}`} block={block}>
-      <StyledBlock contentEditable />
+      <StyledBlock contentEditable dangerouslySetInnerHTML={{ __html: content }} />
     </StyledBlockWrapper>
   )
 }

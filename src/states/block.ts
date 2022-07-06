@@ -1,7 +1,6 @@
 import { atom, selector, selectorFamily, useRecoilCallback, useRecoilValue } from 'recoil'
 import { RecoilAtomKeys, RecoilSelectorKeys } from './keys'
 import { Position } from '../types/position'
-import { emptyBlock } from '../utils/block'
 
 /**
  * Type definition of Block.
@@ -84,7 +83,8 @@ export type Blocks = {
 const blocksAtom = atom<Blocks>({
   key: RecoilAtomKeys.BLOCKS,
   default: {
-    blocks: [emptyBlock({ id: '1', position: { row: 0, col: 0 } })],
+    // blocks: [emptyBlock({ id: '1', position: { row: 0, col: 0 } })],
+    blocks: [] as Block[],
   },
 })
 

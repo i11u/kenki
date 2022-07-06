@@ -15,6 +15,6 @@ export class CursorUtil {
     const cursor = document.getElementById(`cursor-${userId}`) as HTMLDivElement
     cursor.style.display = 'none'
     cursor.blur()
-    addBlock(emptyBlock({ id: 'aaa', position }))
+    addBlock(emptyBlock({ id: 'aaa', position, content: null }))
   }
 }

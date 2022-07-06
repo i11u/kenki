@@ -19,7 +19,7 @@ const unsettledBlockAtom = atom<UnsettledBlocks>({
     unsettledBlocks: [
       {
         userId: 'user1',
-        block: emptyBlock({ id: '9999', position: { row: 0, col: 0 } }),
+        block: emptyBlock({ id: '9999', position: { row: 0, col: 0 }, content: null }),
       },
     ],
   },

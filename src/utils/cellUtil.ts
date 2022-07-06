@@ -1,6 +1,7 @@
 import { Position } from '../types/position'
 import { MAX_COL, MAX_ROW } from '../constants/pageSize'
-import block from '../components/block'
+import { Block } from '../states/block'
+import { UnsettledBlock } from '../states/unsettledBlock'
 
 export class CellUtil {
   public static getInitialCells = (): Position[][] => {
@@ -29,17 +30,43 @@ export class CellUtil {
   public static handleOnMouseDown = ({
     row,
     col,
-    changeCurrentBlockPosition,
+    userId,
+    unsettledBlock,
+    changeUnsettledBlockPosition,
+    changeUnsettledBlockSize,
+    addBlock,
   }: {
     row: number
     col: number
-    changeCurrentBlockPosition: (pos: Position) => void
+    userId: string
+    unsettledBlock: UnsettledBlock
+    changeUnsettledBlockPosition: (userId: string, position: Position) => void
+    changeUnsettledBlockSize: (userId: string, width: number, height: number) => void
+    addBlock: (block: Block) => void
   }) => {
-    changeCurrentBlockPosition({ row, col })
-    const cursor = document.getElementById(`block-1`) as HTMLDivElement
-    cursor.style.display = 'block'
+    const unsettledBlockDiv = document.getElementById(`unsettled-block-${userId}`) as HTMLDivElement
+    if (unsettledBlockDiv.textContent === '') {
+      changeUnsettledBlockPosition(userId, { row, col })
+      setTimeout(() => {
+        unsettledBlockDiv.focus()
+      }, 0)
+      return
+    }
+
+    const newContent = document.createElement('div')
+    newContent.contentEditable = 'true'
+    newContent.innerHTML = unsettledBlockDiv.innerHTML
+    console.log(newContent)
+
+    addBlock({ ...unsettledBlock.block, content: newContent })
+
+    unsettledBlockDiv.innerHTML = ''
+
+    changeUnsettledBlockPosition(userId, { row, col })
+    changeUnsettledBlockSize(userId, 1, 1)
+
     setTimeout(() => {
-      cursor.focus()
+      unsettledBlockDiv.focus()
     }, 0)
   }
 }
