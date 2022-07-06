@@ -1,83 +1,71 @@
 import styled from 'styled-components'
+import React from 'react'
 import { CELL_LENGTH } from '../constants/pageSize'
 import { UnsettledBlock, unsettledBlockAction, unsettledBlockSelectors } from '../states/unsettledBlock'
+import { Block } from '../states/block'
 
-const StyledUnsettledBlock = styled.div`
+const StyledUnsettledBlockWrapper = styled.div<{ block: Block }>`
+  top: ${(props) => props.block.position.row * CELL_LENGTH}px;
+  left: ${(props) => props.block.position.col * CELL_LENGTH}px;
+  width: ${(props) => CELL_LENGTH - 1 + (props.block.width - 1) * CELL_LENGTH}px;
+  height: ${(props) => CELL_LENGTH - 1 + (props.block.height - 1) * CELL_LENGTH}px;
   min-height: ${CELL_LENGTH - 1}px;
   min-width: ${CELL_LENGTH - 1}px;
-  font-size: ${CELL_LENGTH - 1}px;
-  text-align: center;
-  outline: none;
   margin: -1px 0 0 -1px;
   border: 2px solid gray;
-  opacity: 0.5;
-  background-color: white;
   border-radius: 3px;
   position: absolute;
-  resize: none;
-  z-index: 0;
-  line-height: 1;
-  white-space: nowrap;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  background-color: white;
 `
 
-const StyledUnsettledBlockCursor = styled.div`
-  min-height: ${CELL_LENGTH - 1}px;
-  min-width: ${CELL_LENGTH - 1}px;
-  font-size: ${CELL_LENGTH - 1}px;
-  text-align: center;
+const StyledUnsettledBlock = styled.div`
   outline: none;
-  margin: -1px 0 0 -1px;
-  border: 2px solid gray;
-  opacity: 0.5;
-  background-color: white;
-  border-radius: 3px;
-  position: absolute;
-  resize: none;
-  z-index: 0;
-  line-height: 1;
   white-space: nowrap;
+  line-height: ${CELL_LENGTH}px;
+  margin-top: -1px;
 `
 
 type Props = {
-  id: string
+  userId: string
 }
 
 /**
- * UnsettledBlock (ub) is a empty content-editable block.
+ * On html, UnsettledBlock (ub) is a empty content-editable div.
  * You move ub around by pressing arrow keys or clicking on cells.
  * If you start typing, texts will inflate in ub.
  * When you finish typing and get out of the ub,
  * the current state will be stored in blocks and then ub will be empty again.
  * */
-function UnsettledBlockJSX({ id }: Props) {
-  const unsettledBlock = unsettledBlockSelectors.useUnsettledBlockById(id) as UnsettledBlock
+function UnsettledBlockJSX({ userId }: Props) {
+  const unsettledBlock = unsettledBlockSelectors.useUnsettledBlockById(userId) as UnsettledBlock
+  const changeUnsettledBlockSize = unsettledBlockAction.useUnsettledBlockSize()
   const changeUnsettledBlockPos = unsettledBlockAction.useChangeUnsettledBlockPos()
 
-  /**
-   * BlockがcontentEditableではなく、BlockはcontentEditableを持つ、という風にした方が使い勝手が良い可能性がある。
-   * ひとまず前者で実装してみる。
-   */
-
-  const style = {
-    top: `${unsettledBlock.block.position.row * CELL_LENGTH}px`,
-    left: `${unsettledBlock.block.position.col * CELL_LENGTH}px`,
-    width: `${unsettledBlock.block.width * (CELL_LENGTH - 1)}px`,
-    height: `${unsettledBlock.block.height * (CELL_LENGTH - 1)}px`,
-  }
-
-  const style2
-
-  const handleOnInput = () => {
-    const cursor = document.getElementById(`unsettled-block-${id}-cursor`) as HTMLDivElement
-    const newPosition = getNewU
-    changeUnsettledBlockPos(id, newPosition)
-  }
-
   return (
-    <>
-      <StyledUnsettledBlock id={`unsettled-block-${id}`} style={style} contentEditable onInput={handleOnInput} />
-      <StyledUnsettledBlockCursor id="unsettled-block-${id}-cursor" style={style2} contentEditable />
-    </>
+    <div />
+    // <StyledUnsettledBlockWrapper
+    //   id={`unsettled-block-${userId}-cursor`}
+    //   block={unsettledBlock.block}
+    //   onClick={(e: React.MouseEvent<HTMLDivElement>) => handleOnClick({ e, userId })}
+    //   onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) =>
+    //     handleOnKeyDown({
+    //       e,
+    //       userId,
+    //       unsettledBlock,
+    //       changeUnsettledBlockPos,
+    //     })
+    //   }
+    // >
+    //   <StyledUnsettledBlock
+    //     id={`unsettled-block-${userId}`}
+    //     contentEditable
+    //     onInput={(e: React.FormEvent<HTMLDivElement>) => handleOnInput({ e, userId, changeUnsettledBlockSize })}
+    //     onPaste={(e: React.ClipboardEvent<HTMLDivElement>) => handleOnPaste({ e })}
+    //   />
+    // </StyledUnsettledBlockWrapper>
   )
 }
 

@@ -1,8 +1,7 @@
 import { atom, selector, selectorFamily, useRecoilCallback, useRecoilValue } from 'recoil'
-import { Style } from '../types/style'
 import { RecoilAtomKeys, RecoilSelectorKeys } from './keys'
 import { Position } from '../types/position'
-import { FontFamily } from '../types/fontFamily'
+import { emptyBlock } from '../utils/block'
 
 /**
  * Type definition of Block.
@@ -15,19 +14,7 @@ export type Block = {
   width: number
   height: number
   blocks: Block[] | null
-}
-
-/**
- * Type definition of Block with text.
- * */
-export type TextBlock = Block & {
-  text: string
-  parentBlockId: string
-  currentCaretPos: Position
-  scale: number
-  font: FontFamily
-  fontSize: number
-  style: Style
+  content: HTMLDivElement | null
 }
 
 /**
@@ -52,6 +39,7 @@ const currentBlockAtom = atom<CurrentBlock>({
 
 type CurrentBlockActions = {
   useSetCurrentBlock: () => (block: Block) => void
+  useChangeCurrentBlockPosition: () => (position: Position) => void
 }
 
 export const currentBlockActions: CurrentBlockActions = {
@@ -63,6 +51,10 @@ export const currentBlockActions: CurrentBlockActions = {
         },
       []
     ),
+  useChangeCurrentBlockPosition: () =>
+    useRecoilCallback(({ set }) => (position: Position) => {
+      set(currentBlockAtom, (prev) => ({ ...prev, block: { ...prev.block, position } } as CurrentBlock))
+    }),
 }
 
 type CurrentBlockSelectors = {
@@ -92,22 +84,61 @@ export type Blocks = {
 const blocksAtom = atom<Blocks>({
   key: RecoilAtomKeys.BLOCKS,
   default: {
-    blocks: [] as Block[],
+    blocks: [emptyBlock({ id: '1', position: { row: 0, col: 0 } })],
   },
 })
 
 type BlocksActions = {
-  useAddTextBlock: () => (block: TextBlock) => void
+  useAddBlock: () => (block: Block) => void
+  useChangeBlockPosition: () => (blockId: string, position: Position) => void
+  useChangeBlockSize: () => (blockId: string, width: number, height: number) => void
 }
 
 export const blocksActions: BlocksActions = {
-  useAddTextBlock: () =>
+  useAddBlock: () =>
     useRecoilCallback(
       ({ set }) =>
         (block: Block) => {
           set(blocksAtom, (prev) => ({
             ...prev,
             blocks: [...prev.blocks, block],
+          }))
+        },
+      []
+    ),
+  useChangeBlockPosition: () =>
+    useRecoilCallback(
+      ({ set }) =>
+        (blockId: string, position: Position) => {
+          set(blocksAtom, (prev) => ({
+            ...prev,
+            blocks: prev.blocks.map((block) =>
+              block.id === blockId
+                ? {
+                    ...block,
+                    position,
+                  }
+                : block
+            ),
+          }))
+        },
+      []
+    ),
+  useChangeBlockSize: () =>
+    useRecoilCallback(
+      ({ set }) =>
+        (blockId: string, width: number, height: number) => {
+          set(blocksAtom, (prev) => ({
+            ...prev,
+            blocks: prev.blocks.map((block) =>
+              block.id === blockId
+                ? {
+                    ...block,
+                    width,
+                    height,
+                  }
+                : block
+            ),
           }))
         },
       []

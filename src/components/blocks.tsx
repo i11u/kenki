@@ -7,7 +7,7 @@ function BlocksJSX() {
   return (
     <>
       {blocks.map((block) => (
-        <BlockJSX key={block.id} />
+        <BlockJSX key={block.id} id={block.id} />
       ))}
     </>
   )

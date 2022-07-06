@@ -28,6 +28,7 @@ const unsettledBlockAtom = atom<UnsettledBlocks>({
 type UnsettledBlockAction = {
   useAddUnsettledBlock: () => (unsettledBlock: UnsettledBlock) => void
   useChangeUnsettledBlockPos: () => (userId: string, position: Position) => void
+  useUnsettledBlockSize: () => (userId: string, width: number, height: number) => void
 }
 
 export const unsettledBlockAction: UnsettledBlockAction = {
@@ -55,6 +56,28 @@ export const unsettledBlockAction: UnsettledBlockAction = {
                     block: {
                       ...unsettledBlock.block,
                       position,
+                    },
+                  } as UnsettledBlock)
+                : unsettledBlock
+            ),
+          }))
+        },
+      []
+    ),
+  useUnsettledBlockSize: () =>
+    useRecoilCallback(
+      ({ set }) =>
+        (userId: string, width: number, height: number) => {
+          set(unsettledBlockAtom, (prev) => ({
+            ...prev,
+            unsettledBlocks: prev.unsettledBlocks.map((unsettledBlock) =>
+              unsettledBlock.userId === userId
+                ? ({
+                    userId,
+                    block: {
+                      ...unsettledBlock.block,
+                      width,
+                      height,
                     },
                   } as UnsettledBlock)
                 : unsettledBlock

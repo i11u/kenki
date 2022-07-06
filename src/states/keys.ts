@@ -8,6 +8,7 @@ export enum RecoilAtomKeys {
   UNSETTLED_BLOCK = 'unsettled_block',
   CURRENT_BLOCK = 'current_block',
   USER = 'user',
+  CURSOR = 'cursor',
 }
 
 export enum RecoilSelectorKeys {
@@ -17,4 +18,6 @@ export enum RecoilSelectorKeys {
   UNSETTLED_BLOCKS = 'cursors_all_cursors',
   UNSETTLED_BLOCK_BY_ID = 'cursors_cursor_by_id',
   USER = 'user_user',
+  CURSORS = 'cursors',
+  CURSOR_BY_ID = 'cursor_by_id',
 }

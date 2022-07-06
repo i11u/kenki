@@ -1,10 +1,10 @@
 import { Position } from '../types/position'
-import { getInitialCells } from '../utils/cellUtil'
+import { CellUtil } from '../utils/cellUtil'
 import { CELL_LENGTH } from '../constants/pageSize'
 import CellJSX from './cell'
 
 function CellsJSX() {
-  const grid: Position[][] = getInitialCells()
+  const grid: Position[][] = CellUtil.getInitialCells()
 
   return (
     <>
