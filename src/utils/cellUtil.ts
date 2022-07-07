@@ -1,7 +1,7 @@
 import { Position } from '../types/position'
 import { MAX_COL, MAX_ROW } from '../constants/pageSize'
 import { Block } from '../states/block'
-import { UnsettledBlock } from '../states/unsettledBlock'
+import { BlockUtil } from './block'
 
 export class CellUtil {
   public static getInitialCells = (): Position[][] => {
@@ -30,43 +30,29 @@ export class CellUtil {
   public static handleOnMouseDown = ({
     row,
     col,
-    userId,
-    unsettledBlock,
-    changeUnsettledBlockPosition,
-    changeUnsettledBlockSize,
+    id,
+    changeBlockStatus,
+    changeBlockPosition,
     addBlock,
   }: {
     row: number
     col: number
-    userId: string
-    unsettledBlock: UnsettledBlock
-    changeUnsettledBlockPosition: (userId: string, position: Position) => void
-    changeUnsettledBlockSize: (userId: string, width: number, height: number) => void
+    id: string
+    changeBlockStatus: (blockId: string, isEmpty: boolean, isSelected: boolean, editing: boolean) => void
+    changeBlockPosition: (id: string, position: Position) => void
     addBlock: (block: Block) => void
   }) => {
-    const unsettledBlockDiv = document.getElementById(`unsettled-block-${userId}`) as HTMLDivElement
-    if (unsettledBlockDiv.textContent === '') {
-      changeUnsettledBlockPosition(userId, { row, col })
+    const blockDiv = document.getElementById(`block-${id}`) as HTMLDivElement
+
+    if (blockDiv.textContent === '') {
+      changeBlockPosition(id, { row, col })
       setTimeout(() => {
-        unsettledBlockDiv.focus()
+        blockDiv.focus()
       }, 0)
       return
     }
 
-    const newContent = document.createElement('div')
-    newContent.contentEditable = 'true'
-    newContent.innerHTML = unsettledBlockDiv.innerHTML
-    console.log(newContent)
-
-    addBlock({ ...unsettledBlock.block, content: newContent })
-
-    unsettledBlockDiv.innerHTML = ''
-
-    changeUnsettledBlockPosition(userId, { row, col })
-    changeUnsettledBlockSize(userId, 1, 1)
-
-    setTimeout(() => {
-      unsettledBlockDiv.focus()
-    }, 0)
+    changeBlockStatus(id, false, false, false)
+    addBlock(BlockUtil.emptyBlock({ position: { row, col } }))
   }
 }

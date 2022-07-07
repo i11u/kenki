@@ -1,6 +1,7 @@
 import { atom, selector, selectorFamily, useRecoilCallback, useRecoilValue } from 'recoil'
 import { RecoilAtomKeys, RecoilSelectorKeys } from './keys'
 import { Position } from '../types/position'
+import { BlockUtil } from '../utils/block'
 
 /**
  * Type definition of Block.
@@ -13,7 +14,9 @@ export type Block = {
   width: number
   height: number
   blocks: Block[] | null
-  content: HTMLDivElement | null
+  isEmpty: boolean
+  isSelected: boolean
+  editing: boolean
 }
 
 /**
@@ -83,8 +86,7 @@ export type Blocks = {
 const blocksAtom = atom<Blocks>({
   key: RecoilAtomKeys.BLOCKS,
   default: {
-    // blocks: [emptyBlock({ id: '1', position: { row: 0, col: 0 } })],
-    blocks: [] as Block[],
+    blocks: [BlockUtil.emptyBlock({ position: { row: 0, col: 0 } })],
   },
 })
 
@@ -92,6 +94,7 @@ type BlocksActions = {
   useAddBlock: () => (block: Block) => void
   useChangeBlockPosition: () => (blockId: string, position: Position) => void
   useChangeBlockSize: () => (blockId: string, width: number, height: number) => void
+  useChangeBlockStatus: () => (blockId: string, isEmpty: boolean, isSelected: boolean, editing: boolean) => void
 }
 
 export const blocksActions: BlocksActions = {
@@ -143,6 +146,26 @@ export const blocksActions: BlocksActions = {
         },
       []
     ),
+  useChangeBlockStatus: () =>
+    useRecoilCallback(
+      ({ set }) =>
+        (blockId, isEmpty, isSelected, editing) => {
+          set(blocksAtom, (prev) => ({
+            ...prev,
+            blocks: prev.blocks.map((block) =>
+              block.id === blockId
+                ? {
+                    ...block,
+                    isEmpty,
+                    isSelected,
+                    editing,
+                  }
+                : block
+            ),
+          }))
+        },
+      []
+    ),
 }
 
 /**
@@ -152,11 +175,22 @@ export const blocksActions: BlocksActions = {
 type BlockSelectors = {
   useBlocks: () => Block[]
   useBlockById: (id: string) => Block | undefined
+  useSelectedBlocks: () => Block[]
+  useEditingBlock: () => Block | undefined
+  useNextBlock: (id: string) => Block | undefined
 }
 
 const blocksSelector = selector<Block[]>({
   key: RecoilSelectorKeys.BLOCKS,
   get: ({ get }) => get(blocksAtom).blocks,
+})
+
+const selectedBlocksSelector = selector<Block[]>({
+  key: RecoilSelectorKeys.SELECTED_BLOCKS,
+  get: ({ get }) => {
+    const { blocks } = get(blocksAtom)
+    return blocks.filter((v) => v.isSelected)
+  },
 })
 
 const blockSelector = selectorFamily<Block | undefined, string>({
@@ -169,7 +203,29 @@ const blockSelector = selectorFamily<Block | undefined, string>({
     },
 })
 
+const nextBlockSelector = selectorFamily<Block | undefined, string>({
+  key: RecoilSelectorKeys.NEXT_BLOCK,
+  get:
+    (id) =>
+    ({ get }) => {
+      const { blocks } = get(blocksAtom)
+      const index = blocks.findIndex((v) => v.id === id)
+      return blocks.find((v, i) => (index === blocks.length - 1 ? i === 0 : i === index + 1))
+    },
+})
+
+const editingBlockSelector = selector<Block | undefined>({
+  key: RecoilSelectorKeys.EDITING_BLOCK as string,
+  get: ({ get }) => {
+    const { blocks } = get(blocksAtom)
+    return blocks.find((v) => v.editing)
+  },
+})
+
 export const blocksSelectors: BlockSelectors = {
   useBlocks: () => useRecoilValue(blocksSelector),
   useBlockById: (id: string) => useRecoilValue(blockSelector(id)),
+  useSelectedBlocks: () => useRecoilValue(selectedBlocksSelector),
+  useEditingBlock: () => useRecoilValue(editingBlockSelector),
+  useNextBlock: (id: string) => useRecoilValue(nextBlockSelector(id)),
 }

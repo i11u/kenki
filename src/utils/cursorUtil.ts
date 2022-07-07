@@ -1,7 +1,7 @@
 import React from 'react'
 import { Block } from '../states/block'
 import { Position } from '../types/position'
-import { emptyBlock } from './block'
+import { BlockUtil } from './block'
 
 export class CursorUtil {
   public static handleOnKeyDown = (
@@ -15,6 +15,6 @@ export class CursorUtil {
     const cursor = document.getElementById(`cursor-${userId}`) as HTMLDivElement
     cursor.style.display = 'none'
     cursor.blur()
-    addBlock(emptyBlock({ id: 'aaa', position, content: null }))
+    addBlock(BlockUtil.emptyBlock({ position }))
   }
 }

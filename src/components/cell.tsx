@@ -2,9 +2,7 @@ import styled from 'styled-components'
 import React from 'react'
 import { CELL_LENGTH, MAX_COL, MAX_ROW } from '../constants/pageSize'
 import { CellUtil } from '../utils/cellUtil'
-import { UnsettledBlock, unsettledBlockAction, unsettledBlockSelectors } from '../states/unsettledBlock'
-import { getUserId } from '../utils/authUtil'
-import { blocksActions } from '../states/block'
+import { Block, blocksActions, blocksSelectors } from '../states/block'
 
 const StyledCell = styled.textarea`
   width: ${CELL_LENGTH - 1}px;
@@ -30,16 +28,15 @@ function CellJSX({ row, col }: Props) {
   const isLastCol = col === MAX_COL - 1
 
   const style = {
-    borderTop: `1px solid lightgrey`,
-    borderLeft: `1px solid lightgrey`,
-    borderBottom: isLastRow ? `1px solid lightgrey` : '',
-    borderRight: isLastCol ? `1px solid lightgrey` : '',
+    borderTop: `1px solid darkgray`,
+    borderLeft: `1px solid darkgray`,
+    borderBottom: isLastRow ? `1px solid darkgray` : '',
+    borderRight: isLastCol ? `1px solid darkgray` : '',
   }
 
-  const userId = getUserId()
-  const changeUnsettledBlockPosition = unsettledBlockAction.useChangeUnsettledBlockPos()
-  const unsettledBlock = unsettledBlockSelectors.useUnsettledBlockById(userId) as UnsettledBlock
-  const changeUnsettledBlockSize = unsettledBlockAction.useUnsettledBlockSize()
+  const { id } = blocksSelectors.useEditingBlock() as Block
+  const changeBlockStatus = blocksActions.useChangeBlockStatus()
+  const changeBlockPosition = blocksActions.useChangeBlockPosition()
   const addBlock = blocksActions.useAddBlock()
 
   return (
@@ -50,10 +47,9 @@ function CellJSX({ row, col }: Props) {
         CellUtil.handleOnMouseDown({
           row,
           col,
-          userId,
-          unsettledBlock,
-          changeUnsettledBlockPosition,
-          changeUnsettledBlockSize,
+          id,
+          changeBlockStatus,
+          changeBlockPosition,
           addBlock,
         })
       }}

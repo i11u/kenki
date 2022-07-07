@@ -2,7 +2,7 @@ import { atom, selector, selectorFamily, useRecoilCallback, useRecoilValue } fro
 import { Position } from '../types/position'
 import { RecoilAtomKeys, RecoilSelectorKeys } from './keys'
 import { Block } from './block'
-import { emptyBlock } from '../utils/block'
+import { BlockUtil } from '../utils/block'
 
 export type UnsettledBlock = {
   userId: string
@@ -19,7 +19,7 @@ const unsettledBlockAtom = atom<UnsettledBlocks>({
     unsettledBlocks: [
       {
         userId: 'user1',
-        block: emptyBlock({ id: '9999', position: { row: 0, col: 0 }, content: null }),
+        block: BlockUtil.emptyBlock({ position: { row: 0, col: 0 } }),
       },
     ],
   },
