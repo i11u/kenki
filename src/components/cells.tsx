@@ -11,7 +11,7 @@ function CellsJSX() {
       {grid.map((row, rowIdx) => (
         <div key={`row-${grid[rowIdx][0].row}`} style={{ height: CELL_LENGTH }}>
           {row.map((cell, colIdx) => (
-            <CellJSX key={`${cell.row}-${cell.col}`} row={cell.row} col={cell.col} />
+            <CellJSX key={`cell-${cell.row}-${cell.col}`} row={cell.row} col={cell.col} />
           ))}
         </div>
       ))}

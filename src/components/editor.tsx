@@ -2,7 +2,6 @@ import styled from 'styled-components'
 import Page from './page'
 import BlocksJSX from './blocks'
 import CellsJSX from './cells'
-import { inputSelectors } from '../states/input'
 
 const StyledInputValue = styled.div`
   width: 100px;
@@ -24,11 +23,11 @@ const StyledInputValue = styled.div`
 `
 
 function Editor() {
-  const input = inputSelectors.useInputValue()
+  // const input = inputSelectors.useInputValue()
 
   return (
     <div>
-      <StyledInputValue>{input}</StyledInputValue>
+      {/* <StyledInputValue>{input}</StyledInputValue> */}
       <Page>
         <BlocksJSX />
         <CellsJSX />

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { CELL_LENGTH } from '../constants/pageSize'
 import { Block, blocksActions, blocksSelectors } from '../states/block'
 import { BlockUtil } from '../utils/block'
@@ -51,6 +51,7 @@ function BlockJSX({ id }: Props) {
   const changeBlockStatus = blocksActions.useChangeBlockStatus()
   const addBlock = blocksActions.useAddBlock()
   const setInputValue = inputActions.useSetInputValue()
+  const blockRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (block.editing) {
@@ -84,12 +85,14 @@ function BlockJSX({ id }: Props) {
             changeBlockPosition,
             changeBlockStatus,
             setInputValue,
+            blockDOM: blockRef.current!,
           })
         }
       >
         <StyledBlock
           id={`block-${id}`}
           contentEditable
+          ref={blockRef}
           onInput={(e: React.FormEvent<HTMLDivElement>) =>
             BlockUtil.handleOnInput({
               e,

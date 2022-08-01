@@ -63,6 +63,7 @@ export class BlockUtil {
     changeBlockPosition,
     changeBlockStatus,
     setInputValue,
+    blockDOM,
   }: {
     e: React.KeyboardEvent<HTMLDivElement>
     id: string
@@ -71,6 +72,7 @@ export class BlockUtil {
     changeBlockPosition: (blockId: string, position: Position) => void
     changeBlockStatus: (blockId: string, isEmpty: boolean, isSelected: boolean, editing: boolean) => void
     setInputValue: (str: string) => void
+    blockDOM: HTMLDivElement
   }) => {
     const key = e.keyCode || e.charCode
     const { row, col } = block.position
@@ -120,9 +122,7 @@ export class BlockUtil {
       return
     }
 
-    const blockDiv = document.getElementById(`block-${id}`) as HTMLDivElement
-
-    if (blockDiv.textContent !== '') return
+    if (blockDOM.textContent !== '') return
 
     switch (key) {
       case 37: // ArrowLeft
@@ -180,7 +180,6 @@ export class BlockUtil {
                 row,
                 col: col + block.width + 3,
               }
-
         addBlock(BlockUtil.emptyBlock({ position: nextPosition }))
         break
       default:

@@ -177,6 +177,7 @@ type BlockSelectors = {
   useBlockById: (id: string) => Block | undefined
   useSelectedBlocks: () => Block[]
   useEditingBlock: () => Block | undefined
+  useEditingBlockId: () => string
   useNextBlock: (id: string) => Block | undefined
 }
 
@@ -222,10 +223,20 @@ const editingBlockSelector = selector<Block | undefined>({
   },
 })
 
+const editingBlockIdSelector = selector<string>({
+  key: RecoilSelectorKeys.EDITING_BLOCK_ID as string,
+  get: ({ get }) => {
+    const { blocks } = get(blocksAtom)
+    const block = blocks.find((v) => v.editing) as Block
+    return block.id
+  },
+})
+
 export const blocksSelectors: BlockSelectors = {
   useBlocks: () => useRecoilValue(blocksSelector),
   useBlockById: (id: string) => useRecoilValue(blockSelector(id)),
   useSelectedBlocks: () => useRecoilValue(selectedBlocksSelector),
   useEditingBlock: () => useRecoilValue(editingBlockSelector),
+  useEditingBlockId: () => useRecoilValue(editingBlockIdSelector),
   useNextBlock: (id: string) => useRecoilValue(nextBlockSelector(id)),
 }

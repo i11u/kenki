@@ -17,6 +17,7 @@ export enum RecoilSelectorKeys {
   BLOCK_BY_ID = 'blocks_block_by_id',
   SELECTED_BLOCKS = 'selected_blocks',
   EDITING_BLOCK = 'editing_block',
+  EDITING_BLOCK_ID = 'editing_block_id',
   NEXT_BLOCK = 'next_block',
   CURRENT_BLOCK_CURRENT = 'current_block_current',
   UNSETTLED_BLOCKS = 'cursors_all_cursors',

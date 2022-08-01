@@ -2,9 +2,21 @@ import styled from 'styled-components'
 import React from 'react'
 import { CELL_LENGTH, MAX_COL, MAX_ROW } from '../constants/pageSize'
 import { CellUtil } from '../utils/cellUtil'
-import { Block, blocksActions, blocksSelectors } from '../states/block'
+import { blocksActions, blocksSelectors } from '../states/block'
 
 const StyledCell = styled.textarea`
+  @keyframes rendered {
+    0% {
+      background-color: white;
+    }
+    100% {
+      background-color: yellow;
+    }
+  }
+
+  animation: rendered 1s ease;
+  animation-iteration-count: 1;
+
   width: ${CELL_LENGTH - 1}px;
   height: ${CELL_LENGTH - 1}px;
   font-size: ${CELL_LENGTH - 2}px;
@@ -34,7 +46,7 @@ function CellJSX({ row, col }: Props) {
     borderRight: isLastCol ? `1px solid darkgray` : '',
   }
 
-  const { id } = blocksSelectors.useEditingBlock() as Block
+  const id = blocksSelectors.useEditingBlockId()
   const changeBlockStatus = blocksActions.useChangeBlockStatus()
   const changeBlockPosition = blocksActions.useChangeBlockPosition()
   const addBlock = blocksActions.useAddBlock()
@@ -42,6 +54,7 @@ function CellJSX({ row, col }: Props) {
   return (
     <StyledCell
       id={`cell-${row}-${col}`}
+      key={`cell-${row}-${col}`}
       style={style}
       onMouseDown={() => {
         CellUtil.handleOnMouseDown({
