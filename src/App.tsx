@@ -1,5 +1,4 @@
 import React from 'react'
-import './App.css'
 import { RecoilRoot } from 'recoil'
 import Editor from './components/editor'
 

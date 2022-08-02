@@ -10,8 +10,6 @@ export type FontFamily =
   | 'monospace'
   | '凸版文久ゴシック'
 
-export type AspectRatio = 'a4' | 'slide'
-
 export type Header = 'hidden' | 'open'
 
 export type Sidebar = 'hidden' | 'open'

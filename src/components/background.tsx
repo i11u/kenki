@@ -8,7 +8,7 @@ function Background({ children }: Props) {
 }
 
 const StyledBackground = styled.div`
-  background-color: rgb(226, 226, 226);
+  background-color: #f9f9f9;
   position: fixed;
   width: 100%;
   height: 100%;

@@ -1,3 +1,4 @@
+import React from 'react'
 import { blocksSelectors } from '../states/block'
 import BlockJSX from './block'
 

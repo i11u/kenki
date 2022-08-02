@@ -1,10 +1,8 @@
 import styled from 'styled-components'
-import Page from './page'
-import BlocksJSX from './blocks'
-import CellsJSX from './cells'
 import HeaderJSX from './header'
 import SidebarJSX from './sidebar'
 import Background from './background'
+import Page from './page'
 
 const StyledInputValue = styled.div`
   width: 100px;
@@ -16,28 +14,22 @@ const StyledInputValue = styled.div`
   top: 10px;
   left: 50%;
   z-index: 1;
-  margin-top: 20px;
-  margin-bottom: 20px;
   text-align: center;
   vertical-align: center;
   padding-top: 10px;
-  margin-right: auto;
-  margin-left: auto;
+  margin: 20px auto;
 `
 
 function Editor() {
   // const input = inputSelectors.useInputValue()
 
   return (
-    <div>
+    <div style={{ width: '100%', height: '100%' }}>
       {/* <StyledInputValue>{input}</StyledInputValue> */}
       <HeaderJSX />
       <SidebarJSX />
       <Background>
-        <Page>
-          <BlocksJSX />
-          <CellsJSX />
-        </Page>
+        <Page />
       </Background>
     </div>
   )

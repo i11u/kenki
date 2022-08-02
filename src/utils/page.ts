@@ -1,48 +1,40 @@
+import React from 'react'
+import { AspectRatio } from '../states/page'
 import { Position } from '../types/position'
-import { MAX_COL, MAX_ROW } from '../constants/pageSize'
 import { Block } from '../states/block'
 import { BlockUtil } from './block'
 
-export class CellUtil {
-  public static getInitialCells = (): Position[][] => {
-    const res = []
-    for (let row = 0; row < MAX_ROW; row += 1) {
-      const currentRow = []
-      for (let col = 0; col < MAX_COL; col += 1) {
-        currentRow.push({ row, col })
-      }
-      res.push(currentRow)
+export class PageUtil {
+  public static getPositionFromMouseDownEvent = (
+    e: React.MouseEvent<HTMLDivElement>,
+    gridNum: {
+      rowNum: number
+      colNum: number
     }
-    return res
-  }
+  ): Position => ({
+    row: Math.floor(e.nativeEvent.offsetY / ((e.target as HTMLDivElement).clientHeight / gridNum.rowNum)),
+    col: Math.floor(e.nativeEvent.offsetX / ((e.target as HTMLDivElement).clientWidth / gridNum.colNum)),
+  })
 
-  public static getCell = (row: number, col: number) =>
-    document.getElementById(`cell-${row}-${col}`) as HTMLTextAreaElement
+  public static getAspectRatio = (aspectRatio: AspectRatio) => aspectRatio.height / aspectRatio.width
 
-  public static getCellFromPos = (pos: Position) => {
-    if (!pos) return undefined
-    return document.getElementById(`cell-${pos.row}-${pos.col}`) as HTMLTextAreaElement
-  }
-
-  /**
-   * When a cell is clicked, you change the cursor position.
-   * */
   public static handleOnMouseDown = ({
-    row,
-    col,
+    e,
+    gridNum,
     id,
     changeBlockStatus,
     changeBlockPosition,
     addBlock,
   }: {
-    row: number
-    col: number
+    e: React.MouseEvent<HTMLDivElement>
+    gridNum: { rowNum: number; colNum: number }
     id: string
     changeBlockStatus: (blockId: string, isEmpty: boolean, isSelected: boolean, editing: boolean) => void
     changeBlockPosition: (id: string, position: Position) => void
     addBlock: (block: Block) => void
   }) => {
     const blockDiv = document.getElementById(`block-${id}`) as HTMLDivElement
+    const { row, col } = PageUtil.getPositionFromMouseDownEvent(e, gridNum)
 
     if (blockDiv.textContent === '') {
       changeBlockPosition(id, { row, col })
