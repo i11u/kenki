@@ -10,6 +10,8 @@ export enum RecoilAtomKeys {
   USER = 'user',
   CURSOR = 'cursor',
   INPUT = 'input',
+  EDITOR = 'editor',
+  PAGE = 'page',
 }
 
 export enum RecoilSelectorKeys {
@@ -26,4 +28,6 @@ export enum RecoilSelectorKeys {
   CURSORS = 'cursors',
   CURSOR_BY_ID = 'cursor_by_id',
   INPUT = 'input_input',
+  EDITOR_CONFIG = 'editor_config',
+  PAGE_CONFIG = 'page_config',
 }

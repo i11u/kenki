@@ -40,10 +40,10 @@ function CellJSX({ row, col }: Props) {
   const isLastCol = col === MAX_COL - 1
 
   const style = {
-    borderTop: `1px solid darkgray`,
-    borderLeft: `1px solid darkgray`,
-    borderBottom: isLastRow ? `1px solid darkgray` : '',
-    borderRight: isLastCol ? `1px solid darkgray` : '',
+    borderTop: `1px solid lightgray`,
+    borderLeft: `1px solid lightgray`,
+    borderBottom: isLastRow ? `1px solid lightgray` : '',
+    borderRight: isLastCol ? `1px solid lightgray` : '',
   }
 
   const id = blocksSelectors.useEditingBlockId()

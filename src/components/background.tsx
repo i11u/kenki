@@ -12,7 +12,7 @@ const StyledBackground = styled.div`
   position: fixed;
   width: 100%;
   height: 100%;
-  overflow-x: hidden;
+  overflow-x: auto;
   overflow-y: auto;
 `
 

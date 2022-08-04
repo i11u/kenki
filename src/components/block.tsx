@@ -29,7 +29,7 @@ const StyledBlockWrapper = styled.div<{ block: Block }>`
   position: absolute;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: left;
 `
 
 const StyledBlock = styled.div`
@@ -37,6 +37,7 @@ const StyledBlock = styled.div`
   white-space: nowrap;
   line-height: ${CELL_LENGTH}px;
   margin-top: -1px;
+  font-family: '凸版文久ゴシック';
 `
 
 type Props = {
