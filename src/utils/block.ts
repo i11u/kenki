@@ -2,7 +2,6 @@ import React from 'react'
 import { v4 } from 'uuid'
 import { Position } from '../types/position'
 import { Block } from '../states/block'
-import { CELL_LENGTH, MAX_COL, MAX_ROW } from '../constants/pageSize'
 
 export class BlockUtil {
   private static isInterrupted = false
@@ -40,15 +39,21 @@ export class BlockUtil {
     e,
     id,
     changeBlockSize,
+    cellLength,
   }: {
     e: React.FormEvent<HTMLDivElement>
     id: string
     changeBlockSize: (blockId: string, width: number, height: number) => void
+    cellLength: number
   }) => {
     const block = document.getElementById(`block-${id}`) as HTMLDivElement
     return block.textContent === '' && block.childElementCount === 0
       ? changeBlockSize(id, 1, 1)
-      : changeBlockSize(id, Math.ceil(block.offsetWidth / CELL_LENGTH), Math.ceil(block.offsetHeight / CELL_LENGTH))
+      : changeBlockSize(
+          id,
+          Math.ceil((block.clientWidth - 1) / cellLength),
+          Math.ceil((block.clientHeight - 1) / cellLength)
+        )
   }
 
   /**
@@ -64,6 +69,8 @@ export class BlockUtil {
     changeBlockStatus,
     setInputValue,
     blockDOM,
+    rowNum,
+    colNum,
   }: {
     e: React.KeyboardEvent<HTMLDivElement>
     id: string
@@ -73,6 +80,8 @@ export class BlockUtil {
     changeBlockStatus: (blockId: string, isEmpty: boolean, isSelected: boolean, editing: boolean) => void
     setInputValue: (str: string) => void
     blockDOM: HTMLDivElement
+    rowNum: number
+    colNum: number
   }) => {
     const key = e.keyCode || e.charCode
     const { row, col } = block.position
@@ -107,12 +116,12 @@ export class BlockUtil {
           }
           break
         case 39: // ArrowRight
-          if (col < MAX_COL - 1) {
+          if (col < colNum - 1) {
             changeBlockPosition(id, { row, col: col + 1 })
           }
           break
         case 40: // ArrowDown
-          if (row < MAX_ROW - 1) {
+          if (row < rowNum - 1) {
             changeBlockPosition(id, { row: row + 1, col })
           }
           break
@@ -136,12 +145,12 @@ export class BlockUtil {
         }
         break
       case 39: // ArrowRight
-        if (col < MAX_COL - 1) {
+        if (col < colNum - 1) {
           changeBlockPosition(id, { row, col: col + 1 })
         }
         break
       case 40: // ArrowDown
-        if (row < MAX_ROW - 1) {
+        if (row < rowNum - 1) {
           changeBlockPosition(id, { row: row + 1, col })
         }
         break
@@ -155,12 +164,16 @@ export class BlockUtil {
     changeBlockStatus,
     addBlock,
     setInputValue,
+    rowNum,
+    colNum,
   }: {
     e: React.KeyboardEvent<HTMLDivElement>
     block: Block
     changeBlockStatus: (blockId: string, isEmpty: boolean, isSelected: boolean, editing: boolean) => void
     addBlock: (block: Block) => void
     setInputValue: (str: string) => void
+    rowNum: number
+    colNum: number
   }) => {
     if (block.isSelected) return
     const key = e.keyCode || e.charCode
@@ -174,7 +187,7 @@ export class BlockUtil {
         changeBlockStatus(block.id, block.isEmpty, block.isSelected, false)
         // eslint-disable-next-line no-case-declarations
         const nextPosition =
-          col + block.width + 3 > MAX_COL - 3
+          col + block.width + 3 > colNum - 3
             ? { row: row + block.height + 3, col: 3 }
             : {
                 row,

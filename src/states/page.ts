@@ -1,27 +1,39 @@
 import { atom, selector, useRecoilCallback, useRecoilValue } from 'recoil'
-import { AspectRatio } from '../types/editor'
+import { match } from 'ts-pattern'
 import { RecoilAtomKeys, RecoilSelectorKeys } from './keys'
 
-type PageConfig = {
-  aspectRatio: AspectRatio
+export type AspectRatio = { width: number; height: number }
+
+export type AspectRatioType = 'vertical' | 'slide' | 'full-screen'
+
+export function aspectRatioValue(t: AspectRatioType): AspectRatio {
+  return match<AspectRatioType, AspectRatio>(t)
+    .with('vertical', () => ({ width: 10, height: 14 }))
+    .with('slide', () => ({ width: 16, height: 9 }))
+    .with('full-screen', () => ({ width: 0, height: 0 }))
+    .exhaustive()
+}
+
+export type PageConfig = {
+  aspectRatio: AspectRatioType
 }
 
 const pageConfigAtom = atom<PageConfig>({
   key: RecoilAtomKeys.PAGE,
   default: {
-    aspectRatio: 'a4',
+    aspectRatio: 'slide',
   },
 })
 
 type PageConfigActions = {
-  useChangeAspectRatio: () => (aspectRatio: AspectRatio) => void
+  useChangeAspectRatio: () => (aspectRatio: AspectRatioType) => void
 }
 
 export const pageConfigAction: PageConfigActions = {
   useChangeAspectRatio: () =>
     useRecoilCallback(
       ({ set }) =>
-        (aspectRatio: AspectRatio) => {
+        (aspectRatio: AspectRatioType) => {
           set(pageConfigAtom, (prev) => ({ ...prev, aspectRatio }))
         },
       []
@@ -29,7 +41,8 @@ export const pageConfigAction: PageConfigActions = {
 }
 
 type PageConfigSelectors = {
-  usePageConfig: () => PageConfig
+  usePageConfigSelector: () => PageConfig
+  useGridNumSelector: () => { rowNum: number; colNum: number }
 }
 
 const pageConfigSelector = selector<PageConfig>({
@@ -37,6 +50,16 @@ const pageConfigSelector = selector<PageConfig>({
   get: ({ get }) => get(pageConfigAtom),
 })
 
+const gridNumSelector = selector<{ rowNum: number; colNum: number }>({
+  key: RecoilSelectorKeys.PAGE_GRID_NUM,
+  get: ({ get }) => {
+    const { aspectRatio } = get(pageConfigAtom)
+    const value = aspectRatioValue(aspectRatio)
+    return { rowNum: value.height * 4, colNum: value.width * 4 }
+  },
+})
+
 export const pageConfigSelectors: PageConfigSelectors = {
-  usePageConfig: () => useRecoilValue(pageConfigSelector),
+  usePageConfigSelector: () => useRecoilValue(pageConfigSelector),
+  useGridNumSelector: () => useRecoilValue(gridNumSelector),
 }
