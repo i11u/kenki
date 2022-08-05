@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { aspectRatioValue, PageConfig, pageConfigSelectors } from '../states/page'
 import { PageUtil } from '../utils/page'
@@ -13,6 +13,18 @@ function Page() {
   const changeBlockPosition = blocksActions.useChangeBlockPosition()
   const addBlock = blocksActions.useAddBlock()
   const gridNum = pageConfigSelectors.useGridNumSelector()
+
+  useEffect(() => {
+    document.getElementById('page')!.addEventListener(
+      'wheel',
+      (e) => {
+        if (e.ctrlKey) {
+          console.log('aaa')
+        }
+      },
+      { passive: false }
+    )
+  }, [])
 
   return (
     <StyledPage
@@ -36,18 +48,19 @@ function Page() {
 }
 
 const StyledPage = styled.div<{ pageConfig: PageConfig }>`
-  width: ${(props) => (props.pageConfig.aspectRatio === 'full-screen' ? '95%' : '90%')};
+  min-width: 960px;
+  width: ${(props) => (props.pageConfig.aspectRatio === 'full-screen' ? '95%' : '85%')};
   aspect-ratio: ${(props) =>
     props.pageConfig.aspectRatio === 'full-screen'
       ? ''
       : 1 / PageUtil.getAspectRatio(aspectRatioValue(props.pageConfig.aspectRatio))};
-  height: ${(props) => (props.pageConfig.aspectRatio === 'full-screen' ? '95%' : '')};
   background-color: #ffffff;
-  margin-left: 50vw;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  margin: ${(props) => (props.pageConfig.aspectRatio === 'vertical' ? '3% auto' : '')};
+  top: ${(props) => (props.pageConfig.aspectRatio === 'slide' ? '50%' : '')};
+  margin-left: ${(props) => (props.pageConfig.aspectRatio === 'slide' ? '50%' : '')};
+  transform: ${(props) => (props.pageConfig.aspectRatio === 'slide' ? 'translate(-50%, -50%)' : '')};
   box-shadow: 5px 5px 10px darkgrey, -1px 0 10px darkgrey;
-  position: absolute;
+  position: relative;
 `
 
 export default Page

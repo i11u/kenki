@@ -10,8 +10,6 @@ export type FontFamily =
   | 'monospace'
   | '凸版文久ゴシック'
 
-export type Header = 'hidden' | 'open'
+export type HeadeConfig = { display: 'open' | 'closed' }
 
-export type Sidebar = 'hidden' | 'open'
-
-export type Dominant = 'left' | 'right'
+export type SidebarConfig = { display: 'open' | 'closed' | 'initial'; position: 'left' | 'right' }

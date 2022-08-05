@@ -23,6 +23,9 @@ export enum RecoilSelectorKeys {
   USER = 'user_user',
   INPUT = 'input_input',
   EDITOR_CONFIG = 'editor_config',
+  SIDEBAR_CONFIG = 'sidebar_config',
+  SIDEBAR_DISPLAY = 'sidebar_display',
   PAGE_CONFIG = 'page_config',
   PAGE_GRID_NUM = 'page_grid_num',
+  PAGE_ASPECT_RATIO = 'page_aspect_ratio',
 }

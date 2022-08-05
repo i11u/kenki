@@ -3,29 +3,31 @@ import HeaderJSX from './header'
 import SidebarJSX from './sidebar'
 import Background from './background'
 import Page from './page'
+import { inputSelectors } from '../states/input'
 
 const StyledInputValue = styled.div`
-  width: 100px;
+  width: 150px;
   height: 30px;
   color: white;
   font-family: Courier;
   background-color: black;
   border-radius: 3px;
-  top: 10px;
-  left: 50%;
+  bottom: 30px;
+  right: 50px;
   z-index: 1;
+  position: fixed;
   text-align: center;
   vertical-align: center;
-  padding-top: 10px;
-  margin: 20px auto;
+  padding-top: 8px;
+  font-size: 20px;
 `
 
 function Editor() {
-  // const input = inputSelectors.useInputValue()
+  const input = inputSelectors.useInputValue()
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
-      {/* <StyledInputValue>{input}</StyledInputValue> */}
+      <StyledInputValue>{input}</StyledInputValue>
       <HeaderJSX />
       <SidebarJSX />
       <Background>

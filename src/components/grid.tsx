@@ -1,11 +1,11 @@
-/*
- * GridJSX represents readonly grid pattern. This component should re-render
- * only when grid color is changed.
- * */
 import styled from 'styled-components'
 import React from 'react'
 import { pageConfigSelectors } from '../states/page'
 
+/*
+ * GridJSX represents readonly grid pattern. This component should re-render
+ * only when grid color is changed.
+ * */
 const GridJSX = React.memo(() => {
   const gridNum = pageConfigSelectors.useGridNumSelector()
 

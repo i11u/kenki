@@ -21,7 +21,7 @@ export type PageConfig = {
 const pageConfigAtom = atom<PageConfig>({
   key: RecoilAtomKeys.PAGE,
   default: {
-    aspectRatio: 'slide',
+    aspectRatio: 'vertical',
   },
 })
 
@@ -29,7 +29,7 @@ type PageConfigActions = {
   useChangeAspectRatio: () => (aspectRatio: AspectRatioType) => void
 }
 
-export const pageConfigAction: PageConfigActions = {
+export const pageConfigActions: PageConfigActions = {
   useChangeAspectRatio: () =>
     useRecoilCallback(
       ({ set }) =>
@@ -43,6 +43,7 @@ export const pageConfigAction: PageConfigActions = {
 type PageConfigSelectors = {
   usePageConfigSelector: () => PageConfig
   useGridNumSelector: () => { rowNum: number; colNum: number }
+  useAspectRatioSelector: () => AspectRatioType
 }
 
 const pageConfigSelector = selector<PageConfig>({
@@ -59,7 +60,13 @@ const gridNumSelector = selector<{ rowNum: number; colNum: number }>({
   },
 })
 
+const aspectRatioSelector = selector<AspectRatioType>({
+  key: RecoilSelectorKeys.PAGE_ASPECT_RATIO,
+  get: ({ get }) => get(pageConfigAtom).aspectRatio,
+})
+
 export const pageConfigSelectors: PageConfigSelectors = {
   usePageConfigSelector: () => useRecoilValue(pageConfigSelector),
   useGridNumSelector: () => useRecoilValue(gridNumSelector),
+  useAspectRatioSelector: () => useRecoilValue(aspectRatioSelector),
 }

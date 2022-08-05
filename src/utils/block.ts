@@ -106,21 +106,28 @@ export class BlockUtil {
           }
           break
         case 37: // ArrowLeft
+          e.preventDefault()
           if (col > 0) {
             changeBlockPosition(id, { row, col: col - 1 })
           }
           break
         case 38: // ArrowUp
+          e.preventDefault()
+
           if (row > 0) {
             changeBlockPosition(id, { row: row - 1, col })
           }
           break
         case 39: // ArrowRight
+          e.preventDefault()
+
           if (col < colNum - 1) {
             changeBlockPosition(id, { row, col: col + 1 })
           }
           break
         case 40: // ArrowDown
+          e.preventDefault()
+
           if (row < rowNum - 1) {
             changeBlockPosition(id, { row: row + 1, col })
           }
