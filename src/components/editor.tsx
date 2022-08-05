@@ -3,7 +3,6 @@ import HeaderJSX from './header'
 import SidebarJSX from './sidebar'
 import Background from './background'
 import Page from './page'
-import { inputSelectors } from '../states/input'
 
 const StyledInputValue = styled.div`
   width: 150px;
@@ -23,11 +22,11 @@ const StyledInputValue = styled.div`
 `
 
 function Editor() {
-  const input = inputSelectors.useInputValue()
+  // const input = inputSelectors.useInputValue()
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
-      <StyledInputValue>{input}</StyledInputValue>
+      {/* <StyledInputValue>{input}</StyledInputValue> */}
       <HeaderJSX />
       <SidebarJSX />
       <Background>

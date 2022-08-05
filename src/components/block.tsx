@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import React, { useEffect, useRef } from 'react'
-import { pageConfigSelectors } from '../states/page'
+import { pageConfigActions, pageConfigSelectors } from '../states/page'
 import { Block, blocksActions, blocksSelectors } from '../states/block'
 import { BlockUtil } from '../utils/block'
 import { inputActions } from '../states/input'
@@ -59,6 +59,7 @@ function BlockJSX({ id }: Props) {
   const setInputValue = inputActions.useSetInputValue()
   const blockRef = useRef<HTMLDivElement>(null)
   const gridNum = pageConfigSelectors.useGridNumSelector()
+  const changeScale = pageConfigActions.useChangeScale()
 
   useEffect(() => {
     if (block.editing) {
@@ -97,7 +98,7 @@ function BlockJSX({ id }: Props) {
           // eslint-disable-next-line no-nested-ternary
           border: block.isSelected ? '1px dotted cornflowerblue' : block.editing ? '1px solid gray' : '1px dashed gray',
         }}
-        onClick={(e: React.MouseEvent<HTMLDivElement>) => BlockUtil.handleOnClick({ e, id })}
+        onClick={(e: React.MouseEvent<HTMLDivElement>) => BlockUtil.handleOnClick({ e, id, changeScale })}
         onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) =>
           BlockUtil.handleOnKeyDownWrapper({
             e,

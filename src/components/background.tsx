@@ -1,14 +1,31 @@
-import styled from 'styled-components'
+import styled, { css, FlattenSimpleInterpolation } from 'styled-components'
 import React, { ReactNode, useEffect } from 'react'
 import { editorConfigSelectors } from '../states/editor'
+import { aspectRatioValue, pageConfigActions, pageConfigSelectors } from '../states/page'
+import { PageUtil } from '../utils/page'
 
 type Props = { children: ReactNode }
 
 const Background = React.memo(({ children }: Props) => {
   const sidebarDisplay = editorConfigSelectors.useSidebarDisplay()
+  const changeScale = pageConfigActions.useChangeScale()
+  const pageConfig = pageConfigSelectors.usePageConfigSelector()
+
+  const zoomed = css`
+    align-items: ${
+      // eslint-disable-next-line no-nested-ternary,no-restricted-globals
+      pageConfig.scale * PageUtil.getAspectRatio(aspectRatioValue(pageConfig.aspectRatio)) * screen.width <
+      // eslint-disable-next-line no-restricted-globals
+      screen.height
+        ? 'center'
+        : pageConfig.scale < 1
+        ? 'top'
+        : ''
+    };
+  `
 
   useEffect(() => {
-    document.getElementById('background')!.addEventListener(
+    ;(document.getElementById('background') as HTMLDivElement).addEventListener(
       'wheel',
       (e) => {
         if (e.ctrlKey) {
@@ -22,6 +39,7 @@ const Background = React.memo(({ children }: Props) => {
   return (
     <StyledBackground
       id="background"
+      zoomed={zoomed}
       style={{
         // eslint-disable-next-line no-nested-ternary
         width: sidebarDisplay === 'initial' ? '100%' : sidebarDisplay === 'open' ? '80%' : '100%',
@@ -39,7 +57,7 @@ const Background = React.memo(({ children }: Props) => {
   )
 })
 
-const StyledBackground = styled.div`
+const StyledBackground = styled.div<{ zoomed: FlattenSimpleInterpolation }>`
   @keyframes animate-background-1 {
     from {
       left: 0;
@@ -50,7 +68,6 @@ const StyledBackground = styled.div`
       width: 80%;
     }
   }
-
   @keyframes animate-background-2 {
     from {
       left: 20%;
@@ -62,11 +79,20 @@ const StyledBackground = styled.div`
     }
   }
 
+  ${(props) => props.zoomed}
+
   background-color: white;
   position: absolute;
   top: 5%;
   height: 95%;
-  overflow: scroll;
+  overflow: auto;
+  display: flex;
+  //align-content: center;
+  //flex-flow: column wrap;
+  //white-space: nowrap;
+  //flex-wrap: nowrap;
+  //justify-content: center;
+  //min-height: max-content;
 `
 
 export default Background

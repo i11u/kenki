@@ -1,10 +1,10 @@
 import { atom, selector, useRecoilCallback, useRecoilValue } from 'recoil'
 import { RecoilAtomKeys, RecoilSelectorKeys } from './keys'
-import { FontFamily, HeadeConfig, SidebarConfig } from '../types/editor'
+import { FontFamily, HeaderConfig, SidebarConfig } from '../types/editor'
 
 type EditorConfig = {
   fontFamily: string
-  headerConfig: HeadeConfig
+  headerConfig: HeaderConfig
   sidebarConfig: SidebarConfig
 }
 
@@ -38,7 +38,7 @@ export const editorConfigActions: EditorConfigActions = {
       ({ set }) =>
         () => {
           set(editorConfigAtom, (prev) => {
-            const headerConfig: HeadeConfig =
+            const headerConfig: HeaderConfig =
               prev.headerConfig.display === 'open' ? { display: 'closed' } : { display: 'open' }
             return {
               ...prev,

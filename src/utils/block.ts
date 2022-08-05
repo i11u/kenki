@@ -212,10 +212,19 @@ export class BlockUtil {
    * Though, this may not be a good workaround...
    * @link [https://bugzilla.mozilla.org/show_bug.cgi?id=550434]
    * */
-  public static handleOnClick = ({ e, id }: { e: React.MouseEvent<HTMLDivElement>; id: string }) => {
+  public static handleOnClick = ({
+    e,
+    id,
+    changeScale,
+  }: {
+    e: React.MouseEvent<HTMLDivElement>
+    id: string
+    changeScale: (scale: number) => void
+  }) => {
     e.preventDefault()
     const block = document.getElementById(`block-${id}`) as HTMLDivElement
     block.focus()
+    changeScale(1.5)
   }
 
   /**

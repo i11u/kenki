@@ -28,4 +28,5 @@ export enum RecoilSelectorKeys {
   PAGE_CONFIG = 'page_config',
   PAGE_GRID_NUM = 'page_grid_num',
   PAGE_ASPECT_RATIO = 'page_aspect_ratio',
+  PAGE_SCALE = 'page_scale',
 }

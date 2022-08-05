@@ -10,6 +10,6 @@ export type FontFamily =
   | 'monospace'
   | '凸版文久ゴシック'
 
-export type HeadeConfig = { display: 'open' | 'closed' }
+export type HeaderConfig = { display: 'open' | 'closed' }
 
 export type SidebarConfig = { display: 'open' | 'closed' | 'initial'; position: 'left' | 'right' }

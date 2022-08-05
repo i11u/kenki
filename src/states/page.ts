@@ -16,17 +16,20 @@ export function aspectRatioValue(t: AspectRatioType): AspectRatio {
 
 export type PageConfig = {
   aspectRatio: AspectRatioType
+  scale: number
 }
 
-const pageConfigAtom = atom<PageConfig>({
+export const pageConfigAtom = atom<PageConfig>({
   key: RecoilAtomKeys.PAGE,
   default: {
     aspectRatio: 'vertical',
+    scale: 1,
   },
 })
 
 type PageConfigActions = {
   useChangeAspectRatio: () => (aspectRatio: AspectRatioType) => void
+  useChangeScale: () => (scale: number) => void
 }
 
 export const pageConfigActions: PageConfigActions = {
@@ -38,12 +41,17 @@ export const pageConfigActions: PageConfigActions = {
         },
       []
     ),
+  useChangeScale: () =>
+    useRecoilCallback(({ set }) => (scale: number) => {
+      set(pageConfigAtom, (prev) => ({ ...prev, scale }))
+    }),
 }
 
 type PageConfigSelectors = {
   usePageConfigSelector: () => PageConfig
   useGridNumSelector: () => { rowNum: number; colNum: number }
   useAspectRatioSelector: () => AspectRatioType
+  useScaleSelector: () => number
 }
 
 const pageConfigSelector = selector<PageConfig>({
@@ -56,7 +64,7 @@ const gridNumSelector = selector<{ rowNum: number; colNum: number }>({
   get: ({ get }) => {
     const { aspectRatio } = get(pageConfigAtom)
     const value = aspectRatioValue(aspectRatio)
-    return { rowNum: value.height * 4, colNum: value.width * 4 }
+    return { rowNum: value.height * 5, colNum: value.width * 5 }
   },
 })
 
@@ -65,8 +73,14 @@ const aspectRatioSelector = selector<AspectRatioType>({
   get: ({ get }) => get(pageConfigAtom).aspectRatio,
 })
 
+const scaleSelector = selector<number>({
+  key: RecoilSelectorKeys.PAGE_SCALE,
+  get: ({ get }) => get(pageConfigAtom).scale,
+})
+
 export const pageConfigSelectors: PageConfigSelectors = {
   usePageConfigSelector: () => useRecoilValue(pageConfigSelector),
   useGridNumSelector: () => useRecoilValue(gridNumSelector),
   useAspectRatioSelector: () => useRecoilValue(aspectRatioSelector),
+  useScaleSelector: () => useRecoilValue(scaleSelector),
 }
