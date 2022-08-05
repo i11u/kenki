@@ -1,26 +1,19 @@
 import { atom, selector, useRecoilCallback, useRecoilValue } from 'recoil'
 import { RecoilAtomKeys, RecoilSelectorKeys } from './keys'
-import { Dominant, FontFamily, Header, Sidebar } from '../types/editor'
-
-/*
- * TODO: In Recoil, components subscribing any selector will re-render itself whenever a related atom changes.
- *  To optimize the performance, fine atoms are better.
- * */
+import { FontFamily, HeadeConfig, SidebarConfig } from '../types/editor'
 
 type EditorConfig = {
   fontFamily: string
-  header: Header
-  sidebar: Sidebar
-  dominant: Dominant
+  headerConfig: HeadeConfig
+  sidebarConfig: SidebarConfig
 }
 
 const editorConfigAtom = atom<EditorConfig>({
   key: RecoilAtomKeys.EDITOR,
   default: {
     fontFamily: '凸版文久ゴシック',
-    header: 'open',
-    sidebar: 'open',
-    dominant: 'right',
+    headerConfig: { display: 'open' },
+    sidebarConfig: { display: 'initial', position: 'left' },
   },
 })
 
@@ -28,10 +21,10 @@ type EditorConfigActions = {
   useChangeFontFamily: () => (fontFamily: FontFamily) => void
   useToggleHeader: () => () => void
   useToggleSidebar: () => () => void
-  useToggleDominant: () => () => void
+  useSwitchSidebarPosition: () => () => void
 }
 
-const editorConfigAction: EditorConfigActions = {
+export const editorConfigActions: EditorConfigActions = {
   useChangeFontFamily: () =>
     useRecoilCallback(
       ({ set }) =>
@@ -45,10 +38,11 @@ const editorConfigAction: EditorConfigActions = {
       ({ set }) =>
         () => {
           set(editorConfigAtom, (prev) => {
-            const header: Header = prev.header === 'open' ? 'hidden' : 'open'
+            const headerConfig: HeadeConfig =
+              prev.headerConfig.display === 'open' ? { display: 'closed' } : { display: 'open' }
             return {
               ...prev,
-              header,
+              headerConfig,
             }
           })
         },
@@ -59,24 +53,34 @@ const editorConfigAction: EditorConfigActions = {
       ({ set }) =>
         () => {
           set(editorConfigAtom, (prev) => {
-            const sidebar: Sidebar = prev.sidebar === 'open' ? 'hidden' : 'open'
-            return {
-              ...prev,
-              sidebar,
+            const sidebarConfig: SidebarConfig = {
+              ...prev.sidebarConfig,
+              display:
+                prev.sidebarConfig.display === 'closed' || prev.sidebarConfig.display === 'initial' ? 'open' : 'closed',
             }
+            return { ...prev, sidebarConfig }
           })
         },
       []
     ),
-  useToggleDominant: () =>
+  useSwitchSidebarPosition: () =>
     useRecoilCallback(
       ({ set }) =>
         () => {
           set(editorConfigAtom, (prev) => {
-            const dominant: Dominant = prev.dominant === 'left' ? 'right' : 'left'
+            const sidebarConfig: SidebarConfig =
+              prev.sidebarConfig.position === 'left'
+                ? {
+                    ...prev.sidebarConfig,
+                    position: 'right',
+                  }
+                : {
+                    ...prev.sidebarConfig,
+                    position: 'left',
+                  }
             return {
               ...prev,
-              dominant,
+              sidebarConfig,
             }
           })
         },
@@ -86,6 +90,8 @@ const editorConfigAction: EditorConfigActions = {
 
 type EditorConfigSelectors = {
   useEditorConfig: () => EditorConfig
+  useSidebarConfig: () => SidebarConfig
+  useSidebarDisplay: () => string
 }
 
 const editorConfigSelector = selector<EditorConfig>({
@@ -93,6 +99,18 @@ const editorConfigSelector = selector<EditorConfig>({
   get: ({ get }) => get(editorConfigAtom),
 })
 
-export const editorSelectors: EditorConfigSelectors = {
+const sidebarConfigSelector = selector<SidebarConfig>({
+  key: RecoilSelectorKeys.SIDEBAR_CONFIG,
+  get: ({ get }) => get(editorConfigAtom).sidebarConfig,
+})
+
+const sidebarDisplaySelector = selector<string>({
+  key: RecoilSelectorKeys.SIDEBAR_DISPLAY,
+  get: ({ get }) => get(editorConfigAtom).sidebarConfig.display,
+})
+
+export const editorConfigSelectors: EditorConfigSelectors = {
   useEditorConfig: () => useRecoilValue(editorConfigSelector),
+  useSidebarConfig: () => useRecoilValue(sidebarConfigSelector),
+  useSidebarDisplay: () => useRecoilValue(sidebarDisplaySelector),
 }
