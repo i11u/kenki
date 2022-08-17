@@ -1,10 +1,18 @@
 import React from 'react'
 import { v4 } from 'uuid'
-import { Position } from '../types/position'
-import { Block } from '../states/block'
+import { Block, Position } from '../recoil-hooks/blocks/atom'
 
 export class BlockUtil {
   private static isInterrupted = false
+
+  public static style = (block: Block, gridNum: { rowNum: number; colNum: number }) => ({
+    top: `${block.position.row * (100 / gridNum.rowNum)}%`,
+    left: `${block.position.col * (100 / gridNum.colNum)}%`,
+    width: `calc(${100 / gridNum.colNum}% - 1px + ${(100 / gridNum.colNum) * (block.width - 1)}%)`,
+    height: `calc(${100 / gridNum.rowNum}% - 1px + ${(100 / gridNum.rowNum) * (block.height - 1)}%)`,
+    minWidth: `${100 / gridNum.colNum - 1}%`,
+    minHeight: `${100 / gridNum.rowNum - 1}%`,
+  })
 
   public static composeBlock = (
     id: string,
@@ -33,7 +41,7 @@ export class BlockUtil {
 
   /**
    * When any input comes in unsettledBlock,
-   * the wrapper will resize according to the size of the block.
+   * the wrapper will resize according to the size of the blocks.
    * */
   public static handleOnInput = ({
     e,
@@ -57,7 +65,7 @@ export class BlockUtil {
   }
 
   /**
-   * Unsettled block will move when arrow keys are pressed,
+   * Unsettled blocks will move when arrow keys are pressed,
    * without any element inside of contenteditable.
    * */
   public static handleOnKeyDownWrapper = ({
@@ -198,7 +206,7 @@ export class BlockUtil {
             ? { row: row + block.height + 3, col: 3 }
             : {
                 row,
-                col: col + block.width + 3,
+                col: col + block.width + 1,
               }
         addBlock(BlockUtil.emptyBlock({ position: nextPosition }))
         break

@@ -1,8 +1,7 @@
 import React from 'react'
-import { AspectRatio } from '../states/page'
-import { Position } from '../types/position'
-import { Block } from '../states/block'
 import { BlockUtil } from './block'
+import { Block, Position } from '../recoil-hooks/blocks/atom'
+import { AspectRatio } from '../recoil-hooks/pageConfig/atom'
 
 export class PageUtil {
   public static getPositionFromMouseDownEvent = (
@@ -16,6 +15,9 @@ export class PageUtil {
     col: Math.floor(e.nativeEvent.offsetX / ((e.target as HTMLDivElement).clientWidth / gridNum.colNum)),
   })
 
+  /*
+   * Aspect ratio = height / width
+   * */
   public static getAspectRatio = (aspectRatio: AspectRatio) => aspectRatio.height / aspectRatio.width
 
   public static handleOnMouseDown = ({
