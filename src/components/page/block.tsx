@@ -1,12 +1,12 @@
 import styled from 'styled-components'
 import React, { useEffect, useRef } from 'react'
-import { BlockUtil } from '../../utils/block'
+import { BlockUtils } from '../../utils/block'
 import { inputActions } from '../../recoil-hooks/input'
-import { Block } from '../../recoil-hooks/blocks/atom'
 import { blockSelectors } from '../../recoil-hooks/blocks/selector'
 import { blocksActions } from '../../recoil-hooks/blocks/action'
 import { pageConfigActions } from '../../recoil-hooks/pageConfig/action'
 import { pageConfigSelectors } from '../../recoil-hooks/pageConfig/selector'
+import { Block } from '../../recoil-hooks/blocks/atom'
 
 const StyledBlockSelection = styled.div`
   position: absolute;
@@ -47,7 +47,7 @@ function BlockTSX({ id }: { id: string }) {
     if (block.editing) setTimeout(() => blockRef.current?.focus(), 0)
   }, [block.editing])
 
-  const style = BlockUtil.style(block, gridNum)
+  const style = BlockUtils.style(block, gridNum)
 
   return (
     <>
@@ -64,9 +64,9 @@ function BlockTSX({ id }: { id: string }) {
       <StyledBlockWrapper
         id={`block-${id}-wrapper`}
         style={{ ...style, borderStyle: block.isSelected ? 'dotted' : block.editing ? 'solid' : 'dashed' }}
-        onClick={(e: React.MouseEvent<HTMLDivElement>) => BlockUtil.handleOnClick({ e, id, changeScale })}
+        onClick={(e: React.MouseEvent<HTMLDivElement>) => BlockUtils.handleOnClick({ e, id, changeScale })}
         onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) =>
-          BlockUtil.handleOnKeyDownWrapper({
+          BlockUtils.handleOnKeyDownWrapper({
             e,
             id,
             block,
@@ -85,7 +85,7 @@ function BlockTSX({ id }: { id: string }) {
           contentEditable
           ref={blockRef}
           onInput={(e: React.FormEvent<HTMLDivElement>) =>
-            BlockUtil.handleOnInput({
+            BlockUtils.handleOnInput({
               e,
               id,
               changeBlockSize,
@@ -93,7 +93,7 @@ function BlockTSX({ id }: { id: string }) {
             })
           }
           onKeyDown={(e) =>
-            BlockUtil.handleOnKeyDown({
+            BlockUtils.handleOnKeyDown({
               e,
               block,
               changeBlockStatus,
@@ -103,8 +103,8 @@ function BlockTSX({ id }: { id: string }) {
               colNum: gridNum.colNum,
             })
           }
-          onPaste={(e: React.ClipboardEvent<HTMLDivElement>) => BlockUtil.handleOnPaste({ e })}
-          onKeyUp={(e) => BlockUtil.handleOnKeyUp({ e, block, changeBlockStatus })}
+          onPaste={(e: React.ClipboardEvent<HTMLDivElement>) => BlockUtils.handleOnPaste({ e })}
+          onKeyUp={(e) => BlockUtils.handleOnKeyUp({ e, block, changeBlockStatus })}
         />
       </StyledBlockWrapper>
     </>

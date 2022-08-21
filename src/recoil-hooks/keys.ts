@@ -9,6 +9,7 @@ export enum RecoilAtomKeys {
   INPUT = 'input',
   EDITOR = 'editor',
   PAGE = 'page',
+  MODE = 'mode',
 }
 
 export enum RecoilSelectorKeys {
@@ -26,4 +27,5 @@ export enum RecoilSelectorKeys {
   PAGE_ASPECT_RATIO = 'page_aspect_ratio',
   PAGE_SCALE = 'page_scale',
   INPUT = 'input_input',
+  MODE = 'mode_mode',
 }

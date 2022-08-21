@@ -2,7 +2,7 @@ import React from 'react'
 import { v4 } from 'uuid'
 import { Block, Position } from '../recoil-hooks/blocks/atom'
 
-export class BlockUtil {
+export class BlockUtils {
   private static isInterrupted = false
 
   public static style = (block: Block, gridNum: { rowNum: number; colNum: number }) => ({
@@ -208,7 +208,7 @@ export class BlockUtil {
                 row,
                 col: col + block.width + 1,
               }
-        addBlock(BlockUtil.emptyBlock({ position: nextPosition }))
+        addBlock(BlockUtils.emptyBlock({ position: nextPosition }))
         break
       default:
     }

@@ -1,6 +1,6 @@
 import { atom, atomFamily } from 'recoil'
 import { RecoilAtomKeys } from '../keys'
-import { BlockUtil } from '../../utils/block'
+import { BlockUtils } from '../../utils/block'
 
 export type Position = {
   row: number
@@ -37,12 +37,12 @@ export type Blocks = {
  * */
 export const blockAtom = atomFamily<Block, Position>({
   key: RecoilAtomKeys.BLOCK,
-  default: (position) => BlockUtil.emptyBlock({ position }),
+  default: (position) => BlockUtils.emptyBlock({ position }),
 })
 
 export const blocksAtom = atom<Blocks>({
   key: RecoilAtomKeys.BLOCKS,
   default: {
-    blocks: [BlockUtil.emptyBlock({ position: { row: 0, col: 0 } })],
+    blocks: [BlockUtils.emptyBlock({ position: { row: 0, col: 0 } })],
   },
 })

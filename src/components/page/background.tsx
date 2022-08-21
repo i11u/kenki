@@ -4,7 +4,7 @@ import { editorConfigSelectors } from '../../recoil-hooks/editorConfig/selector'
 import { aspectRatioValue } from '../../recoil-hooks/pageConfig/atom'
 import { pageConfigSelectors } from '../../recoil-hooks/pageConfig/selector'
 import usePreventPinch from '../../hooks/usePreventPinch'
-import { PageUtil } from '../../utils/page'
+import { PageUtils } from '../../utils/page'
 import useIsFirst from '../../hooks/useIsFirst'
 
 type Props = { children: ReactNode }
@@ -57,7 +57,7 @@ const Background = React.memo(({ children }: Props) => {
         animationName:
           sidebarIsOpen === undefined ? '' : sidebarIsOpen ? 'animate-background-1' : 'animate-background-2',
         alignItems:
-          pageConfig.scale * PageUtil.getAspectRatio(aspectRatio) * window.screen.width < window.screen.height
+          pageConfig.scale * PageUtils.getAspectRatio(aspectRatio) * window.screen.width < window.screen.height
             ? 'center'
             : pageConfig.scale < 1
             ? 'top'
