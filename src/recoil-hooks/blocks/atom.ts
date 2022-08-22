@@ -26,17 +26,13 @@ export type Block = {
 /**
  * Type definition of multiple Blocks
  * */
-export type Blocks = {
-  blocks: Block[]
-}
+export type Blocks = Block[]
 
 /*
  * Ideally, atoms must not be accessible from components but only from custom hooks, such as actions or selectors.
  * TypeScript currently does not have a feature to export "locally", which may be enabled by:
  * https://github.com/microsoft/TypeScript/issues/41316
  * */
-export const blocksAtom = atom<Blocks>({
-  blocks: [BlockUtils.emptyBlock({ position: { row: 0, col: 0 } })],
-})
+export const blocksAtom = atom<Blocks>([BlockUtils.emptyBlock({ position: { row: 0, col: 0 } })])
 
-export const blockAtom = atomFamily((id: string) => atom((get) => get(blocksAtom).blocks.find((v) => v.id === id)))
+export const blockAtom = atomFamily((id: string) => atom((get) => get(blocksAtom).find((v) => v.id === id)))

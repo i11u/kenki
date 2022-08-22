@@ -21,31 +21,21 @@ type BlocksActions = {
 
 export const blocksActions: BlocksActions = {
   useAddBlock: () =>
-    useAtomCallback(
-      useCallback(
-        (get, set, { addingBlock }) =>
-          set(blocksAtom, (prev) => ({
-            ...prev,
-            blocks: [...prev.blocks, addingBlock],
-          })),
-        []
-      )
-    ),
+    useAtomCallback(useCallback((get, set, { addingBlock }) => set(blocksAtom, (prev) => [...prev, addingBlock]), [])),
   useChangeBlockPosition: () =>
     useAtomCallback(
       useCallback(
         (get, set, { blockId, position }) =>
-          set(blocksAtom, (prev) => ({
-            ...prev,
-            blocks: prev.blocks.map((block) =>
+          set(blocksAtom, (prev) =>
+            prev.map((block) =>
               block.id === blockId
                 ? {
                     ...block,
                     position,
                   }
                 : block
-            ),
-          })),
+            )
+          ),
         []
       )
     ),
@@ -53,9 +43,8 @@ export const blocksActions: BlocksActions = {
     useAtomCallback(
       useCallback(
         (get, set, { blockId, width, height }) =>
-          set(blocksAtom, (prev) => ({
-            ...prev,
-            blocks: prev.blocks.map((block) =>
+          set(blocksAtom, (prev) =>
+            prev.map((block) =>
               block.id === blockId
                 ? {
                     ...block,
@@ -63,8 +52,8 @@ export const blocksActions: BlocksActions = {
                     height,
                   }
                 : block
-            ),
-          })),
+            )
+          ),
         []
       )
     ),
@@ -72,9 +61,8 @@ export const blocksActions: BlocksActions = {
     useAtomCallback(
       useCallback(
         (get, set, { blockId, isEmpty, isSelected, editing }) =>
-          set(blocksAtom, (prev) => ({
-            ...prev,
-            blocks: prev.blocks.map((block) =>
+          set(blocksAtom, (prev) =>
+            prev.map((block) =>
               block.id === blockId
                 ? {
                     ...block,
@@ -83,8 +71,8 @@ export const blocksActions: BlocksActions = {
                     editing,
                   }
                 : block
-            ),
-          })),
+            )
+          ),
         []
       )
     ),

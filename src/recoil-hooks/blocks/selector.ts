@@ -20,7 +20,7 @@ const useBlocksSelector = () =>
   useAtomValue<Block[]>(
     selectAtom(
       blocksAtom,
-      useCallback((blocks) => blocks.blocks, [])
+      useCallback((blocks) => blocks, [])
     )
   )
 
@@ -28,7 +28,7 @@ const useBlockSelector = (id: string) =>
   useAtomValue<Block | undefined>(
     selectAtom(
       blocksAtom,
-      useCallback((blocks) => blocks.blocks.find((v) => v.id === id), [id])
+      useCallback((blocks) => blocks.find((v) => v.id === id), [id])
     )
   )
 
@@ -36,7 +36,7 @@ const useSelectedBlocksSelector = () =>
   useAtomValue<Block[]>(
     selectAtom(
       blocksAtom,
-      useCallback((blocks) => blocks.blocks.filter((v) => v.isSelected), [])
+      useCallback((blocks) => blocks.filter((v) => v.isSelected), [])
     )
   )
 
@@ -46,8 +46,8 @@ const useNextBlockSelector = (id: string) =>
       blocksAtom,
       useCallback(
         (blocks) => {
-          const index = blocks.blocks.findIndex((v) => v.id === id)
-          return blocks.blocks.find((v, i) => (index === blocks.blocks.length - 1 ? i === 0 : i === index + 1))
+          const index = blocks.findIndex((v) => v.id === id)
+          return blocks.find((v, i) => (index === blocks.length - 1 ? i === 0 : i === index + 1))
         },
         [id]
       )
@@ -58,7 +58,7 @@ const useEditingBlockSelector = () =>
   useAtomValue(
     selectAtom(
       blocksAtom,
-      useCallback((blocks) => blocks.blocks.find((v) => v.editing), [])
+      useCallback((blocks) => blocks.find((v) => v.editing), [])
     )
   )
 
@@ -67,7 +67,7 @@ const useEditingBlockIdSelector = () =>
     selectAtom(
       blocksAtom,
       useCallback((blocks) => {
-        const block = blocks.blocks.find((v) => v.editing) as Block
+        const block = blocks.find((v) => v.editing) as Block
         return block.id
       }, [])
     )
