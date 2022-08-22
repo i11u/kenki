@@ -1,5 +1,5 @@
-import { atom, atomFamily } from 'recoil'
-import { RecoilAtomKeys } from '../keys'
+import { atom } from 'jotai'
+import { atomFamily } from 'jotai/utils'
 import { BlockUtils } from '../../utils/block'
 
 export type Position = {
@@ -35,14 +35,8 @@ export type Blocks = {
  * TypeScript currently does not have a feature to export "locally", which may be enabled by:
  * https://github.com/microsoft/TypeScript/issues/41316
  * */
-export const blockAtom = atomFamily<Block, Position>({
-  key: RecoilAtomKeys.BLOCK,
-  default: (position) => BlockUtils.emptyBlock({ position }),
+export const blocksAtom = atom<Blocks>({
+  blocks: [BlockUtils.emptyBlock({ position: { row: 0, col: 0 } })],
 })
 
-export const blocksAtom = atom<Blocks>({
-  key: RecoilAtomKeys.BLOCKS,
-  default: {
-    blocks: [BlockUtils.emptyBlock({ position: { row: 0, col: 0 } })],
-  },
-})
+export const blockAtom = atomFamily((id: string) => atom((get) => get(blocksAtom).blocks.find((v) => v.id === id)))

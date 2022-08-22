@@ -1,29 +1,40 @@
-import { useRecoilCallback } from 'recoil'
+import { useAtomCallback } from 'jotai/utils'
+import { useCallback } from 'react'
 import { Block, blocksAtom, Position } from './atom'
 
 type BlocksActions = {
-  useAddBlock: () => (block: Block) => void
-  useChangeBlockPosition: () => (blockId: string, position: Position) => void
-  useChangeBlockSize: () => (blockId: string, width: number, height: number) => void
-  useChangeBlockStatus: () => (blockId: string, isEmpty: boolean, isSelected: boolean, editing: boolean) => void
+  useAddBlock: () => ({ addingBlock }: { addingBlock: Block }) => void
+  useChangeBlockPosition: () => ({ blockId, position }: { blockId: string; position: Position }) => void
+  useChangeBlockSize: () => ({ blockId, width, height }: { blockId: string; width: number; height: number }) => void
+  useChangeBlockStatus: () => ({
+    blockId,
+    isEmpty,
+    isSelected,
+    editing,
+  }: {
+    blockId: string
+    isEmpty: boolean
+    isSelected: boolean
+    editing: boolean
+  }) => void
 }
 
 export const blocksActions: BlocksActions = {
   useAddBlock: () =>
-    useRecoilCallback(
-      ({ set }) =>
-        (block: Block) => {
+    useAtomCallback(
+      useCallback(
+        (get, set, { addingBlock }) =>
           set(blocksAtom, (prev) => ({
             ...prev,
-            blocks: [...prev.blocks, block],
-          }))
-        },
-      []
+            blocks: [...prev.blocks, addingBlock],
+          })),
+        []
+      )
     ),
   useChangeBlockPosition: () =>
-    useRecoilCallback(
-      ({ set }) =>
-        (blockId: string, position: Position) => {
+    useAtomCallback(
+      useCallback(
+        (get, set, { blockId, position }) =>
           set(blocksAtom, (prev) => ({
             ...prev,
             blocks: prev.blocks.map((block) =>
@@ -34,14 +45,14 @@ export const blocksActions: BlocksActions = {
                   }
                 : block
             ),
-          }))
-        },
-      []
+          })),
+        []
+      )
     ),
   useChangeBlockSize: () =>
-    useRecoilCallback(
-      ({ set }) =>
-        (blockId: string, width: number, height: number) => {
+    useAtomCallback(
+      useCallback(
+        (get, set, { blockId, width, height }) =>
           set(blocksAtom, (prev) => ({
             ...prev,
             blocks: prev.blocks.map((block) =>
@@ -53,14 +64,14 @@ export const blocksActions: BlocksActions = {
                   }
                 : block
             ),
-          }))
-        },
-      []
+          })),
+        []
+      )
     ),
   useChangeBlockStatus: () =>
-    useRecoilCallback(
-      ({ set }) =>
-        (blockId, isEmpty, isSelected, editing) => {
+    useAtomCallback(
+      useCallback(
+        (get, set, { blockId, isEmpty, isSelected, editing }) =>
           set(blocksAtom, (prev) => ({
             ...prev,
             blocks: prev.blocks.map((block) =>
@@ -73,8 +84,8 @@ export const blocksActions: BlocksActions = {
                   }
                 : block
             ),
-          }))
-        },
-      []
+          })),
+        []
+      )
     ),
 }

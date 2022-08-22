@@ -14,15 +14,13 @@ const StyledHeaderConfig = styled.div`
   right: 1%;
 `
 
-function HeaderConfig() {
-  return (
-    <StyledHeaderConfig>
-      <Icon src={shareSvg} hovered="" clicked="" alt="Resize Button" style={{ position: 'relative' }} />
-      <Icon src={feedbackSvg} hovered="" clicked="" alt="Resize Button" style={{ position: 'relative' }} />
-      <Icon src={settingsSvg} hovered="" clicked="" alt="Resize Button" style={{ position: 'relative' }} />
-      <Icon src={guideSvg} hovered="" clicked="" alt="Resize Button" style={{ position: 'relative' }} />
-    </StyledHeaderConfig>
-  )
-}
+const HeaderConfig = () => (
+  <StyledHeaderConfig>
+    <Icon src={shareSvg} hovered="" clicked="" alt="Resize Button" style={{ position: 'relative' }} />
+    <Icon src={feedbackSvg} hovered="" clicked="" alt="Resize Button" style={{ position: 'relative' }} />
+    <Icon src={settingsSvg} hovered="" clicked="" alt="Resize Button" style={{ position: 'relative' }} />
+    <Icon src={guideSvg} hovered="" clicked="" alt="Resize Button" style={{ position: 'relative' }} />
+  </StyledHeaderConfig>
+)
 
 export default HeaderConfig

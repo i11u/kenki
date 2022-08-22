@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import styled, { Keyframes } from 'styled-components'
 import { useRecoilState } from 'recoil'
 import { PageUtils } from '../../utils/page'
-import Blocks from './blocks'
 import { blockSelectors } from '../../recoil-hooks/blocks/selector'
 import { blocksActions } from '../../recoil-hooks/blocks/action'
 import { PageConfig, pageConfigAtom } from '../../recoil-hooks/pageConfig/atom'
@@ -12,8 +11,9 @@ import useThrottleCallback from '../../hooks/useThrottleCallback'
 import Grid from './grid'
 import { editorConfigSelectors } from '../../recoil-hooks/editorConfig/selector'
 import useOnWheelPageEffect from '../../hooks/useOnWheelPageEffect'
+import Blocks from './blocks'
 
-function Page() {
+const Page = () => {
   const [pageConfig, setPageConfig] = useRecoilState(pageConfigAtom)
   const [previousPageConfig, setPreviousPageConfig] = useState<PageConfig>({ ...pageConfig })
   const id = blockSelectors.useEditingBlockId()

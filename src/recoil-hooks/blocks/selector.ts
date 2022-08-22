@@ -1,5 +1,6 @@
-import { selector, selectorFamily, useRecoilValue } from 'recoil'
-import { RecoilSelectorKeys } from '../keys'
+import { useAtomValue } from 'jotai'
+import { useCallback } from 'react'
+import { selectAtom } from 'jotai/utils'
 import { Block, blocksAtom } from './atom'
 
 /**
@@ -15,62 +16,68 @@ type BlockSelectors = {
   useNextBlock: (id: string) => Block | undefined
 }
 
-const blocksSelector = selector<Block[]>({
-  key: RecoilSelectorKeys.BLOCKS,
-  get: ({ get }) => get(blocksAtom).blocks,
-})
+const useBlocksSelector = () =>
+  useAtomValue<Block[]>(
+    selectAtom(
+      blocksAtom,
+      useCallback((blocks) => blocks.blocks, [])
+    )
+  )
 
-const selectedBlocksSelector = selector<Block[]>({
-  key: RecoilSelectorKeys.SELECTED_BLOCKS,
-  get: ({ get }) => {
-    const { blocks } = get(blocksAtom)
-    return blocks.filter((v) => v.isSelected)
-  },
-})
+const useBlockSelector = (id: string) =>
+  useAtomValue<Block | undefined>(
+    selectAtom(
+      blocksAtom,
+      useCallback((blocks) => blocks.blocks.find((v) => v.id === id), [id])
+    )
+  )
 
-const blockSelector = selectorFamily<Block | undefined, string>({
-  key: RecoilSelectorKeys.BLOCK_BY_ID,
-  get:
-    (id) =>
-    ({ get }) => {
-      const { blocks } = get(blocksAtom)
-      return blocks.find((v) => v.id === id)
-    },
-})
+const useSelectedBlocksSelector = () =>
+  useAtomValue<Block[]>(
+    selectAtom(
+      blocksAtom,
+      useCallback((blocks) => blocks.blocks.filter((v) => v.isSelected), [])
+    )
+  )
 
-const nextBlockSelector = selectorFamily<Block | undefined, string>({
-  key: RecoilSelectorKeys.NEXT_BLOCK,
-  get:
-    (id) =>
-    ({ get }) => {
-      const { blocks } = get(blocksAtom)
-      const index = blocks.findIndex((v) => v.id === id)
-      return blocks.find((v, i) => (index === blocks.length - 1 ? i === 0 : i === index + 1))
-    },
-})
+const useNextBlockSelector = (id: string) =>
+  useAtomValue(
+    selectAtom(
+      blocksAtom,
+      useCallback(
+        (blocks) => {
+          const index = blocks.blocks.findIndex((v) => v.id === id)
+          return blocks.blocks.find((v, i) => (index === blocks.blocks.length - 1 ? i === 0 : i === index + 1))
+        },
+        [id]
+      )
+    )
+  )
 
-const editingBlockSelector = selector<Block | undefined>({
-  key: RecoilSelectorKeys.EDITING_BLOCK as string,
-  get: ({ get }) => {
-    const { blocks } = get(blocksAtom)
-    return blocks.find((v) => v.editing)
-  },
-})
+const useEditingBlockSelector = () =>
+  useAtomValue(
+    selectAtom(
+      blocksAtom,
+      useCallback((blocks) => blocks.blocks.find((v) => v.editing), [])
+    )
+  )
 
-const editingBlockIdSelector = selector<string>({
-  key: RecoilSelectorKeys.EDITING_BLOCK_ID as string,
-  get: ({ get }) => {
-    const { blocks } = get(blocksAtom)
-    const block = blocks.find((v) => v.editing) as Block
-    return block.id
-  },
-})
+const useEditingBlockIdSelector = () =>
+  useAtomValue(
+    selectAtom(
+      blocksAtom,
+      useCallback((blocks) => {
+        const block = blocks.blocks.find((v) => v.editing) as Block
+        return block.id
+      }, [])
+    )
+  )
 
 export const blockSelectors: BlockSelectors = {
-  useBlocks: () => useRecoilValue(blocksSelector),
-  useBlockById: (id: string) => useRecoilValue(blockSelector(id)),
-  useSelectedBlocks: () => useRecoilValue(selectedBlocksSelector),
-  useEditingBlock: () => useRecoilValue(editingBlockSelector),
-  useEditingBlockId: () => useRecoilValue(editingBlockIdSelector),
-  useNextBlock: (id: string) => useRecoilValue(nextBlockSelector(id)),
+  useBlocks: useBlocksSelector,
+  useBlockById: useBlockSelector,
+  useSelectedBlocks: useSelectedBlocksSelector,
+  useNextBlock: useNextBlockSelector,
+  useEditingBlock: useEditingBlockSelector,
+  useEditingBlockId: useEditingBlockIdSelector,
 }

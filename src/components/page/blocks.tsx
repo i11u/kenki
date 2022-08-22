@@ -1,17 +1,17 @@
-import React from 'react'
+import React, { memo } from 'react'
 import BlockTSX from './block'
 import { blockSelectors } from '../../recoil-hooks/blocks/selector'
 
-function Blocks() {
+const Blocks = memo(() => {
   const blocks = blockSelectors.useBlocks()
 
   return (
-    <>
+    <div>
       {blocks.map((block) => (
-        <BlockTSX id={block.id} key={block.id} />
+        <BlockTSX key={block.id} id={block.id} />
       ))}
-    </>
+    </div>
   )
-}
+})
 
 export default Blocks

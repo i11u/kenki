@@ -93,26 +93,36 @@ export class PageUtils {
     e: React.MouseEvent<HTMLDivElement>
     gridNum: { rowNum: number; colNum: number }
     id: string
-    changeBlockStatus: (blockId: string, isEmpty: boolean, isSelected: boolean, editing: boolean) => void
-    changeBlockPosition: (id: string, position: Position) => void
-    addBlock: (block: Block) => void
+    changeBlockStatus: ({
+      blockId,
+      isEmpty,
+      isSelected,
+      editing,
+    }: {
+      blockId: string
+      isEmpty: boolean
+      isSelected: boolean
+      editing: boolean
+    }) => void
+    changeBlockPosition: ({ blockId, position }: { blockId: string; position: Position }) => void
+    addBlock: ({ addingBlock }: { addingBlock: Block }) => void
   }) => {
     const blockDiv = document.getElementById(`block-${id}`) as HTMLDivElement
-    const { row, col } = this.getPositionFromMouseDownEvent(e, gridNum)
+    const { row, col } = PageUtils.getPositionFromMouseDownEvent(e, gridNum)
 
     if (blockDiv.textContent === '') {
-      changeBlockPosition(id, { row, col })
+      changeBlockPosition({ blockId: id, position: { row, col } })
       setTimeout(() => {
         blockDiv.focus()
       }, 0)
       return
     }
 
-    changeBlockStatus(id, false, false, false)
-    addBlock(BlockUtils.emptyBlock({ position: { row, col } }))
+    changeBlockStatus({ blockId: id, isEmpty: false, isSelected: false, editing: false })
+    addBlock({ addingBlock: BlockUtils.emptyBlock({ position: { row, col } }) })
   }
 
-  private static getPositionFromMouseDownEvent = (
+  public static getPositionFromMouseDownEvent = (
     e: React.MouseEvent<HTMLDivElement>,
     gridNum: {
       rowNum: number

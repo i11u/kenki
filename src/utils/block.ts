@@ -51,17 +51,17 @@ export class BlockUtils {
   }: {
     e: React.FormEvent<HTMLDivElement>
     id: string
-    changeBlockSize: (blockId: string, width: number, height: number) => void
+    changeBlockSize: ({ blockId, width, height }: { blockId: string; width: number; height: number }) => void
     cellLength: number
   }) => {
     const block = document.getElementById(`block-${id}`) as HTMLDivElement
     return block.textContent === '' && block.childElementCount === 0
-      ? changeBlockSize(id, 1, 1)
-      : changeBlockSize(
-          id,
-          Math.ceil((block.clientWidth - 1) / cellLength),
-          Math.ceil((block.clientHeight - 1) / cellLength)
-        )
+      ? changeBlockSize({ blockId: id, width: 1, height: 1 })
+      : changeBlockSize({
+          blockId: id,
+          width: Math.ceil((block.clientWidth - 1) / cellLength),
+          height: Math.ceil((block.clientHeight - 1) / cellLength),
+        })
   }
 
   /**
@@ -84,8 +84,18 @@ export class BlockUtils {
     id: string
     block: Block
     nextBlock: Block | undefined
-    changeBlockPosition: (blockId: string, position: Position) => void
-    changeBlockStatus: (blockId: string, isEmpty: boolean, isSelected: boolean, editing: boolean) => void
+    changeBlockPosition: ({ blockId, position }: { blockId: string; position: Position }) => void
+    changeBlockStatus: ({
+      blockId,
+      isEmpty,
+      isSelected,
+      editing,
+    }: {
+      blockId: string
+      isEmpty: boolean
+      isSelected: boolean
+      editing: boolean
+    }) => void
     setInputValue: (str: string) => void
     blockDOM: HTMLDivElement
     rowNum: number
@@ -108,36 +118,41 @@ export class BlockUtils {
       switch (key) {
         case 9: // Tab
           e.preventDefault()
-          changeBlockStatus(id, block.isEmpty, false, false)
+          changeBlockStatus({ blockId: id, isEmpty: block.isEmpty, isSelected: false, editing: false })
           if (nextBlock) {
-            changeBlockStatus(nextBlock.id, nextBlock.isEmpty, true, true)
+            changeBlockStatus({
+              blockId: nextBlock.id,
+              isEmpty: nextBlock.isEmpty,
+              isSelected: true,
+              editing: true,
+            })
           }
           break
         case 37: // ArrowLeft
           e.preventDefault()
           if (col > 0) {
-            changeBlockPosition(id, { row, col: col - 1 })
+            changeBlockPosition({ blockId: id, position: { row, col: col - 1 } })
           }
           break
         case 38: // ArrowUp
           e.preventDefault()
 
           if (row > 0) {
-            changeBlockPosition(id, { row: row - 1, col })
+            changeBlockPosition({ blockId: id, position: { row: row - 1, col } })
           }
           break
         case 39: // ArrowRight
           e.preventDefault()
 
           if (col < colNum - 1) {
-            changeBlockPosition(id, { row, col: col + 1 })
+            changeBlockPosition({ blockId: id, position: { row, col: col + 1 } })
           }
           break
         case 40: // ArrowDown
           e.preventDefault()
 
           if (row < rowNum - 1) {
-            changeBlockPosition(id, { row: row + 1, col })
+            changeBlockPosition({ blockId: id, position: { row: row + 1, col } })
           }
           break
         default:
@@ -151,22 +166,22 @@ export class BlockUtils {
     switch (key) {
       case 37: // ArrowLeft
         if (col > 0) {
-          changeBlockPosition(id, { row, col: col - 1 })
+          changeBlockPosition({ blockId: id, position: { row, col: col - 1 } })
         }
         break
       case 38: // ArrowUp
         if (row > 0) {
-          changeBlockPosition(id, { row: row - 1, col })
+          changeBlockPosition({ blockId: id, position: { row: row - 1, col } })
         }
         break
       case 39: // ArrowRight
         if (col < colNum - 1) {
-          changeBlockPosition(id, { row, col: col + 1 })
+          changeBlockPosition({ blockId: id, position: { row, col: col + 1 } })
         }
         break
       case 40: // ArrowDown
         if (row < rowNum - 1) {
-          changeBlockPosition(id, { row: row + 1, col })
+          changeBlockPosition({ blockId: id, position: { row: row + 1, col } })
         }
         break
       default:
@@ -184,8 +199,18 @@ export class BlockUtils {
   }: {
     e: React.KeyboardEvent<HTMLDivElement>
     block: Block
-    changeBlockStatus: (blockId: string, isEmpty: boolean, isSelected: boolean, editing: boolean) => void
-    addBlock: (block: Block) => void
+    changeBlockStatus: ({
+      blockId,
+      isEmpty,
+      isSelected,
+      editing,
+    }: {
+      blockId: string
+      isEmpty: boolean
+      isSelected: boolean
+      editing: boolean
+    }) => void
+    addBlock: ({ addingBlock }: { addingBlock: Block }) => void
     setInputValue: (str: string) => void
     rowNum: number
     colNum: number
@@ -199,7 +224,12 @@ export class BlockUtils {
     switch (key) {
       case 9:
         e.preventDefault()
-        changeBlockStatus(block.id, block.isEmpty, block.isSelected, false)
+        changeBlockStatus({
+          blockId: block.id,
+          isEmpty: block.isEmpty,
+          isSelected: block.isSelected,
+          editing: false,
+        })
         // eslint-disable-next-line no-case-declarations
         const nextPosition =
           col + block.width + 3 > colNum - 3
@@ -208,7 +238,7 @@ export class BlockUtils {
                 row,
                 col: col + block.width + 1,
               }
-        addBlock(BlockUtils.emptyBlock({ position: nextPosition }))
+        addBlock({ addingBlock: BlockUtils.emptyBlock({ position: nextPosition }) })
         break
       default:
     }
@@ -249,7 +279,17 @@ export class BlockUtils {
   }: {
     e: React.KeyboardEvent<HTMLDivElement>
     block: Block
-    changeBlockStatus: (blockId: string, isEmpty: boolean, isSelected: boolean, editing: boolean) => void
+    changeBlockStatus: ({
+      blockId,
+      isEmpty,
+      isSelected,
+      editing,
+    }: {
+      blockId: string
+      isEmpty: boolean
+      isSelected: boolean
+      editing: boolean
+    }) => void
   }) => {
     const key = e.keyCode || e.charCode
 
@@ -257,7 +297,12 @@ export class BlockUtils {
       switch (key) {
         case 16:
           if (this.isInterrupted) return
-          changeBlockStatus(block.id, block.isEmpty, true, block.editing)
+          changeBlockStatus({
+            blockId: block.id,
+            isEmpty: block.isEmpty,
+            isSelected: true,
+            editing: block.editing,
+          })
           break
         default:
       }
@@ -265,7 +310,7 @@ export class BlockUtils {
       switch (key) {
         case 16:
           if (this.isInterrupted) return
-          changeBlockStatus(block.id, block.isEmpty, false, true)
+          changeBlockStatus({ blockId: block.id, isEmpty: block.isEmpty, isSelected: false, editing: true })
           break
         default:
       }

@@ -1,12 +1,12 @@
 import styled from 'styled-components'
-import React, { useEffect, useRef } from 'react'
+import React, { memo, useEffect, useRef } from 'react'
 import { BlockUtils } from '../../utils/block'
-import { inputActions } from '../../recoil-hooks/input'
 import { blockSelectors } from '../../recoil-hooks/blocks/selector'
 import { blocksActions } from '../../recoil-hooks/blocks/action'
 import { pageConfigActions } from '../../recoil-hooks/pageConfig/action'
 import { pageConfigSelectors } from '../../recoil-hooks/pageConfig/selector'
 import { Block } from '../../recoil-hooks/blocks/atom'
+import { inputActions } from '../../recoil-hooks/input'
 
 const StyledBlockSelection = styled.div`
   position: absolute;
@@ -28,7 +28,7 @@ const StyledBlock = styled.div`
   font-family: '凸版文久ゴシック', serif;
 `
 
-function BlockTSX({ id }: { id: string }) {
+const BlockTSX = memo(({ id }: { id: string }) => {
   const block = blockSelectors.useBlockById(id) as Block
   const nextBlock = blockSelectors.useNextBlock(id)
   const changeBlockSize = blocksActions.useChangeBlockSize()
@@ -109,6 +109,6 @@ function BlockTSX({ id }: { id: string }) {
       </StyledBlockWrapper>
     </>
   )
-}
+})
 
 export default BlockTSX

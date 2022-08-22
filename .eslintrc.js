@@ -52,6 +52,7 @@ module.exports = {
     'no-shadow': 'off',
     '@typescript-eslint/no-shadow': 'error',
     'no-nested-ternary': 'off',
+    'react/function-component-definition': [2, { namedComponents: 'arrow-function' }],
   },
   settings: {
     'import/resolver': {

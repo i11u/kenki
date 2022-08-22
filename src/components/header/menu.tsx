@@ -3,7 +3,7 @@ import openMenuSvg from '../../assets/icons/open-menu.svg'
 import closeMenuSvg from '../../assets/icons/close-menu.svg'
 import { editorConfigActions } from '../../recoil-hooks/editorConfig/action'
 
-function Menu() {
+const Menu = () => {
   const toggleSidebar = editorConfigActions.useToggleSidebar()
 
   return (

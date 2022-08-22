@@ -13,9 +13,9 @@ type Props = {
   onClick?: () => void
 }
 
-function Icon({ src, hovered, clicked, alt, style, onClick }: Props) {
-  return <StyledIcon src={src} alt={alt} style={style} onClick={onClick} />
-}
+const Icon = ({ src, hovered, clicked, alt, style, onClick }: Props) => (
+  <StyledIcon src={src} alt={alt} style={style} onClick={onClick} />
+)
 
 const StyledIcon = styled.img`
   position: absolute;
