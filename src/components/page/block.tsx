@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import React, { memo, useEffect, useRef } from 'react'
+import { PrimitiveAtom, useAtomValue } from 'jotai'
 import { BlockUtils } from '../../utils/block'
 import { blockSelectors } from '../../recoil-hooks/blocks/selector'
 import { blocksActions } from '../../recoil-hooks/blocks/action'
@@ -28,8 +29,9 @@ const StyledBlock = styled.div`
   font-family: '凸版文久ゴシック', serif;
 `
 
-const BlockTSX = memo(({ id }: { id: string }) => {
-  const block = blockSelectors.useBlockById(id) as Block
+const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
+  const block = useAtomValue(blockAtom)
+  const { id } = block
   const nextBlock = blockSelectors.useNextBlock(id)
   const changeBlockSize = blocksActions.useChangeBlockSize()
   const changeBlockPosition = blocksActions.useChangeBlockPosition()

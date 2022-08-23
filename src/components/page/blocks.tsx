@@ -3,12 +3,13 @@ import BlockTSX from './block'
 import { blockSelectors } from '../../recoil-hooks/blocks/selector'
 
 const Blocks = memo(() => {
-  const blocks = blockSelectors.useBlocks()
+  const blocks = blockSelectors.useBlockAtoms()
 
   return (
     <div>
-      {blocks.map((block) => (
-        <BlockTSX key={block.id} id={block.id} />
+      {blocks.map((blockAtom, i) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <BlockTSX key={`block-${i}`} blockAtom={blockAtom} />
       ))}
     </div>
   )

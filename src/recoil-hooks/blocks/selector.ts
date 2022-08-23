@@ -1,14 +1,14 @@
-import { useAtomValue } from 'jotai'
+import { PrimitiveAtom, useAtomValue } from 'jotai'
 import { useCallback } from 'react'
 import { selectAtom } from 'jotai/utils'
-import { Block, blocksAtom } from './atom'
+import { Block, blockAtomsAtom, blocksAtom } from './atom'
 
 /**
  * You can fetch the current state of blocks
  * only via methods defined in BlocksSelectors.
  * */
 type BlockSelectors = {
-  useBlocks: () => Block[]
+  useBlockAtoms: () => PrimitiveAtom<Block>[]
   useBlockById: (id: string) => Block | undefined
   useSelectedBlocks: () => Block[]
   useEditingBlock: () => Block | undefined
@@ -16,15 +16,9 @@ type BlockSelectors = {
   useNextBlock: (id: string) => Block | undefined
 }
 
-const useBlocksSelector = () =>
-  useAtomValue<Block[]>(
-    selectAtom(
-      blocksAtom,
-      useCallback((blocks) => blocks, [])
-    )
-  )
+const useBlocksSelector = () => useAtomValue(blockAtomsAtom)
 
-const useBlockSelector = (id: string) =>
+export const useBlockSelector = (id: string) =>
   useAtomValue<Block | undefined>(
     selectAtom(
       blocksAtom,
@@ -74,7 +68,7 @@ const useEditingBlockIdSelector = () =>
   )
 
 export const blockSelectors: BlockSelectors = {
-  useBlocks: useBlocksSelector,
+  useBlockAtoms: useBlocksSelector,
   useBlockById: useBlockSelector,
   useSelectedBlocks: useSelectedBlocksSelector,
   useNextBlock: useNextBlockSelector,

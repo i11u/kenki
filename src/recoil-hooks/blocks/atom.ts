@@ -1,5 +1,5 @@
-import { atom } from 'jotai'
-import { atomFamily } from 'jotai/utils'
+import { atom, PrimitiveAtom } from 'jotai'
+import { splitAtom } from 'jotai/utils'
 import { BlockUtils } from '../../utils/block'
 
 export type Position = {
@@ -35,4 +35,7 @@ export type Blocks = Block[]
  * */
 export const blocksAtom = atom<Blocks>([BlockUtils.emptyBlock({ position: { row: 0, col: 0 } })])
 
-export const blockAtom = atomFamily((id: string) => atom((get) => get(blocksAtom).find((v) => v.id === id)))
+export const blockAtomsAtom = splitAtom(blocksAtom)
+
+export const blockByIdAtom = (id: string) =>
+  atom((get) => get(blockAtomsAtom).find((v) => get(v).id === id) as PrimitiveAtom<Block>)

@@ -1,6 +1,6 @@
 import { useAtomCallback } from 'jotai/utils'
 import { useCallback } from 'react'
-import { Block, blocksAtom, Position } from './atom'
+import { Block, blockAtomsAtom, blockByIdAtom, Position } from './atom'
 
 type BlocksActions = {
   useAddBlock: () => ({ addingBlock }: { addingBlock: Block }) => void
@@ -21,59 +21,43 @@ type BlocksActions = {
 
 export const blocksActions: BlocksActions = {
   useAddBlock: () =>
-    useAtomCallback(useCallback((get, set, { addingBlock }) => set(blocksAtom, (prev) => [...prev, addingBlock]), [])),
+    useAtomCallback(
+      useCallback((get, set, { addingBlock }) => set(blockAtomsAtom, { type: 'insert', value: addingBlock }), [])
+    ),
+
   useChangeBlockPosition: () =>
     useAtomCallback(
-      useCallback(
-        (get, set, { blockId, position }) =>
-          set(blocksAtom, (prev) =>
-            prev.map((block) =>
-              block.id === blockId
-                ? {
-                    ...block,
-                    position,
-                  }
-                : block
-            )
-          ),
-        []
-      )
+      useCallback((get, set, { blockId, position }) => {
+        const blockAtom = get(blockByIdAtom(blockId))
+        set(blockAtom, (prev: Block) => ({
+          ...prev,
+          position,
+        }))
+      }, [])
     ),
+
   useChangeBlockSize: () =>
     useAtomCallback(
-      useCallback(
-        (get, set, { blockId, width, height }) =>
-          set(blocksAtom, (prev) =>
-            prev.map((block) =>
-              block.id === blockId
-                ? {
-                    ...block,
-                    width,
-                    height,
-                  }
-                : block
-            )
-          ),
-        []
-      )
+      useCallback((get, set, { blockId, width, height }) => {
+        const blockAtom = get(blockByIdAtom(blockId))
+        set(blockAtom, (prev) => ({
+          ...prev,
+          width,
+          height,
+        }))
+      }, [])
     ),
   useChangeBlockStatus: () =>
     useAtomCallback(
-      useCallback(
-        (get, set, { blockId, isEmpty, isSelected, editing }) =>
-          set(blocksAtom, (prev) =>
-            prev.map((block) =>
-              block.id === blockId
-                ? {
-                    ...block,
-                    isEmpty,
-                    isSelected,
-                    editing,
-                  }
-                : block
-            )
-          ),
-        []
-      )
+      useCallback((get, set, { blockId, isEmpty, isSelected, editing }) => {
+        const blockAtom = get(blockByIdAtom(blockId))
+
+        set(blockAtom, (prev) => ({
+          ...prev,
+          isEmpty,
+          isSelected,
+          editing,
+        }))
+      }, [])
     ),
 }
