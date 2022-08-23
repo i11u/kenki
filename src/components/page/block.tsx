@@ -13,6 +13,7 @@ const StyledBlockSelection = styled.div`
   position: absolute;
   background-color: cornflowerblue;
   opacity: 0.3;
+  z-index: 3;
 `
 
 const StyledBlockWrapper = styled.div`
@@ -21,18 +22,24 @@ const StyledBlockWrapper = styled.div`
   flex-wrap: wrap;
   border-color: gray;
   border-width: 1px;
+  background-color: white;
+  z-index: 2;
 `
 
 const StyledBlock = styled.div`
   outline: none;
   white-space: nowrap;
   font-family: '凸版文久ゴシック', serif;
+  text-justify: inter-ideograph;
+  z-index: 1;
 `
 
 const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
   const block = useAtomValue(blockAtom)
-  const { id } = block
-  const nextBlock = blockSelectors.useNextBlock(id)
+  const nextBlock = {
+    id: blockSelectors.useNextBlockId(block.id),
+    isEmpty: blockSelectors.useNextBlockIsEmpty(block.id),
+  }
   const changeBlockSize = blocksActions.useChangeBlockSize()
   const changeBlockPosition = blocksActions.useChangeBlockPosition()
   const changeBlockStatus = blocksActions.useChangeBlockStatus()
@@ -64,13 +71,19 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
         }}
       />
       <StyledBlockWrapper
-        id={`block-${id}-wrapper`}
-        style={{ ...style, borderStyle: block.isSelected ? 'dotted' : block.editing ? 'solid' : 'dashed' }}
-        onClick={(e: React.MouseEvent<HTMLDivElement>) => BlockUtils.handleOnClick({ e, id, changeScale })}
+        id={`block-${block.id}-wrapper`}
+        style={{ ...style, borderStyle: block.isSelected ? 'dotted' : 'solid' }}
+        onClick={(e: React.MouseEvent<HTMLDivElement>) =>
+          BlockUtils.handleOnClick({
+            e,
+            id: block.id,
+            changeScale,
+          })
+        }
         onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) =>
           BlockUtils.handleOnKeyDownWrapper({
             e,
-            id,
+            id: block.id,
             block,
             nextBlock,
             changeBlockPosition,
@@ -83,13 +96,13 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
         }
       >
         <StyledBlock
-          id={`block-${id}`}
+          id={`block-${block.id}`}
           contentEditable
           ref={blockRef}
           onInput={(e: React.FormEvent<HTMLDivElement>) =>
             BlockUtils.handleOnInput({
               e,
-              id,
+              id: block.id,
               changeBlockSize,
               cellLength: (document.getElementById('page') as HTMLDivElement).clientWidth / gridNum.colNum,
             })

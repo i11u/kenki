@@ -13,7 +13,8 @@ type BlockSelectors = {
   useSelectedBlocks: () => Block[]
   useEditingBlock: () => Block | undefined
   useEditingBlockId: () => string
-  useNextBlock: (id: string) => Block | undefined
+  useNextBlockId: (blockId: string) => string
+  useNextBlockIsEmpty: (blockId: string) => boolean
 }
 
 const useBlocksSelector = () => useAtomValue(blockAtomsAtom)
@@ -31,20 +32,6 @@ const useSelectedBlocksSelector = () =>
     selectAtom(
       blocksAtom,
       useCallback((blocks) => blocks.filter((v) => v.isSelected), [])
-    )
-  )
-
-const useNextBlockSelector = (id: string) =>
-  useAtomValue(
-    selectAtom(
-      blocksAtom,
-      useCallback(
-        (blocks) => {
-          const index = blocks.findIndex((v) => v.id === id)
-          return blocks.find((v, i) => (index === blocks.length - 1 ? i === 0 : i === index + 1))
-        },
-        [id]
-      )
     )
   )
 
@@ -67,11 +54,42 @@ const useEditingBlockIdSelector = () =>
     )
   )
 
+const useNextBlockIdSelector = (blockId: string) =>
+  useAtomValue(
+    selectAtom(
+      blocksAtom,
+      useCallback(
+        (blocks) => {
+          const index = blocks.findIndex((v) => v.id === blockId)
+          const block = blocks.at(index === blocks.length - 1 ? 0 : index + 1) as Block
+          return block.id
+        },
+        [blockId]
+      )
+    )
+  )
+
+const useNextBlockIsEmptySelector = (blockId: string) =>
+  useAtomValue(
+    selectAtom(
+      blocksAtom,
+      useCallback(
+        (blocks) => {
+          const index = blocks.findIndex((v) => v.id === blockId)
+          const block = blocks.at(index === blocks.length - 1 ? 0 : index + 1) as Block
+          return block.isEmpty
+        },
+        [blockId]
+      )
+    )
+  )
+
 export const blockSelectors: BlockSelectors = {
   useBlockAtoms: useBlocksSelector,
   useBlockById: useBlockSelector,
   useSelectedBlocks: useSelectedBlocksSelector,
-  useNextBlock: useNextBlockSelector,
   useEditingBlock: useEditingBlockSelector,
   useEditingBlockId: useEditingBlockIdSelector,
+  useNextBlockId: useNextBlockIdSelector,
+  useNextBlockIsEmpty: useNextBlockIsEmptySelector,
 }

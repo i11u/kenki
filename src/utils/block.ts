@@ -83,7 +83,7 @@ export class BlockUtils {
     e: React.KeyboardEvent<HTMLDivElement>
     id: string
     block: Block
-    nextBlock: Block | undefined
+    nextBlock: { id: string; isEmpty: boolean }
     changeBlockPosition: ({ blockId, position }: { blockId: string; position: Position }) => void
     changeBlockStatus: ({
       blockId,
@@ -119,7 +119,7 @@ export class BlockUtils {
         case 9: // Tab
           e.preventDefault()
           changeBlockStatus({ blockId: id, isEmpty: block.isEmpty, isSelected: false, editing: false })
-          if (nextBlock) {
+          if (nextBlock.id !== id) {
             changeBlockStatus({
               blockId: nextBlock.id,
               isEmpty: nextBlock.isEmpty,
