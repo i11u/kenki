@@ -1,6 +1,6 @@
 # How Block works
 
-- Block is a minimal editable unit in GridNotes.
+- Block is a minimal editable unit in Kiji.
 - You can style texts in blocks and position blocks with key/mouse.
 
 ## For programmers

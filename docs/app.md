@@ -1,6 +1,6 @@
 # Base Concepts
 
-- GridNotes is an experimental notebook-like rich text editor with high key efficiency.
+- Kiji is an experimental notebook-like rich text editor with high key efficiency.
 - There are three modes in this app:
 
 1. You are on "Edit mode" by default. Here, you can edit contents in a [Block](block.md).
