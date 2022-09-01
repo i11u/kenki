@@ -1,5 +1,4 @@
-import { atom } from 'recoil'
-import { RecoilAtomKeys } from '../keys'
+import { atom } from 'jotai'
 
 export type FontFamily =
   | 'SF Mono'
@@ -17,6 +16,8 @@ export type HeaderConfig = { display: 'open' | 'closed' }
 
 export type SidebarConfig = { isOpen: boolean | undefined; position: 'left' | 'right' }
 
+export type Style = 'Plain' | 'Bold' | 'Italic' | 'Underline' | 'StrikeThrough'
+
 export type EditorConfig = {
   fontFamily: string
   headerConfig: HeaderConfig
@@ -29,11 +30,7 @@ export type EditorConfig = {
  * https://github.com/microsoft/TypeScript/issues/41316
  * */
 export const editorConfigAtom = atom<EditorConfig>({
-  key: RecoilAtomKeys.EDITOR,
-  default: {
-    fontFamily: '凸版文久ゴシック',
-    headerConfig: { display: 'open' },
-    sidebarConfig: { isOpen: undefined, position: 'left' },
-  },
+  fontFamily: '凸版文久ゴシック',
+  headerConfig: { display: 'open' },
+  sidebarConfig: { isOpen: undefined, position: 'left' },
 })
-export type Style = 'Plain' | 'Bold' | 'Italic' | 'Underline' | 'StrikeThrough'

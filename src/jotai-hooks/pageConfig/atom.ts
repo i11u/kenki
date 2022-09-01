@@ -1,7 +1,5 @@
-import { atom } from 'recoil'
+import { atom } from 'jotai'
 import { match } from 'ts-pattern'
-
-import { RecoilAtomKeys } from '../keys'
 
 export type AspectRatio = { width: number; height: number }
 
@@ -21,9 +19,6 @@ export type PageConfig = {
 }
 
 export const pageConfigAtom = atom<PageConfig>({
-  key: RecoilAtomKeys.PAGE,
-  default: {
-    aspectRatio: 'slide',
-    scale: 1,
-  },
+  aspectRatio: 'slide',
+  scale: 1,
 })

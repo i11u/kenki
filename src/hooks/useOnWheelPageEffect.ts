@@ -1,11 +1,10 @@
 import React, { RefObject, useEffect } from 'react'
-import { SetterOrUpdater } from 'recoil'
-import { PageConfig } from '../recoil-hooks/pageConfig/atom'
+import { PageConfig } from '../jotai-hooks/pageConfig/atom'
 
 const useOnWheelPageEffect = (
   pageRef: RefObject<HTMLDivElement>,
   setPreviousPageConfig: React.Dispatch<React.SetStateAction<PageConfig>>,
-  setPageConfig: SetterOrUpdater<PageConfig>,
+  setPageConfig: React.Dispatch<React.SetStateAction<PageConfig>>,
   throttle: (callback: () => void, time: number) => void
 ) => {
   useEffect(() => {

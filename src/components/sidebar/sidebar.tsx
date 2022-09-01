@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import React, { useRef } from 'react'
-import { editorConfigSelectors } from '../../recoil-hooks/editorConfig/selector'
-import { pageConfigSelectors } from '../../recoil-hooks/pageConfig/selector'
+import { editorConfigSelectors } from '../../jotai-hooks/editorConfig/selector'
+import { pageConfigSelectors } from '../../jotai-hooks/pageConfig/selector'
 import usePreventPinch from '../../hooks/usePreventPinch'
 import useIsFirst from '../../hooks/useIsFirst'
 import useOnResizeEffect from '../../hooks/useOnResizeEffect'
@@ -39,7 +39,7 @@ const StyledSidebar = styled.div`
 const Sidebar = React.memo(() => {
   const sidebarRef = useRef<HTMLDivElement>(null)
   usePreventPinch(sidebarRef)
-  const gridNum = pageConfigSelectors.useGridNumSelector()
+  const gridNum = pageConfigSelectors.useGridNum()
   useOnResizeEffect(gridNum.rowNum, sidebarRef)
 
   const sidebarIsOpen = editorConfigSelectors.useSidebarIsOpen()

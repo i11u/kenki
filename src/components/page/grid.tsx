@@ -1,13 +1,13 @@
 import styled from 'styled-components'
 import React from 'react'
-import { pageConfigSelectors } from '../../recoil-hooks/pageConfig/selector'
+import {pageConfigSelectors} from '../../jotai-hooks/pageConfig/selector'
 
 /*
  * GridJSX represents readonly grid pattern.
  * This component should not re-render when typing thus memoized.
  * */
 const Grid = React.memo(() => {
-  const gridNum = pageConfigSelectors.useGridNumSelector()
+  const gridNum = pageConfigSelectors.useGridNum()
 
   return (
     <>
@@ -26,7 +26,7 @@ const VerticalLine = styled.div<{ col: number; rowNum: number; colNum: number }>
   width: 1px;
   height: 100%;
   left: ${(props) => (100 / props.colNum) * props.col}%;
-  background-color: #e5e4e2;
+  background-color: #efefef;
   pointer-events: none;
 `
 
@@ -35,7 +35,7 @@ const HorizontalLine = styled.div<{ row: number; rowNum: number; colNum: number 
   width: 100%;
   height: 1px;
   top: ${(props) => (100 / props.rowNum) * props.row}%;
-  background-color: #e5e4e2;
+  background-color: #efefef;
   pointer-events: none;
 `
 

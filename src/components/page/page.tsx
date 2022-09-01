@@ -1,26 +1,28 @@
 import { useEffect, useRef, useState } from 'react'
 import styled, { Keyframes } from 'styled-components'
-import { useRecoilState } from 'recoil'
+import { useAtom } from 'jotai'
 import { PageUtils } from '../../utils/page'
-import { blockSelectors } from '../../recoil-hooks/blocks/selector'
-import { blocksActions } from '../../recoil-hooks/blocks/action'
-import { PageConfig, pageConfigAtom } from '../../recoil-hooks/pageConfig/atom'
-import { pageConfigSelectors } from '../../recoil-hooks/pageConfig/selector'
+import { blockSelectors } from '../../jotai-hooks/blocks/selector'
+import { blocksActions } from '../../jotai-hooks/blocks/action'
+import { PageConfig, pageConfigAtom } from '../../jotai-hooks/pageConfig/atom'
+import { pageConfigSelectors } from '../../jotai-hooks/pageConfig/selector'
 import useOnResizeEffect from '../../hooks/useOnResizeEffect'
 import useThrottleCallback from '../../hooks/useThrottleCallback'
 import Grid from './grid'
-import { editorConfigSelectors } from '../../recoil-hooks/editorConfig/selector'
+import { editorConfigSelectors } from '../../jotai-hooks/editorConfig/selector'
 import useOnWheelPageEffect from '../../hooks/useOnWheelPageEffect'
 import Blocks from './blocks'
+import { modeSelectors } from '../../jotai-hooks/mode/selector'
 
 const Page = () => {
-  const [pageConfig, setPageConfig] = useRecoilState(pageConfigAtom)
+  const mode = modeSelectors.useCurrentMode()
+  const [pageConfig, setPageConfig] = useAtom(pageConfigAtom)
   const [previousPageConfig, setPreviousPageConfig] = useState<PageConfig>({ ...pageConfig })
   const id = blockSelectors.useEditingBlockId()
   const changeBlockStatus = blocksActions.useChangeBlockStatus()
   const changeBlockPosition = blocksActions.useChangeBlockPosition()
   const addBlock = blocksActions.useAddBlock()
-  const gridNum = pageConfigSelectors.useGridNumSelector()
+  const gridNum = pageConfigSelectors.useGridNum()
   const pageRef = useRef<HTMLDivElement>(null)
   const sidebarIsOpen = editorConfigSelectors.useSidebarIsOpen()
   useOnResizeEffect(gridNum.rowNum, pageRef)

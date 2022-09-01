@@ -1,8 +1,8 @@
 import styled from 'styled-components'
 import React, { ReactNode, useRef } from 'react'
-import { editorConfigSelectors } from '../../recoil-hooks/editorConfig/selector'
-import { aspectRatioValue } from '../../recoil-hooks/pageConfig/atom'
-import { pageConfigSelectors } from '../../recoil-hooks/pageConfig/selector'
+import { editorConfigSelectors } from '../../jotai-hooks/editorConfig/selector'
+import { aspectRatioValue } from '../../jotai-hooks/pageConfig/atom'
+import { pageConfigSelectors } from '../../jotai-hooks/pageConfig/selector'
 import usePreventPinch from '../../hooks/usePreventPinch'
 import { PageUtils } from '../../utils/page'
 import useIsFirst from '../../hooks/useIsFirst'
@@ -37,7 +37,7 @@ const StyledBackground = styled.div`
   background-color: white;
   position: absolute;
   top: 5%;
-  height: 95%;
+  height: 93%;
   overflow: auto;
   display: flex;
 `
@@ -47,7 +47,7 @@ const Background = React.memo(({ children }: Props) => {
   usePreventPinch(backgroundRef)
 
   const sidebarIsOpen = editorConfigSelectors.useSidebarIsOpen()
-  const pageConfig = pageConfigSelectors.usePageConfigSelector()
+  const pageConfig = pageConfigSelectors.usePageConfig()
   const aspectRatio = aspectRatioValue(pageConfig.aspectRatio)
 
   const style = useIsFirst()

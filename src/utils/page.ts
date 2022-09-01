@@ -1,8 +1,8 @@
 import React, { RefObject } from 'react'
 import { keyframes, Keyframes } from 'styled-components'
 import { BlockUtils } from './block'
-import { Block, Position } from '../recoil-hooks/blocks/atom'
-import { AspectRatio, AspectRatioType, aspectRatioValue, PageConfig } from '../recoil-hooks/pageConfig/atom'
+import { Block, Position } from '../jotai-hooks/blocks/atom'
+import { AspectRatio, AspectRatioType, aspectRatioValue, PageConfig } from '../jotai-hooks/pageConfig/atom'
 
 export class PageUtils {
   /*

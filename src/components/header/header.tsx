@@ -1,8 +1,12 @@
 import styled from 'styled-components'
 import React, { useRef } from 'react'
 import usePreventPinch from '../../hooks/usePreventPinch'
-import Menu from './menu'
-import HeaderConfig from './headerConfig'
+import Download from './download'
+import Trash from './trash'
+import Share from './share'
+import Feedback from './feedback'
+import Settings from './settings'
+import Help from './help'
 
 const Header = React.memo(() => {
   const headerRef = useRef<HTMLDivElement>(null)
@@ -10,8 +14,16 @@ const Header = React.memo(() => {
 
   return (
     <StyledHeader id="header" ref={headerRef}>
-      <Menu />
-      <HeaderConfig />
+      <StyledFlexLeft>
+        <Download />
+        <Trash />
+      </StyledFlexLeft>
+      <StyledFlexRight>
+        <Share />
+        <Feedback />
+        <Settings />
+        <Help />
+      </StyledFlexRight>
     </StyledHeader>
   )
 })
@@ -24,6 +36,24 @@ const StyledHeader = styled.div`
   box-shadow: 1px 0 10px darkgrey;
   overflow: hidden;
   z-index: 1;
+`
+
+const StyledFlexLeft = styled.div`
+  position: absolute;
+  height: 100%;
+  display: flex;
+  gap: 0 20px;
+  left: 1%;
+`
+
+const StyledFlexRight = styled.div`
+  position: absolute;
+  height: 90%;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 0 20px;
+  right: 1%;
 `
 
 export default Header

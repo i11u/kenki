@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
 import BlockTSX from './block'
-import { blockSelectors } from '../../recoil-hooks/blocks/selector'
+import { blockSelectors } from '../../jotai-hooks/blocks/selector'
 
 const Blocks = memo(() => {
   const blocks = blockSelectors.useBlockAtoms()

@@ -1,6 +1,6 @@
 import React from 'react'
 import { v4 } from 'uuid'
-import { Block, Position } from '../recoil-hooks/blocks/atom'
+import { Block, Position } from '../jotai-hooks/blocks/atom'
 
 export class BlockUtils {
   private static isInterrupted = false
@@ -14,7 +14,7 @@ export class BlockUtils {
     minHeight: `${100 / gridNum.rowNum - 1}%`,
   })
 
-  public static composeBlock = (
+  static composeBlock = (
     id: string,
     page: number,
     position: Position,
@@ -75,7 +75,6 @@ export class BlockUtils {
     nextBlock,
     changeBlockPosition,
     changeBlockStatus,
-    setInputValue,
     blockDOM,
     rowNum,
     colNum,
@@ -96,7 +95,6 @@ export class BlockUtils {
       isSelected: boolean
       editing: boolean
     }) => void
-    setInputValue: (str: string) => void
     blockDOM: HTMLDivElement
     rowNum: number
     colNum: number
@@ -113,8 +111,6 @@ export class BlockUtils {
     }
 
     if (block.isSelected) {
-      setInputValue(e.key)
-
       switch (key) {
         case 9: // Tab
           e.preventDefault()
@@ -193,7 +189,6 @@ export class BlockUtils {
     block,
     changeBlockStatus,
     addBlock,
-    setInputValue,
     rowNum,
     colNum,
   }: {
@@ -211,15 +206,12 @@ export class BlockUtils {
       editing: boolean
     }) => void
     addBlock: ({ addingBlock }: { addingBlock: Block }) => void
-    setInputValue: (str: string) => void
     rowNum: number
     colNum: number
   }) => {
     if (block.isSelected) return
     const key = e.keyCode || e.charCode
     const { row, col } = block.position
-
-    setInputValue(e.key)
 
     switch (key) {
       case 9:

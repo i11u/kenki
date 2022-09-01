@@ -2,12 +2,12 @@ import styled from 'styled-components'
 import React, { memo, useEffect, useRef } from 'react'
 import { PrimitiveAtom, useAtomValue } from 'jotai'
 import { BlockUtils } from '../../utils/block'
-import { blockSelectors } from '../../recoil-hooks/blocks/selector'
-import { blocksActions } from '../../recoil-hooks/blocks/action'
-import { pageConfigActions } from '../../recoil-hooks/pageConfig/action'
-import { pageConfigSelectors } from '../../recoil-hooks/pageConfig/selector'
-import { Block } from '../../recoil-hooks/blocks/atom'
-import { inputActions } from '../../recoil-hooks/input'
+import { blockSelectors } from '../../jotai-hooks/blocks/selector'
+import { blocksActions } from '../../jotai-hooks/blocks/action'
+import { pageConfigActions } from '../../jotai-hooks/pageConfig/action'
+import { pageConfigSelectors } from '../../jotai-hooks/pageConfig/selector'
+import { Block } from '../../jotai-hooks/blocks/atom'
+import { modeSelectors } from '../../jotai-hooks/mode/selector'
 
 const StyledBlockSelection = styled.div`
   position: absolute;
@@ -22,7 +22,6 @@ const StyledBlockWrapper = styled.div`
   flex-wrap: wrap;
   border-color: gray;
   border-width: 1px;
-  background-color: white;
   z-index: 2;
 `
 
@@ -44,10 +43,10 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
   const changeBlockPosition = blocksActions.useChangeBlockPosition()
   const changeBlockStatus = blocksActions.useChangeBlockStatus()
   const addBlock = blocksActions.useAddBlock()
-  const setInputValue = inputActions.useSetInputValue()
   const blockRef = useRef<HTMLDivElement>(null)
-  const gridNum = pageConfigSelectors.useGridNumSelector()
+  const gridNum = pageConfigSelectors.useGridNum()
   const changeScale = pageConfigActions.useChangeScale()
+  const mode = modeSelectors.useCurrentMode()
 
   /*
    * When block.editing is true, then the contenteditable element automatically gets focused.
@@ -63,17 +62,17 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
       <StyledBlockSelection
         style={{
           ...style,
-          width: `calc(${style.width} + 1px)`,
-          height: `calc(${style.height} + 1px)`,
-          minWidth: `calc(${style.minWidth} + 1px)`,
-          minHeight: `calc(${style.minHeight} + 1px)`,
-          display: block.isSelected ? '' : 'none',
+          width: `calc(${style.width} + 2px)`,
+          height: `calc(${style.height} + 2px)`,
+          minWidth: `calc(${style.minWidth} + 2px)`,
+          minHeight: `calc(${style.minHeight} + px)`,
+          display: mode === 'SELECT' && block.isSelected ? '' : 'none',
         }}
       />
       <StyledBlockWrapper
         id={`block-${block.id}-wrapper`}
-        style={{ ...style, borderStyle: block.isSelected ? 'dotted' : 'solid' }}
-        onClick={(e: React.MouseEvent<HTMLDivElement>) =>
+        style={{ ...style, borderStyle: mode === 'SELECT' && block.isSelected ? 'dotted' : 'solid' }}
+        onDoubleClick={(e: React.MouseEvent<HTMLDivElement>) =>
           BlockUtils.handleOnClick({
             e,
             id: block.id,
@@ -88,7 +87,6 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
             nextBlock,
             changeBlockPosition,
             changeBlockStatus,
-            setInputValue,
             blockDOM: blockRef.current as HTMLDivElement,
             rowNum: gridNum.rowNum,
             colNum: gridNum.colNum,
@@ -113,7 +111,6 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
               block,
               changeBlockStatus,
               addBlock,
-              setInputValue,
               rowNum: gridNum.rowNum,
               colNum: gridNum.colNum,
             })

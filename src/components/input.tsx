@@ -1,7 +1,7 @@
 import styled from 'styled-components'
-import { inputSelectors } from '../recoil-hooks/input'
+import { inputSelectors } from '../jotai-hooks/input'
 
-function Input() {
+const Input = () => {
   const input = inputSelectors.useInputValue()
   return <StyledInputValue>{input}</StyledInputValue>
 }
