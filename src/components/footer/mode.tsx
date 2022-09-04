@@ -6,7 +6,7 @@ const Mode = () => {
   const currentMode = modeSelectors.useCurrentMode()
   const { backgroundColor, color } = match(currentMode)
     .with('NORMAL', () => ({
-      backgroundColor: '#efefef',
+      backgroundColor: '#edecea',
       color: 'black',
     }))
     .with('COMMAND', () => ({
@@ -38,6 +38,7 @@ const StyledFooter = styled.div`
   overflow: auto;
   display: flex;
   font-family: Monaco, serif;
+  border-top: 1px solid #a9a9a9;
 `
 
 export default Mode

@@ -6,7 +6,7 @@ import {pageConfigSelectors} from '../../jotai-hooks/pageConfig/selector'
  * GridJSX represents readonly grid pattern.
  * This component should not re-render when typing thus memoized.
  * */
-const Grid = React.memo(() => {
+const Grid = () => {
   const gridNum = pageConfigSelectors.useGridNum()
 
   return (
@@ -19,14 +19,14 @@ const Grid = React.memo(() => {
       ))}
     </>
   )
-})
+}
 
 const VerticalLine = styled.div<{ col: number; rowNum: number; colNum: number }>`
   position: absolute;
   width: 1px;
   height: 100%;
   left: ${(props) => (100 / props.colNum) * props.col}%;
-  background-color: #efefef;
+  background-color: #dbdbdb;
   pointer-events: none;
 `
 
@@ -35,8 +35,8 @@ const HorizontalLine = styled.div<{ row: number; rowNum: number; colNum: number 
   width: 100%;
   height: 1px;
   top: ${(props) => (100 / props.rowNum) * props.row}%;
-  background-color: #efefef;
+  background-color: #dbdbdb;
   pointer-events: none;
 `
 
-export default Grid
+export default React.memo(Grid)

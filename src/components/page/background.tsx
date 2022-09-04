@@ -34,7 +34,7 @@ const StyledBackground = styled.div`
 
   animation-duration: 0.5s;
   animation-fill-mode: forwards;
-  background-color: white;
+  background-color: #edecea;
   position: absolute;
   top: 5%;
   height: 93%;

@@ -71,7 +71,7 @@ const Page = () => {
 const StyledPage = styled.div<{ keyframes: Keyframes }>`
   animation: ${(props) => props.keyframes};
   min-width: 960px;
-  background-color: #ffffff;
+  background-color: #edecea;
   box-shadow: 5px 5px 10px darkgrey, -1px 0 10px darkgrey;
   position: absolute;
   width: 100%;

@@ -32,10 +32,11 @@ const StyledHeader = styled.div`
   width: 100%;
   position: fixed;
   height: 5%;
-  background-color: white;
-  box-shadow: 1px 0 10px darkgrey;
+  background-color: #edecea;
+  //box-shadow: 1px 0 10px darkgrey;
   overflow: hidden;
   z-index: 1;
+  border-bottom: 1px solid #a9a9a9;
 `
 
 const StyledFlexLeft = styled.div`
