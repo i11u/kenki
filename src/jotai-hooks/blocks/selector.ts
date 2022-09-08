@@ -12,7 +12,7 @@ type BlockSelectors = {
   useBlockById: (id: string) => Block | undefined
   useSelectedBlocks: () => Block[]
   useEditingBlock: () => Block | undefined
-  useEditingBlockId: () => string
+  useEditingBlockId: () => string | undefined
   useNextBlockId: (blockId: string) => string
   useNextBlockIsEmpty: (blockId: string) => boolean
 }
@@ -48,8 +48,8 @@ const useEditingBlockIdSelector = () =>
     selectAtom(
       blocksAtom,
       useCallback((blocks) => {
-        const block = blocks.find((v) => v.editing) as Block
-        return block.id
+        const block = blocks.find((v) => v.editing)
+        return block ? block.id : undefined
       }, [])
     )
   )

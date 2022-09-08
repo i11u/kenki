@@ -1,6 +1,5 @@
 import { atom, PrimitiveAtom } from 'jotai'
 import { splitAtom } from 'jotai/utils'
-import { BlockUtils } from '../../utils/block'
 
 export type Position = {
   row: number
@@ -33,7 +32,7 @@ export type Blocks = Block[]
  * TypeScript currently does not have a feature to export "locally", which may be enabled by:
  * https://github.com/microsoft/TypeScript/issues/41316
  * */
-export const blocksAtom = atom<Blocks>([BlockUtils.emptyBlock({ position: { row: 0, col: 0 } })])
+export const blocksAtom = atom<Blocks>([])
 
 export const blockAtomsAtom = splitAtom(blocksAtom)
 

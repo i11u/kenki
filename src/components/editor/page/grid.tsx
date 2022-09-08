@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import React from 'react'
-import {pageConfigSelectors} from '../../jotai-hooks/pageConfig/selector'
+import {pageConfigSelectors} from '../../../jotai-hooks/pageConfig/selector'
 
 /*
  * GridJSX represents readonly grid pattern.

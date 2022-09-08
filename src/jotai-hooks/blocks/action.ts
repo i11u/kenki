@@ -21,18 +21,31 @@ type BlocksActions = {
   }) => void
 }
 
-type Direction = 'left' | 'down' | 'up' | 'right'
+export type Direction = 'left' | 'down' | 'up' | 'right'
 
-export const useMoveBlock = (): (({ blockId, direction }: { blockId: string; direction: Direction }) => void) =>
+export const useCreateBlock = (): ((block: Block) => void) =>
   useAtomCallback(
-    useCallback((get, set, { blockId, direction }) => {
+    useCallback((get, set, addingBlock: Block) => set(blockAtomsAtom, { type: 'insert', value: addingBlock }), [])
+  )
+
+export const useMoveBlock = (): (({
+  blockId,
+  direction,
+  offset,
+}: {
+  blockId: string
+  direction: Direction
+  offset: number
+}) => void) =>
+  useAtomCallback(
+    useCallback((get, set, { blockId, direction, offset }) => {
       const blockAtom = get(blockByIdAtom(blockId))
       set(blockAtom, (prev: Block) => {
         const position = match<Direction, Position>(direction)
-          .with('left', () => ({ row: prev.position.row, col: prev.position.col - 1 }))
-          .with('down', () => ({ row: prev.position.row + 1, col: prev.position.col }))
-          .with('up', () => ({ row: prev.position.row - 1, col: prev.position.col }))
-          .with('right', () => ({ row: prev.position.row, col: prev.position.col + 1 }))
+          .with('left', () => ({ row: prev.position.row, col: prev.position.col - offset }))
+          .with('down', () => ({ row: prev.position.row + offset, col: prev.position.col }))
+          .with('up', () => ({ row: prev.position.row - offset, col: prev.position.col }))
+          .with('right', () => ({ row: prev.position.row, col: prev.position.col + offset }))
           .exhaustive()
         return {
           ...prev,

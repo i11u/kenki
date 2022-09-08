@@ -92,7 +92,7 @@ export class PageUtils {
   }: {
     e: React.MouseEvent<HTMLDivElement>
     gridNum: { rowNum: number; colNum: number }
-    id: string
+    id: string | undefined
     changeBlockStatus: ({
       blockId,
       isEmpty,
@@ -107,6 +107,7 @@ export class PageUtils {
     changeBlockPosition: ({ blockId, position }: { blockId: string; position: Position }) => void
     addBlock: ({ addingBlock }: { addingBlock: Block }) => void
   }) => {
+    if (id === undefined) return
     const blockDiv = document.getElementById(`block-${id}`) as HTMLDivElement
     const { row, col } = PageUtils.getPositionFromMouseDownEvent(e, gridNum)
 

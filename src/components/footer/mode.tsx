@@ -10,20 +10,20 @@ const Mode = () => {
       color: 'black',
     }))
     .with('COMMAND', () => ({
-      backgroundColor: '#000000',
-      color: 'white',
+      backgroundColor: '#edecea',
+      color: 'black',
     }))
     .with('EDIT', () => ({
-      backgroundColor: '#6e964b',
-      color: 'white',
+      backgroundColor: '#edecea',
+      color: 'black',
     }))
     .with('SELECT', () => ({
-      backgroundColor: '#326EA5',
-      color: 'white',
+      backgroundColor: '#edecea',
+      color: 'black',
     }))
     .with('MULTISELECT', () => ({
-      backgroundColor: '#0D4E8A',
-      color: 'white',
+      backgroundColor: '#edecea',
+      color: 'black',
     }))
     .exhaustive()
   return <StyledFooter style={{ backgroundColor, color }}>-- {currentMode} --</StyledFooter>
@@ -39,6 +39,7 @@ const StyledFooter = styled.div`
   display: flex;
   font-family: Monaco, serif;
   border-top: 1px solid #a9a9a9;
+  margin-top: -3px;
 `
 
 export default Mode

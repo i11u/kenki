@@ -1,13 +1,13 @@
 import styled from 'styled-components'
 import React, { memo, useEffect, useRef } from 'react'
 import { PrimitiveAtom, useAtomValue } from 'jotai'
-import { BlockUtils } from '../../utils/block'
-import { blockSelectors } from '../../jotai-hooks/blocks/selector'
-import { blocksActions } from '../../jotai-hooks/blocks/action'
-import { pageConfigActions } from '../../jotai-hooks/pageConfig/action'
-import { pageConfigSelectors } from '../../jotai-hooks/pageConfig/selector'
-import { Block } from '../../jotai-hooks/blocks/atom'
-import { modeSelectors } from '../../jotai-hooks/mode/selector'
+import { BlockUtils } from '../../../utils/block'
+import { blockSelectors } from '../../../jotai-hooks/blocks/selector'
+import { blocksActions } from '../../../jotai-hooks/blocks/action'
+import { pageConfigActions } from '../../../jotai-hooks/pageConfig/action'
+import { pageConfigSelectors } from '../../../jotai-hooks/pageConfig/selector'
+import { Block } from '../../../jotai-hooks/blocks/atom'
+import { modeSelectors } from '../../../jotai-hooks/mode/selector'
 
 const StyledBlockSelection = styled.div`
   position: absolute;
@@ -53,6 +53,7 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
    * */
   useEffect(() => {
     if (block.editing) setTimeout(() => blockRef.current?.focus(), 0)
+    if (!block.editing) setTimeout(() => blockRef.current?.blur(), 0)
   }, [block.editing])
 
   const style = BlockUtils.style(block, gridNum)

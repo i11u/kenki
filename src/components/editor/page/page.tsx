@@ -1,18 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
 import styled, { Keyframes } from 'styled-components'
 import { useAtom } from 'jotai'
-import { PageUtils } from '../../utils/page'
-import { blockSelectors } from '../../jotai-hooks/blocks/selector'
-import { blocksActions } from '../../jotai-hooks/blocks/action'
-import { PageConfig, pageConfigAtom } from '../../jotai-hooks/pageConfig/atom'
-import { pageConfigSelectors } from '../../jotai-hooks/pageConfig/selector'
-import useOnResizeEffect from '../../hooks/useOnResizeEffect'
-import useThrottleCallback from '../../hooks/useThrottleCallback'
+import { PageUtils } from '../../../utils/page'
+import { blockSelectors } from '../../../jotai-hooks/blocks/selector'
+import { blocksActions } from '../../../jotai-hooks/blocks/action'
+import { PageConfig, pageConfigAtom } from '../../../jotai-hooks/pageConfig/atom'
+import { pageConfigSelectors } from '../../../jotai-hooks/pageConfig/selector'
+import useOnResizeEffect from '../../../hooks/useOnResizeEffect'
+import useThrottleCallback from '../../../hooks/useThrottleCallback'
 import Grid from './grid'
-import { editorConfigSelectors } from '../../jotai-hooks/editorConfig/selector'
-import useOnWheelPageEffect from '../../hooks/useOnWheelPageEffect'
+import { editorConfigSelectors } from '../../../jotai-hooks/editorConfig/selector'
+import useOnWheelPageEffect from '../../../hooks/useOnWheelPageEffect'
 import Blocks from './blocks'
-import { modeSelectors } from '../../jotai-hooks/mode/selector'
+import { modeSelectors } from '../../../jotai-hooks/mode/selector'
+import CursorTSX from './cursor'
 
 const Page = () => {
   const mode = modeSelectors.useCurrentMode()
@@ -64,6 +65,7 @@ const Page = () => {
     >
       <Grid />
       <Blocks />
+      <CursorTSX />
     </StyledPage>
   )
 }
