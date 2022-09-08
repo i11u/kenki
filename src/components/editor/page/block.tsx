@@ -23,6 +23,7 @@ const StyledBlockWrapper = styled.div`
   border-color: gray;
   border-width: 1px;
   z-index: 2;
+  background-color: #edecea;
 `
 
 const StyledBlock = styled.div`
@@ -72,6 +73,7 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
       />
       <StyledBlockWrapper
         id={`block-${block.id}-wrapper`}
+        className="block"
         style={{ ...style, borderStyle: mode === 'SELECT' && block.isSelected ? 'dotted' : 'solid' }}
         onDoubleClick={(e: React.MouseEvent<HTMLDivElement>) =>
           BlockUtils.handleOnClick({

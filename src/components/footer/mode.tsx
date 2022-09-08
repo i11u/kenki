@@ -25,6 +25,10 @@ const Mode = () => {
       backgroundColor: '#edecea',
       color: 'black',
     }))
+    .with('BLOCKHINT', () => ({
+      backgroundColor: '#edecea',
+      color: 'black',
+    }))
     .exhaustive()
   return <StyledFooter style={{ backgroundColor, color }}>-- {currentMode} --</StyledFooter>
 }
