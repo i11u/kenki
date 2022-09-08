@@ -23,7 +23,8 @@ const StyledBlockWrapper = styled.div`
   border-color: gray;
   border-width: 1px;
   z-index: 2;
-  background-color: #edecea;
+  background-color: #25292e;
+  color: white;
 `
 
 const StyledBlock = styled.div`

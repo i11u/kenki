@@ -6,16 +6,16 @@ const Mode = () => {
   const currentMode = modeSelectors.useCurrentMode()
   const { backgroundColor, color } = match(currentMode)
     .with('NORMAL', () => ({
-      backgroundColor: '#edecea',
-      color: 'black',
+      backgroundColor: '#25292e',
+      color: 'white',
     }))
     .with('COMMAND', () => ({
       backgroundColor: '#edecea',
-      color: 'black',
+      color: 'white',
     }))
     .with('EDIT', () => ({
-      backgroundColor: '#edecea',
-      color: 'black',
+      backgroundColor: '#25292e',
+      color: 'white',
     }))
     .with('SELECT', () => ({
       backgroundColor: '#edecea',
@@ -43,7 +43,6 @@ const StyledFooter = styled.div`
   display: flex;
   font-family: Monaco, serif;
   border-top: 1px solid #a9a9a9;
-  margin-top: -3px;
 `
 
 export default Mode

@@ -7,7 +7,7 @@ import More from './More'
 
 const StyledWrapper = styled.div`
   position: fixed;
-  background-color: #edecea;
+  background-color: #25292e;
   border-radius: 5%;
   height: 4%;
   right: 3%;

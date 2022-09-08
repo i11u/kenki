@@ -32,7 +32,7 @@ const StyledHeader = styled.div`
   width: 100%;
   position: fixed;
   height: 5%;
-  background-color: #edecea;
+  background-color: #25292e;
   //box-shadow: 1px 0 10px darkgrey;
   overflow: hidden;
   z-index: 1;
