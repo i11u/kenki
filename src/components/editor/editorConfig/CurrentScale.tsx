@@ -8,10 +8,10 @@ const Scale = () => {
 }
 
 const StyledText = styled.div`
-  color: #767171;
+  color: #ffffff;
   transform: translateY(25%);
   font-weight: bold;
-  font-family: 'Monaco', serif;
+  font-family: 'Monaco', sans-serif;
   font-size: 90%;
 `
 

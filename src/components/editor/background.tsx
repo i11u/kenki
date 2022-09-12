@@ -37,7 +37,7 @@ const StyledBackground = styled.div`
   background-color: #25292e;
   position: absolute;
   top: 5%;
-  height: 93%;
+  height: 92.5%;
   overflow: auto;
   display: flex;
 `

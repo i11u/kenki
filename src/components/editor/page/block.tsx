@@ -30,7 +30,7 @@ const StyledBlockWrapper = styled.div`
 const StyledBlock = styled.div`
   outline: none;
   white-space: nowrap;
-  font-family: '凸版文久ゴシック', serif;
+  font-family: '凸版文久ゴシック', sans-serif;
   text-justify: inter-ideograph;
   z-index: 1;
 `
@@ -54,9 +54,9 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
    * When block.editing is true, then the contenteditable element automatically gets focused.
    * */
   useEffect(() => {
-    if (block.editing) setTimeout(() => blockRef.current?.focus(), 0)
+    if (block.editing || mode === 'EDIT') setTimeout(() => blockRef.current?.focus(), 0)
     if (!block.editing) setTimeout(() => blockRef.current?.blur(), 0)
-  }, [block.editing])
+  }, [block.editing, mode])
 
   const style = BlockUtils.style(block, gridNum)
 
@@ -68,13 +68,13 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
           width: `calc(${style.width} + 2px)`,
           height: `calc(${style.height} + 2px)`,
           minWidth: `calc(${style.minWidth} + 2px)`,
-          minHeight: `calc(${style.minHeight} + px)`,
+          minHeight: `calc(${style.minHeight} + 2px)`,
           display: mode === 'SELECT' && block.isSelected ? '' : 'none',
         }}
       />
       <StyledBlockWrapper
         id={`block-${block.id}-wrapper`}
-        className="block"
+        className="block-wrapper"
         style={{ ...style, borderStyle: mode === 'SELECT' && block.isSelected ? 'dotted' : 'solid' }}
         onDoubleClick={(e: React.MouseEvent<HTMLDivElement>) =>
           BlockUtils.handleOnClick({
@@ -99,6 +99,7 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
       >
         <StyledBlock
           id={`block-${block.id}`}
+          className="block"
           contentEditable
           ref={blockRef}
           onInput={(e: React.FormEvent<HTMLDivElement>) =>

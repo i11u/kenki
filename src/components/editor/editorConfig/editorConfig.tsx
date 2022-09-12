@@ -7,12 +7,12 @@ import More from './More'
 
 const StyledWrapper = styled.div`
   position: fixed;
-  background-color: #25292e;
+  background-color: #363c44;
   border-radius: 5%;
   height: 4%;
   right: 3%;
   bottom: 5%;
-  box-shadow: 3px 3px 5px darkgrey, -1px 0 5px darkgrey;
+  box-shadow: 3px 3px 5px #25292e, -1px 0 5px #25292e;
   padding: 0 1%;
 `
 
