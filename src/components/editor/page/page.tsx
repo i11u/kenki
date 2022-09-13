@@ -13,6 +13,7 @@ import { editorConfigSelectors } from '../../../jotai-hooks/editorConfig/selecto
 import useOnWheelPageEffect from '../../../hooks/useOnWheelPageEffect'
 import Blocks from './blocks'
 import CursorTSX from './cursor'
+import Relations from './relations'
 
 const Page = () => {
   const [pageConfig, setPageConfig] = useAtom(pageConfigAtom)
@@ -63,6 +64,7 @@ const Page = () => {
     >
       <Grid />
       <Blocks />
+      <Relations />
       <CursorTSX />
     </StyledPage>
   )

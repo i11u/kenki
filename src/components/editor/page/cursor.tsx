@@ -23,7 +23,7 @@ const CursorTSX = () => {
     minHeight: `calc(${100 / gridNum.rowNum}% - 1px)`,
   }
 
-  return mode === 'EDIT' || mode === 'SELECT' ? null : <StyledCursor id="cursor" style={style} />
+  return mode === 'EDIT' || mode === 'SELECT' || mode === 'INSERT' ? null : <StyledCursor id="cursor" style={style} />
 }
 
 export default CursorTSX

@@ -54,8 +54,11 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
    * When block.editing is true, then the contenteditable element automatically gets focused.
    * */
   useEffect(() => {
-    if (block.editing || mode === 'EDIT') setTimeout(() => blockRef.current?.focus(), 0)
-    if (!block.editing) setTimeout(() => blockRef.current?.blur(), 0)
+    if (block.editing) {
+      setTimeout(() => blockRef.current?.focus(), 0)
+    } else {
+      setTimeout(() => blockRef.current?.blur(), 0)
+    }
   }, [block.editing, mode])
 
   const style = BlockUtils.style(block, gridNum)
@@ -69,7 +72,7 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
           height: `calc(${style.height} + 2px)`,
           minWidth: `calc(${style.minWidth} + 2px)`,
           minHeight: `calc(${style.minHeight} + 2px)`,
-          display: mode === 'SELECT' && block.isSelected ? '' : 'none',
+          display: block.isSelected ? '' : 'none',
         }}
       />
       <StyledBlockWrapper
@@ -101,6 +104,7 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
           id={`block-${block.id}`}
           className="block"
           contentEditable
+          spellCheck={false}
           ref={blockRef}
           onInput={(e: React.FormEvent<HTMLDivElement>) =>
             BlockUtils.handleOnInput({

@@ -2,17 +2,17 @@ import React from 'react'
 import { match } from 'ts-pattern'
 import styled from 'styled-components'
 import Icon from '../common/icon'
-import normalInwardLabel from '../../assets/icons/normal-inward-label.svg'
-import normalOutwardLabels from '../../assets/icons/normal-outward-labels.svg'
-import thickOutwardLabels from '../../assets/icons/thick-outward-labels.svg'
+import normalArrowInward from '../../assets/icons/normal-arrow-inward.svg'
+import normalArrowOutward from '../../assets/icons/normal-arrow-outward.svg'
+import thickArrowOutward from '../../assets/icons/thick-arrow-outward.svg'
 import { ContentData } from './sidebar'
 
 const Content = ({ buffer, content, isSelected }: { buffer: string; content: ContentData; isSelected: boolean }) => {
   const { key, description } = content
   const svg = match(key)
-    .with('normal-inward-label', () => normalInwardLabel)
-    .with('normal-outward-labels', () => normalOutwardLabels)
-    .with('thick-outward-labels', () => thickOutwardLabels)
+    .with('normal-arrow-inward', () => normalArrowInward)
+    .with('normal-arrow-outward', () => normalArrowOutward)
+    .with('thick-arrow-outward', () => thickArrowOutward)
     .otherwise(() => '')
 
   const arr = description.split(buffer)
@@ -22,7 +22,13 @@ const Content = ({ buffer, content, isSelected }: { buffer: string; content: Con
       <Icon
         src={svg}
         alt="arrow svg"
-        style={{ position: 'relative', width: '35%', height: 'fit-content', marginLeft: '5%' }}
+        style={{
+          position: 'relative',
+          width: '30%',
+          height: 'fit-content',
+          marginTop: '-16px',
+          marginLeft: '10%',
+        }}
       />
       <StyledText>
         {arr.map((str, index) => {

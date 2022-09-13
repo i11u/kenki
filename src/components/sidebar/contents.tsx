@@ -15,7 +15,8 @@ const Contents = ({
   <StyledFlex style={{ width: `${window.innerWidth * 0.2}px` }}>
     {matchingContents.map((content, index) => (
       <Content
-        key={`content-${content.key}`}
+        // eslint-disable-next-line react/no-array-index-key
+        key={`content-${index}`}
         buffer={buffer}
         content={content}
         isSelected={index === selectedContentIndex}

@@ -53,7 +53,7 @@ const App = () => {
       console.log(buffer)
       return (
         match(mode)
-          .with('NORMAL', () =>
+          .with('CURSOR', () =>
             match(buffer)
               .with(':', () => {
                 e.preventDefault()
@@ -79,15 +79,6 @@ const App = () => {
                 if (e.ctrlKey) {
                   createBlock(BlockUtils.emptyBlock({ position: cursorPosition }))
                   changeMode('EDIT')
-                  buffer = ''
-                }
-                e.preventDefault()
-                buffer = ''
-              })
-              .with('r', () => {
-                if (e.ctrlKey) {
-                  changeMode('INSERT')
-                  toggleSidebar()
                   buffer = ''
                 }
                 e.preventDefault()
@@ -196,7 +187,7 @@ const App = () => {
             match(buffer)
               .with('Escape', () => {
                 toggleSidebar()
-                changeMode('NORMAL')
+                changeMode('CURSOR')
                 buffer = ''
               })
               .with('Enter', () => {
@@ -210,7 +201,7 @@ const App = () => {
           .with('COMMAND', () =>
             match(buffer)
               .with('Escape', () => {
-                changeMode('NORMAL')
+                changeMode('CURSOR')
                 buffer = ''
               })
               //  In COMMAND mode, keystrokes are handled by listeners defined in each component.
@@ -228,13 +219,25 @@ const App = () => {
                     isSelected: false,
                     editing: false,
                   })
-                  changeMode('NORMAL')
+                  changeMode('CURSOR')
                   moveCursorByPosition({
                     row: editingBlock.position.row + editingBlock.height - 1,
                     col: editingBlock.position.col + editingBlock.width - 1,
                   })
                   buffer = ''
                 }
+              })
+              .with('v', () => {
+                if (e.ctrlKey) {
+                  changeBlockStatus({
+                    blockId: editingBlockId as string,
+                    isEmpty: false,
+                    isSelected: true,
+                    editing: false,
+                  })
+                  changeMode('SELECT')
+                }
+                buffer = ''
               })
               //  In EDIT mode, keystrokes are handled by listeners defined in each component.
               .otherwise(() => {
@@ -245,14 +248,26 @@ const App = () => {
             match(buffer)
               .with('Escape', () => {
                 const selectedBlock = selectedBlocks[0]
+                changeBlockStatus({
+                  blockId: selectedBlocks[0].id,
+                  isEmpty: false,
+                  isSelected: false,
+                  editing: false,
+                })
                 moveCursorByPosition({
                   row: selectedBlock.position.row + selectedBlock.height - 1,
                   col: selectedBlock.position.col + selectedBlock.width - 1,
                 })
-                changeMode('NORMAL')
+                changeMode('CURSOR')
                 buffer = ''
               })
               .with('i', () => {
+                changeBlockStatus({
+                  blockId: selectedBlocks[0].id,
+                  isEmpty: false,
+                  isSelected: false,
+                  editing: true,
+                })
                 changeMode('EDIT')
                 buffer = ''
               })
@@ -271,6 +286,15 @@ const App = () => {
               })
               .with('l', () => {
                 moveBlock({ blockId: selectedBlocks[0].id, direction: 'right', offset: 1 })
+                buffer = ''
+              })
+              .with('r', () => {
+                if (e.ctrlKey) {
+                  changeMode('INSERT')
+                  toggleSidebar()
+                  buffer = ''
+                }
+                e.preventDefault()
                 buffer = ''
               })
               .otherwise(() => {
@@ -338,7 +362,7 @@ const App = () => {
           //  MULTISELECT mode is disabled for now
           .with('MULTISELECT', () =>
             match(buffer)
-              .with('Escape', () => changeMode('NORMAL'))
+              .with('Escape', () => changeMode('CURSOR'))
               .with('v', () => changeMode('SELECT'))
               .otherwise(() => e.preventDefault())
           )
@@ -346,7 +370,7 @@ const App = () => {
             match(e.key)
               .with('Escape', () => {
                 DomUtils.removeElements(document.getElementsByClassName('hint'))
-                changeMode('NORMAL')
+                changeMode('CURSOR')
                 buffer = ''
               })
               .otherwise(() => {

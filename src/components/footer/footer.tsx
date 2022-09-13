@@ -31,7 +31,7 @@ export const commands: CommandData[] = [
 const Footer = () => {
   const mode = modeSelectors.useCurrentMode()
   const { backgroundColor, color } = match(mode)
-    .with('NORMAL', () => ({
+    .with('CURSOR', () => ({
       backgroundColor: '#25292e',
       color: 'white',
     }))

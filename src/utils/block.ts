@@ -205,7 +205,8 @@ export class BlockUtils {
       isSelected: boolean
       editing: boolean
     }) => void
-    addBlock: ({ addingBlock }: { addingBlock: Block }) => void
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    addBlock: ({ block }: { block: Block }) => void
     rowNum: number
     colNum: number
   }) => {
@@ -230,7 +231,7 @@ export class BlockUtils {
                 row,
                 col: col + block.width + 1,
               }
-        addBlock({ addingBlock: BlockUtils.emptyBlock({ position: nextPosition }) })
+        addBlock({ block: BlockUtils.emptyBlock({ position: nextPosition }) })
         break
       default:
     }
