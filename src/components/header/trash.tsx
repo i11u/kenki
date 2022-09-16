@@ -6,14 +6,7 @@ const Trash = () => {
   const toggleSidebar = editorConfigActions.useToggleSidebar()
 
   return (
-    <Icon
-      src={trashSvg}
-      hovered={trashSvg}
-      clicked={trashSvg}
-      alt="Menu Button"
-      style={{ position: 'relative' }}
-      onClick={toggleSidebar}
-    />
+    <Icon src={trashSvg} hovered={trashSvg} clicked={trashSvg} alt="Menu Button" style={{ position: 'relative' }} />
   )
 }
 

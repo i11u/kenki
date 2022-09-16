@@ -21,6 +21,7 @@ const StyledIcon = styled.img`
   position: absolute;
   height: 60%;
   transform: translateY(35%);
+  stroke: white;
 `
 
 export default Icon

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styled, { Keyframes } from 'styled-components'
 import { useAtom } from 'jotai'
 import { PageUtils } from '../../../utils/page'
@@ -12,11 +12,10 @@ import Grid from './grid'
 import { editorConfigSelectors } from '../../../jotai-hooks/editorConfig/selector'
 import useOnWheelPageEffect from '../../../hooks/useOnWheelPageEffect'
 import Blocks from './blocks'
-import { modeSelectors } from '../../../jotai-hooks/mode/selector'
 import CursorTSX from './cursor'
+import Relations from './relations'
 
 const Page = () => {
-  const mode = modeSelectors.useCurrentMode()
   const [pageConfig, setPageConfig] = useAtom(pageConfigAtom)
   const [previousPageConfig, setPreviousPageConfig] = useState<PageConfig>({ ...pageConfig })
   const id = blockSelectors.useEditingBlockId()
@@ -65,6 +64,7 @@ const Page = () => {
     >
       <Grid />
       <Blocks />
+      <Relations />
       <CursorTSX />
     </StyledPage>
   )
@@ -73,10 +73,10 @@ const Page = () => {
 const StyledPage = styled.div<{ keyframes: Keyframes }>`
   animation: ${(props) => props.keyframes};
   min-width: 960px;
-  background-color: #edecea;
-  box-shadow: 5px 5px 10px darkgrey, -1px 0 10px darkgrey;
+  background-color: #25292e;
+  box-shadow: 5px 5px 10px #3d444d, -1px 0 10px #3d444d;
   position: absolute;
   width: 100%;
 `
 
-export default Page
+export default React.memo(Page)

@@ -34,10 +34,10 @@ const StyledBackground = styled.div`
 
   animation-duration: 0.5s;
   animation-fill-mode: forwards;
-  background-color: #edecea;
+  background-color: #25292e;
   position: absolute;
   top: 5%;
-  height: 93%;
+  height: 92.5%;
   overflow: auto;
   display: flex;
 `

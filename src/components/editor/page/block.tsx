@@ -23,12 +23,14 @@ const StyledBlockWrapper = styled.div`
   border-color: gray;
   border-width: 1px;
   z-index: 2;
+  background-color: #25292e;
+  color: white;
 `
 
 const StyledBlock = styled.div`
   outline: none;
   white-space: nowrap;
-  font-family: '凸版文久ゴシック', serif;
+  font-family: '凸版文久ゴシック', sans-serif;
   text-justify: inter-ideograph;
   z-index: 1;
 `
@@ -52,9 +54,12 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
    * When block.editing is true, then the contenteditable element automatically gets focused.
    * */
   useEffect(() => {
-    if (block.editing) setTimeout(() => blockRef.current?.focus(), 0)
-    if (!block.editing) setTimeout(() => blockRef.current?.blur(), 0)
-  }, [block.editing])
+    if (block.editing) {
+      setTimeout(() => blockRef.current?.focus(), 0)
+    } else {
+      setTimeout(() => blockRef.current?.blur(), 0)
+    }
+  }, [block.editing, mode])
 
   const style = BlockUtils.style(block, gridNum)
 
@@ -66,12 +71,13 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
           width: `calc(${style.width} + 2px)`,
           height: `calc(${style.height} + 2px)`,
           minWidth: `calc(${style.minWidth} + 2px)`,
-          minHeight: `calc(${style.minHeight} + px)`,
-          display: mode === 'SELECT' && block.isSelected ? '' : 'none',
+          minHeight: `calc(${style.minHeight} + 2px)`,
+          display: block.isSelected ? '' : 'none',
         }}
       />
       <StyledBlockWrapper
         id={`block-${block.id}-wrapper`}
+        className="block-wrapper"
         style={{ ...style, borderStyle: mode === 'SELECT' && block.isSelected ? 'dotted' : 'solid' }}
         onDoubleClick={(e: React.MouseEvent<HTMLDivElement>) =>
           BlockUtils.handleOnClick({
@@ -96,7 +102,9 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
       >
         <StyledBlock
           id={`block-${block.id}`}
+          className="block"
           contentEditable
+          spellCheck={false}
           ref={blockRef}
           onInput={(e: React.FormEvent<HTMLDivElement>) =>
             BlockUtils.handleOnInput({

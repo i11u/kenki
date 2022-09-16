@@ -105,7 +105,7 @@ export class PageUtils {
       editing: boolean
     }) => void
     changeBlockPosition: ({ blockId, position }: { blockId: string; position: Position }) => void
-    addBlock: ({ addingBlock }: { addingBlock: Block }) => void
+    addBlock: ({ block }: { block: Block }) => void
   }) => {
     if (id === undefined) return
     const blockDiv = document.getElementById(`block-${id}`) as HTMLDivElement
@@ -120,7 +120,7 @@ export class PageUtils {
     }
 
     changeBlockStatus({ blockId: id, isEmpty: false, isSelected: false, editing: false })
-    addBlock({ addingBlock: BlockUtils.emptyBlock({ position: { row, col } }) })
+    addBlock({ block: BlockUtils.emptyBlock({ position: { row, col } }) })
   }
 
   public static getPositionFromMouseDownEvent = (

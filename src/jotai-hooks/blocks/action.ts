@@ -4,7 +4,7 @@ import { match } from 'ts-pattern'
 import { Block, blockAtomsAtom, blockByIdAtom, Position } from './atom'
 
 type BlocksActions = {
-  useAddBlock: () => ({ addingBlock }: { addingBlock: Block }) => void
+  useAddBlock: () => ({ block }: { block: Block }) => void
   useUpdateBlock: () => ({ blockId, newProps }: { blockId: string; newProps: object }) => void
   useChangeBlockPosition: () => ({ blockId, position }: { blockId: string; position: Position }) => void
   useChangeBlockSize: () => ({ blockId, width, height }: { blockId: string; width: number; height: number }) => void
@@ -24,9 +24,7 @@ type BlocksActions = {
 export type Direction = 'left' | 'down' | 'up' | 'right'
 
 export const useCreateBlock = (): ((block: Block) => void) =>
-  useAtomCallback(
-    useCallback((get, set, addingBlock: Block) => set(blockAtomsAtom, { type: 'insert', value: addingBlock }), [])
-  )
+  useAtomCallback(useCallback((get, set, block: Block) => set(blockAtomsAtom, { type: 'insert', value: block }), []))
 
 export const useMoveBlock = (): (({
   blockId,
@@ -57,9 +55,7 @@ export const useMoveBlock = (): (({
 
 export const blocksActions: BlocksActions = {
   useAddBlock: () =>
-    useAtomCallback(
-      useCallback((get, set, { addingBlock }) => set(blockAtomsAtom, { type: 'insert', value: addingBlock }), [])
-    ),
+    useAtomCallback(useCallback((get, set, { block }) => set(blockAtomsAtom, { type: 'insert', value: block }), [])),
 
   useUpdateBlock: () =>
     useAtomCallback(

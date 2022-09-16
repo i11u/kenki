@@ -7,7 +7,7 @@ const StyledCursor = styled.div`
   position: absolute;
   border: 1px solid darkgrey;
   background-color: darkgrey;
-  opacity: 0.3;
+  opacity: 0.5;
   z-index: 3;
 `
 
@@ -23,7 +23,7 @@ const CursorTSX = () => {
     minHeight: `calc(${100 / gridNum.rowNum}% - 1px)`,
   }
 
-  return mode === 'EDIT' || mode === 'SELECT' ? null : <StyledCursor style={style} />
+  return mode === 'EDIT' || mode === 'SELECT' || mode === 'INSERT' ? null : <StyledCursor id="cursor" style={style} />
 }
 
 export default CursorTSX

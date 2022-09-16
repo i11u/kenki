@@ -1,8 +1,8 @@
-import React, { memo } from 'react'
+import React from 'react'
 import BlockTSX from './block'
 import { blockSelectors } from '../../../jotai-hooks/blocks/selector'
 
-const Blocks = memo(() => {
+const Blocks = () => {
   const blocks = blockSelectors.useBlockAtoms()
 
   return (
@@ -13,6 +13,6 @@ const Blocks = memo(() => {
       ))}
     </div>
   )
-})
+}
 
-export default Blocks
+export default React.memo(Blocks)

@@ -22,17 +22,12 @@ export type Block = {
   editing: boolean
 }
 
-/**
- * Type definition of multiple Blocks
- * */
-export type Blocks = Block[]
-
 /*
  * Ideally, atoms must not be accessible from components but only from custom hooks, such as actions or selectors.
  * TypeScript currently does not have a feature to export "locally", which may be enabled by:
  * https://github.com/microsoft/TypeScript/issues/41316
  * */
-export const blocksAtom = atom<Blocks>([])
+export const blocksAtom = atom<Block[]>([])
 
 export const blockAtomsAtom = splitAtom(blocksAtom)
 

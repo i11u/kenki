@@ -10,8 +10,8 @@ export class BlockUtils {
     left: `${block.position.col * (100 / gridNum.colNum)}%`,
     width: `calc(${100 / gridNum.colNum}% - 1px + ${(100 / gridNum.colNum) * (block.width - 1)}%)`,
     height: `calc(${100 / gridNum.rowNum}% - 1px + ${(100 / gridNum.rowNum) * (block.height - 1)}%)`,
-    minWidth: `${100 / gridNum.colNum - 1}%`,
-    minHeight: `${100 / gridNum.rowNum - 1}%`,
+    minWidth: `calc(${100 / gridNum.colNum}% - 1px)`,
+    minHeight: `calc(${100 / gridNum.rowNum}% - 1px)`,
   })
 
   static composeBlock = (
@@ -205,7 +205,8 @@ export class BlockUtils {
       isSelected: boolean
       editing: boolean
     }) => void
-    addBlock: ({ addingBlock }: { addingBlock: Block }) => void
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    addBlock: ({ block }: { block: Block }) => void
     rowNum: number
     colNum: number
   }) => {
@@ -230,7 +231,7 @@ export class BlockUtils {
                 row,
                 col: col + block.width + 1,
               }
-        addBlock({ addingBlock: BlockUtils.emptyBlock({ position: nextPosition }) })
+        addBlock({ block: BlockUtils.emptyBlock({ position: nextPosition }) })
         break
       default:
     }
