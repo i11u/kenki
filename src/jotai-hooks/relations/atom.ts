@@ -9,10 +9,11 @@ export type RelationType = 'normal-arrow-outward' | 'normal-arrow-inward' | 'thi
 export type Relation = {
   id: string
   type: RelationType
-  startBlockId: string
+  startBlockId: string | undefined
   endBlockId: string | undefined
   isSelected: boolean
   editing: boolean
+  label: string
 }
 
 /*

@@ -5,6 +5,8 @@ import { AspectRatioType, pageConfigAtom } from './atom'
 type PageConfigActions = {
   useChangeAspectRatio: () => (aspectRatio: AspectRatioType) => void
   useChangeScale: () => (scale: number) => void
+  useToggleGridIsVisible: () => () => void
+  useToggleBlockBorderIsVisible: () => () => void
 }
 
 export const pageConfigActions: PageConfigActions = {
@@ -21,13 +23,31 @@ export const pageConfigActions: PageConfigActions = {
     ),
   useChangeScale: () =>
     useAtomCallback(
-      useCallback(
-        (get, set, scale) =>
-          set(pageConfigAtom, (prev) => ({
-            ...prev,
-            scale,
-          })),
-        []
-      )
+      useCallback((get, set, scale) => {
+        if (scale < 0.5) return
+        if (scale >= 2.1) return
+        set(pageConfigAtom, (prev) => ({
+          ...prev,
+          scale,
+        }))
+      }, [])
+    ),
+  useToggleGridIsVisible: () =>
+    useAtomCallback(
+      useCallback((get, set) => {
+        set(pageConfigAtom, (prev) => ({
+          ...prev,
+          grid: !prev.grid,
+        }))
+      }, [])
+    ),
+  useToggleBlockBorderIsVisible: () =>
+    useAtomCallback(
+      useCallback((get, set) => {
+        set(pageConfigAtom, (prev) => ({
+          ...prev,
+          blockBorder: !prev.blockBorder,
+        }))
+      }, [])
     ),
 }

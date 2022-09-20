@@ -16,9 +16,13 @@ export function aspectRatioValue(t: AspectRatioType): AspectRatio {
 export type PageConfig = {
   aspectRatio: AspectRatioType
   scale: number
+  grid: boolean
+  blockBorder: boolean
 }
 
 export const pageConfigAtom = atom<PageConfig>({
   aspectRatio: 'slide',
   scale: 1,
+  grid: true,
+  blockBorder: true,
 })

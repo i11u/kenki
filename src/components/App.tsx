@@ -1,13 +1,13 @@
 import { useEffect } from 'react'
 import { match } from 'ts-pattern'
-import Header from './header/header'
-import Sidebar from './sidebar/sidebar'
+import SidebarLeft from './sidebarLeft/sidebarLeft'
+import SidebarRight from './sidebarRight/sidebarRight'
 import Background from './editor/background'
 import Page from './editor/page/page'
 import { modeSelectors } from '../jotai-hooks/mode/selector'
 import { modeActions } from '../jotai-hooks/mode/action'
 import { blockSelectors } from '../jotai-hooks/blocks/selector'
-import { blocksActions, Direction, useCreateBlock, useMoveBlock } from '../jotai-hooks/blocks/action'
+import { blocksActions, Direction, useCreateBlock, useMoveBlock, useRemoveBlock } from '../jotai-hooks/blocks/action'
 import EditorConfig from './editor/editorConfig/editorConfig'
 import { useMoveCursor, useMoveCursorByPosition } from '../jotai-hooks/cursor/action'
 import { BlockUtils } from '../utils/block'
@@ -16,6 +16,9 @@ import { DomUtils } from '../utils/dom'
 import { pageConfigSelectors } from '../jotai-hooks/pageConfig/selector'
 import { editorConfigActions } from '../jotai-hooks/editorConfig/action'
 import Footer from './footer/footer'
+import { pageConfigActions } from '../jotai-hooks/pageConfig/action'
+import Header from './header/header'
+import { colorThemeActions } from '../jotai-hooks/colorTheme/action'
 
 const App = () => {
   const editingBlockId = blockSelectors.useEditingBlockId()
@@ -30,7 +33,14 @@ const App = () => {
   const changeBlockStatus = blocksActions.useChangeBlockStatus()
   const moveCursorByPosition = useMoveCursorByPosition()
   const gridNum = pageConfigSelectors.useGridNum()
-  const toggleSidebar = editorConfigActions.useToggleSidebar()
+  const toggleSidebar = editorConfigActions.useToggleSidebarLeft()
+  const currentScale = pageConfigSelectors.usePageScale()
+  const changeScale = pageConfigActions.useChangeScale()
+  const toggleSidebarRight = editorConfigActions.useToggleSidebarRight()
+  const removeBlock = useRemoveBlock()
+  const toggleColorTheme = colorThemeActions.useToggleColorTheme()
+  const toggleGridIsVisible = pageConfigActions.useToggleGridIsVisible()
+  const toggleBlockBorderIsVisible = pageConfigActions.useToggleBlockBorderIsVisible()
 
   const addEventListeners = () => console.log('')
 
@@ -72,15 +82,26 @@ const App = () => {
                 buffer = ''
               })
               .with('l', () => {
-                moveCursor({ direction: 'right', offset: 1 })
+                if (e.shiftKey && e.metaKey) {
+                  e.preventDefault()
+                  toggleColorTheme()
+                } else {
+                  moveCursor({ direction: 'right', offset: 1 })
+                }
+                buffer = ''
+              })
+              .with('+', () => {
+                changeScale(currentScale + 0.1)
+                buffer = ''
+              })
+              .with('-', () => {
+                changeScale(currentScale - 0.1)
                 buffer = ''
               })
               .with('t', () => {
-                if (e.ctrlKey) {
-                  createBlock(BlockUtils.emptyBlock({ position: cursorPosition }))
-                  changeMode('EDIT')
-                  buffer = ''
-                }
+                createBlock(BlockUtils.emptyBlock({ position: cursorPosition }))
+                changeMode('EDIT')
+                buffer = ''
                 e.preventDefault()
                 buffer = ''
               })
@@ -120,6 +141,28 @@ const App = () => {
                 //     className: '',
                 //   }
                 // )
+                buffer = ''
+              })
+              .with('g', () => {
+                if (e.shiftKey && e.metaKey) {
+                  e.preventDefault()
+                  toggleGridIsVisible()
+                }
+                buffer = ''
+              })
+              .with('v', () => {
+                if (e.shiftKey && e.metaKey) {
+                  e.preventDefault()
+                  toggleBlockBorderIsVisible()
+                }
+                buffer = ''
+              })
+              .with(',', () => {
+                if (e.metaKey) {
+                  e.preventDefault()
+                  changeMode('SETTINGS')
+                  toggleSidebarRight()
+                }
                 buffer = ''
               })
               .otherwise(() => {
@@ -178,7 +221,7 @@ const App = () => {
                   moveCursor({ direction: 'right', offset })
                   buffer = ''
                 } else {
-                  e.preventDefault()
+                  // e.preventDefault()
                   buffer = ''
                 }
               })
@@ -187,11 +230,17 @@ const App = () => {
             match(buffer)
               .with('Escape', () => {
                 toggleSidebar()
-                changeMode('CURSOR')
+                changeMode('SELECT')
                 buffer = ''
               })
               .with('Enter', () => {
                 e.preventDefault()
+                buffer = ''
+              })
+              .with('l', () => {
+                if (e.shiftKey && e.metaKey) {
+                  toggleColorTheme()
+                }
                 buffer = ''
               })
               .otherwise(() => {
@@ -202,6 +251,12 @@ const App = () => {
             match(buffer)
               .with('Escape', () => {
                 changeMode('CURSOR')
+                buffer = ''
+              })
+              .with('l', () => {
+                if (e.shiftKey && e.metaKey) {
+                  toggleColorTheme()
+                }
                 buffer = ''
               })
               //  In COMMAND mode, keystrokes are handled by listeners defined in each component.
@@ -236,6 +291,12 @@ const App = () => {
                     editing: false,
                   })
                   changeMode('SELECT')
+                }
+                buffer = ''
+              })
+              .with('l', () => {
+                if (e.shiftKey && e.metaKey) {
+                  toggleColorTheme()
                 }
                 buffer = ''
               })
@@ -295,6 +356,20 @@ const App = () => {
                   buffer = ''
                 }
                 e.preventDefault()
+                buffer = ''
+              })
+
+              .with('Backspace', () => {
+                const block = selectedBlocks[0]
+                removeBlock(block.id)
+                moveCursorByPosition(block.position)
+                changeMode('CURSOR')
+                buffer = ''
+              })
+              .with('l', () => {
+                if (e.shiftKey && e.metaKey) {
+                  toggleColorTheme()
+                }
                 buffer = ''
               })
               .otherwise(() => {
@@ -373,6 +448,12 @@ const App = () => {
                 changeMode('CURSOR')
                 buffer = ''
               })
+              .with('l', () => {
+                if (e.shiftKey && e.metaKey) {
+                  toggleColorTheme()
+                }
+                buffer = ''
+              })
               .otherwise(() => {
                 const hints = Array.from(document.getElementsByClassName('hint'))
                 hints.map((hint) => {
@@ -407,6 +488,50 @@ const App = () => {
                 })
               })
           })
+          .with('SETTINGS', () =>
+            match(buffer)
+              .with('Escape', () => {
+                toggleSidebarRight()
+                changeMode('CURSOR')
+                buffer = ''
+              })
+              .with('l', () => {
+                if (e.shiftKey && e.metaKey) {
+                  toggleColorTheme()
+                }
+                buffer = ''
+              })
+              .with(',', () => {
+                if (e.metaKey) {
+                  e.preventDefault()
+                  changeMode('CURSOR')
+                  toggleSidebarRight()
+                }
+                buffer = ''
+              })
+              //  In COMMAND mode, keystrokes are handled by listeners defined in each component.
+              .otherwise(() => {
+                buffer = ''
+              })
+          )
+          .with('HELP', () => {
+            match(buffer)
+              .with('Escape', () => {
+                toggleSidebarRight()
+                changeMode('CURSOR')
+                buffer = ''
+              })
+              .with('l', () => {
+                if (e.shiftKey && e.metaKey) {
+                  toggleColorTheme()
+                }
+                buffer = ''
+              })
+              //  In COMMAND mode, keystrokes are handled by listeners defined in each component.
+              .otherwise(() => {
+                buffer = ''
+              })
+          })
           .exhaustive()
       )
     }
@@ -429,16 +554,36 @@ const App = () => {
     gridNum,
     toggleSidebar,
     selectedBlocks,
+    changeScale,
+    currentScale,
+    toggleSidebarRight,
+    removeBlock,
+    toggleColorTheme,
+    toggleGridIsVisible,
+    toggleBlockBorderIsVisible,
   ])
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
       {/* <Input /> */}
       <Header />
-      <Sidebar />
+      <SidebarLeft />
+      <SidebarRight />
       <Background>
+        <div
+          style={{
+            position: 'sticky',
+            width: '100%',
+            height: '100%',
+            top: '0%',
+            left: '0%',
+            zIndex: 1,
+            pointerEvents: 'none',
+          }}
+        >
+          <EditorConfig />
+        </div>
         <Page />
-        <EditorConfig />
       </Background>
       <Footer />
     </div>

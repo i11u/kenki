@@ -5,8 +5,10 @@ import { EditorConfig, editorConfigAtom, SidebarConfig } from './atom'
 
 type EditorConfigSelectors = {
   useEditorConfig: () => EditorConfig
-  useSidebarConfig: () => SidebarConfig
-  useSidebarIsOpen: () => boolean | undefined
+  useSidebarLeftConfig: () => SidebarConfig
+  useSidebarRightConfig: () => SidebarConfig
+  useSidebarLeftIsOpen: () => boolean | undefined
+  useSidebarRightIsOpen: () => boolean | undefined
 }
 
 const useEditorConfigSelector = () =>
@@ -17,24 +19,42 @@ const useEditorConfigSelector = () =>
     )
   )
 
-const useSidebarConfigSelector = () =>
+const useSidebarLeftConfigSelector = () =>
   useAtomValue<SidebarConfig>(
     selectAtom(
       editorConfigAtom,
-      useCallback((config) => config.sidebarConfig, [])
+      useCallback((config) => config.sidebarLeftConfig, [])
     )
   )
 
-const useSidebarIsOpenSelector = () =>
+const useSidebarRightConfigSelector = () =>
+  useAtomValue<SidebarConfig>(
+    selectAtom(
+      editorConfigAtom,
+      useCallback((config) => config.sidebarRightConfig, [])
+    )
+  )
+
+const useSidebarLeftIsOpenSelector = () =>
   useAtomValue<boolean | undefined>(
     selectAtom(
       editorConfigAtom,
-      useCallback((config) => config.sidebarConfig.isOpen, [])
+      useCallback((config) => config.sidebarLeftConfig.isOpen, [])
+    )
+  )
+
+const useSidebarRightIsOpenSelector = () =>
+  useAtomValue<boolean | undefined>(
+    selectAtom(
+      editorConfigAtom,
+      useCallback((config) => config.sidebarRightConfig.isOpen, [])
     )
   )
 
 export const editorConfigSelectors: EditorConfigSelectors = {
   useEditorConfig: useEditorConfigSelector,
-  useSidebarConfig: useSidebarConfigSelector,
-  useSidebarIsOpen: useSidebarIsOpenSelector,
+  useSidebarLeftConfig: useSidebarLeftConfigSelector,
+  useSidebarRightConfig: useSidebarRightConfigSelector,
+  useSidebarLeftIsOpen: useSidebarLeftIsOpenSelector,
+  useSidebarRightIsOpen: useSidebarRightIsOpenSelector,
 }

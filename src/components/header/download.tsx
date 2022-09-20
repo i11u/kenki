@@ -1,17 +1,35 @@
-import React from 'react'
-import downloadSvg from '../../assets/icons/download.svg'
+import React, { useEffect, useState } from 'react'
+import { useAtomValue } from 'jotai'
+import downloadSvg from '../../assets/icons/header/download.svg'
 import { colorThemeSelector } from '../../jotai-hooks/colorTheme/selector'
-import { colorThemeActions } from '../../jotai-hooks/colorTheme/action'
+import { blocksAtom } from '../../jotai-hooks/blocks/atom'
+import { relationsAtom } from '../../jotai-hooks/relations/atom'
 
 const Download = () => {
   const colorTheme = colorThemeSelector.useColorTheme()
-  const toggleColorTheme = colorThemeActions.useToggleColorTheme()
+
+  const blocks = useAtomValue(blocksAtom)
+  const relations = useAtomValue(relationsAtom)
+
+  const [data, setData] = useState('')
+
+  useEffect(() => {
+    const json = JSON.stringify({ blocks, relations })
+    setData(json)
+  }, [blocks, relations])
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(data)
+      window.alert('Copied current page to clipboard in json format.')
+    } catch (error) {
+      window.alert('Failed to copy current page to clipboard.')
+    }
+  }
 
   return (
-    <svg
-      style={{ color: colorTheme.header, width: '10%', height: '60%', transform: 'translateY(30%)' }}
-      onClick={() => toggleColorTheme()}
-    >
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    <svg style={{ color: colorTheme.icon, height: '50%', transform: 'translateY(50%)' }} onClick={copyToClipboard}>
       <use xlinkHref={`${downloadSvg}#download`} />
     </svg>
   )

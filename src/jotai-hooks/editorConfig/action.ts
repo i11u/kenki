@@ -1,12 +1,12 @@
 import { useAtomCallback } from 'jotai/utils'
 import { useCallback } from 'react'
-import { editorConfigAtom, FontFamily, SidebarConfig } from './atom'
+import { editorConfigAtom, FontFamily } from './atom'
 
 type EditorConfigActions = {
   useChangeFontFamily: () => (fontFamily: FontFamily) => void
   useToggleHeader: () => () => void
-  useToggleSidebar: () => () => void
-  useSwitchSidebarPosition: () => () => void
+  useToggleSidebarLeft: () => () => void
+  useToggleSidebarRight: () => () => void
 }
 
 export const editorConfigActions: EditorConfigActions = {
@@ -30,35 +30,33 @@ export const editorConfigActions: EditorConfigActions = {
         []
       )
     ),
-  useToggleSidebar: () =>
+  useToggleSidebarLeft: () =>
     useAtomCallback(
       useCallback(
         (get, set) =>
           set(editorConfigAtom, (prev) => {
-            const sidebarConfig = {
-              ...prev.sidebarConfig,
-              isOpen: prev.sidebarConfig.isOpen === undefined || !prev.sidebarConfig.isOpen,
+            const sidebarLeftConfig = {
+              isOpen: prev.sidebarLeftConfig.isOpen === undefined || !prev.sidebarLeftConfig.isOpen,
             }
             return {
               ...prev,
-              sidebarConfig,
+              sidebarLeftConfig,
             }
           }),
         []
       )
     ),
-  useSwitchSidebarPosition: () =>
+  useToggleSidebarRight: () =>
     useAtomCallback(
       useCallback(
         (get, set) =>
           set(editorConfigAtom, (prev) => {
-            const sidebarConfig: SidebarConfig = {
-              ...prev.sidebarConfig,
-              position: prev.sidebarConfig.position === 'right' ? 'left' : 'right',
+            const sidebarRightConfig = {
+              isOpen: prev.sidebarRightConfig.isOpen === undefined || !prev.sidebarRightConfig.isOpen,
             }
             return {
               ...prev,
-              sidebarConfig,
+              sidebarRightConfig,
             }
           }),
         []

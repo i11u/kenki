@@ -23,7 +23,8 @@ export class BlockUtils {
     blocks: Block[] | null,
     isEmpty: boolean,
     isSelected: boolean,
-    editing: boolean
+    editing: boolean,
+    text: string
   ): Block => ({
     id,
     page,
@@ -34,10 +35,11 @@ export class BlockUtils {
     isEmpty,
     isSelected,
     editing,
+    innerHTML: text,
   })
 
   public static emptyBlock = ({ position }: { position: Position }) =>
-    this.composeBlock(v4(), 0, position, 1, 1, null, true, false, true)
+    this.composeBlock(v4(), 0, position, 1, 1, null, true, false, true, '')
 
   /**
    * When any input comes in unsettledBlock,
@@ -48,13 +50,16 @@ export class BlockUtils {
     id,
     changeBlockSize,
     cellLength,
+    updateInnerHTML,
   }: {
     e: React.FormEvent<HTMLDivElement>
     id: string
     changeBlockSize: ({ blockId, width, height }: { blockId: string; width: number; height: number }) => void
     cellLength: number
+    updateInnerHTML: ({ blockId, innerHTML }: { blockId: string; innerHTML: string }) => void
   }) => {
     const block = document.getElementById(`block-${id}`) as HTMLDivElement
+    updateInnerHTML({ blockId: id, innerHTML: block.innerHTML ? block.innerHTML : '' })
     return block.textContent === '' && block.childElementCount === 0
       ? changeBlockSize({ blockId: id, width: 1, height: 1 })
       : changeBlockSize({
@@ -243,7 +248,7 @@ export class BlockUtils {
    * Though, this may not be a good workaround...
    * @link [https://bugzilla.mozilla.org/show_bug.cgi?id=550434]
    * */
-  public static handleOnClick = ({
+  public static handleOnDoubleClick = ({
     e,
     id,
     changeScale,
@@ -289,13 +294,13 @@ export class BlockUtils {
     if (!block.isSelected) {
       switch (key) {
         case 16:
-          if (this.isInterrupted) return
-          changeBlockStatus({
-            blockId: block.id,
-            isEmpty: block.isEmpty,
-            isSelected: true,
-            editing: block.editing,
-          })
+          // if (this.isInterrupted) return
+          // changeBlockStatus({
+          //   blockId: block.id,
+          //   isEmpty: block.isEmpty,
+          //   isSelected: true,
+          //   editing: block.editing,
+          // })
           break
         default:
       }

@@ -8,6 +8,8 @@ type PageConfigSelectors = {
   useGridNum: () => { rowNum: number; colNum: number }
   useAspectRatio: () => AspectRatioType
   usePageScale: () => number
+  useGridIsVisible: () => boolean
+  useBlockBorderIsVisible: () => boolean
 }
 const usePageConfigSelector = () =>
   useAtomValue(
@@ -47,9 +49,27 @@ const usePageScaleSelector = () =>
     )
   )
 
+const useGridIsVisibleSelector = () =>
+  useAtomValue(
+    selectAtom(
+      pageConfigAtom,
+      useCallback((config) => config.grid, [])
+    )
+  )
+
+const useBlockBorderIsVisibleSelector = () =>
+  useAtomValue(
+    selectAtom(
+      pageConfigAtom,
+      useCallback((config) => config.blockBorder, [])
+    )
+  )
+
 export const pageConfigSelectors: PageConfigSelectors = {
   usePageConfig: usePageConfigSelector,
   useGridNum: useGridNumSelector,
   useAspectRatio: useAspectRatioSelector,
   usePageScale: usePageScaleSelector,
+  useGridIsVisible: useGridIsVisibleSelector,
+  useBlockBorderIsVisible: useBlockBorderIsVisibleSelector,
 }

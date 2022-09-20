@@ -14,6 +14,7 @@ import useOnWheelPageEffect from '../../../hooks/useOnWheelPageEffect'
 import Blocks from './blocks'
 import CursorTSX from './cursor'
 import Relations from './relations'
+import { colorThemeSelector } from '../../../jotai-hooks/colorTheme/selector'
 
 const Page = () => {
   const [pageConfig, setPageConfig] = useAtom(pageConfigAtom)
@@ -24,8 +25,9 @@ const Page = () => {
   const addBlock = blocksActions.useAddBlock()
   const gridNum = pageConfigSelectors.useGridNum()
   const pageRef = useRef<HTMLDivElement>(null)
-  const sidebarIsOpen = editorConfigSelectors.useSidebarIsOpen()
+  const sidebarIsOpen = editorConfigSelectors.useSidebarLeftIsOpen()
   useOnResizeEffect(gridNum.rowNum, pageRef)
+  const colorTheme = colorThemeSelector.useColorTheme()
 
   const style = PageUtils.style(pageConfig.aspectRatio)
 
@@ -47,7 +49,13 @@ const Page = () => {
     <StyledPage
       id="page"
       ref={pageRef}
-      style={style}
+      style={{
+        ...style,
+        backgroundColor: colorTheme.page,
+        // borderRight: `1px solid ${colorTheme.grid}`,
+        // borderBottom: `1px solid ${colorTheme.grid}`,
+        boxShadow: `5px 5px 10px ${colorTheme.shadow}, -1px 0 10px ${colorTheme.shadow}`,
+      }}
       keyframes={kf}
       onMouseDown={(e) =>
         e.target === pageRef.current
@@ -73,10 +81,9 @@ const Page = () => {
 const StyledPage = styled.div<{ keyframes: Keyframes }>`
   animation: ${(props) => props.keyframes};
   min-width: 960px;
-  background-color: #25292e;
-  box-shadow: 5px 5px 10px #3d444d, -1px 0 10px #3d444d;
   position: absolute;
   width: 100%;
+  z-index: 0;
 `
 
 export default React.memo(Page)

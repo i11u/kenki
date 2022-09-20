@@ -14,14 +14,15 @@ export type FontFamily =
 
 export type HeaderConfig = { display: 'open' | 'closed' }
 
-export type SidebarConfig = { isOpen: boolean | undefined; position: 'left' | 'right' }
+export type SidebarConfig = { isOpen: boolean | undefined }
 
 export type Style = 'Plain' | 'Bold' | 'Italic' | 'Underline' | 'StrikeThrough'
 
 export type EditorConfig = {
   fontFamily: string
   headerConfig: HeaderConfig
-  sidebarConfig: SidebarConfig
+  sidebarLeftConfig: SidebarConfig
+  sidebarRightConfig: SidebarConfig
 }
 
 /*
@@ -32,5 +33,6 @@ export type EditorConfig = {
 export const editorConfigAtom = atom<EditorConfig>({
   fontFamily: '凸版文久ゴシック',
   headerConfig: { display: 'open' },
-  sidebarConfig: { isOpen: undefined, position: 'left' },
+  sidebarLeftConfig: { isOpen: undefined },
+  sidebarRightConfig: { isOpen: undefined },
 })

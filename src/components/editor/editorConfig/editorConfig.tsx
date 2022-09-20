@@ -1,19 +1,20 @@
 import React from 'react'
 import styled from 'styled-components'
-import DecrementScale from './DecrementScale'
-import CurrentScale from './CurrentScale'
-import IncrementScale from './IncrementScale'
-import More from './More'
+import DecrementScale from './decrementScale'
+import CurrentScale from './currentScale'
+import IncrementScale from './incrementScale'
+import More from './more'
+import { colorThemeSelector } from '../../../jotai-hooks/colorTheme/selector'
 
 const StyledWrapper = styled.div`
-  position: fixed;
-  background-color: #363c44;
+  position: absolute;
   border-radius: 5%;
-  height: 4%;
+  width: 200px;
+  height: 34px;
   right: 3%;
   bottom: 5%;
-  box-shadow: 3px 3px 5px #25292e, -1px 0 5px #25292e;
   padding: 0 1%;
+  z-index: 1;
 `
 
 const StyledFlex = styled.div`
@@ -21,19 +22,28 @@ const StyledFlex = styled.div`
   height: 80%;
   display: flex;
   gap: 0 20px;
+  justify-content: space-between;
   align-items: center;
-  transform: translateY(-8%);
+  transform: translateY(-10%);
 `
 
-const EditorConfig = () => (
-  <StyledWrapper>
-    <StyledFlex>
-      <DecrementScale />
-      <CurrentScale />
-      <IncrementScale />
-      <More />
-    </StyledFlex>
-  </StyledWrapper>
-)
+const EditorConfig = () => {
+  const colorTheme = colorThemeSelector.useColorTheme()
+  return (
+    <StyledWrapper
+      style={{
+        backgroundColor: colorTheme.editorConfig,
+        boxShadow: `3px 3px 5px ${colorTheme.shadow}, -1px 0 5px ${colorTheme.shadow}`,
+      }}
+    >
+      <StyledFlex>
+        <DecrementScale />
+        <CurrentScale />
+        <IncrementScale />
+        <More />
+      </StyledFlex>
+    </StyledWrapper>
+  )
+}
 
 export default React.memo(EditorConfig)

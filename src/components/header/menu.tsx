@@ -4,7 +4,7 @@ import closeMenuSvg from '../../assets/icons/close-menu.svg'
 import { editorConfigActions } from '../../jotai-hooks/editorConfig/action'
 
 const Menu = () => {
-  const toggleSidebar = editorConfigActions.useToggleSidebar()
+  const toggleSidebar = editorConfigActions.useToggleSidebarLeft()
 
   return (
     <Icon

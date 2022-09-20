@@ -1,9 +1,8 @@
 import styled from 'styled-components'
 import React, { useEffect, useRef } from 'react'
 import { v4 } from 'uuid'
-import Icon from '../common/icon'
 import searchSvg from '../../assets/icons/search.svg'
-import { ContentData } from './sidebar'
+import { ContentData } from './sidebarLeft'
 import { modeSelectors } from '../../jotai-hooks/mode/selector'
 import { modeActions } from '../../jotai-hooks/mode/action'
 import { relationActions } from '../../jotai-hooks/relations/action'
@@ -11,6 +10,7 @@ import { editorConfigActions } from '../../jotai-hooks/editorConfig/action'
 import { blockSelectors } from '../../jotai-hooks/blocks/selector'
 import { blocksActions } from '../../jotai-hooks/blocks/action'
 import { BlockUtils } from '../../utils/block'
+import { colorThemeSelector } from '../../jotai-hooks/colorTheme/selector'
 
 const Search = ({
   word,
@@ -32,11 +32,12 @@ const Search = ({
   const mode = modeSelectors.useCurrentMode()
   const changeMode = modeActions.useSwitchModes()
   const createRelation = relationActions.useAddRelation()
-  const toggleSidebar = editorConfigActions.useToggleSidebar()
+  const toggleSidebar = editorConfigActions.useToggleSidebarLeft()
   const ref = useRef<HTMLInputElement>(null)
   const selectedBlocks = blockSelectors.useSelectedBlocks()
   const changeBlockStatus = blocksActions.useChangeBlockStatus()
   const createBlock = blocksActions.useAddBlock()
+  const colorTheme = colorThemeSelector.useColorTheme()
 
   useEffect(() => {
     if (mode === 'INSERT') {
@@ -52,17 +53,25 @@ const Search = ({
   }, [mode, setBuffer, setWord, setSelectedContentIndex])
 
   return (
-    <StyledFlex>
-      <Icon
-        src={searchSvg}
-        alt={searchSvg}
-        style={{ position: 'relative', width: '18px', height: '18px', marginLeft: '8px', marginTop: '-2px' }}
-      />
+    <StyledFlex style={{ backgroundColor: colorTheme.searchBox }}>
+      <svg
+        style={{
+          position: 'relative',
+          color: colorTheme.icon,
+          width: '16px',
+          height: '16px',
+          marginLeft: '8px',
+          transform: 'translateY(20%)',
+        }}
+      >
+        <use xlinkHref={`${searchSvg}#search`} />
+      </svg>
       <StyledInput
         ref={ref}
         id="search"
         value={buffer}
         autoComplete="off"
+        style={{ backgroundColor: colorTheme.searchBox, color: colorTheme.textPrimary }}
         onFocus={(e) => e.target.select()}
         onChange={(e) => {
           setWord(e.target.value)
@@ -97,7 +106,8 @@ const Search = ({
               null,
               true,
               false,
-              false
+              false,
+              ''
             )
             createBlock({ block: endBlock })
             createRelation({
@@ -108,6 +118,7 @@ const Search = ({
                 endBlockId: endBlock.id,
                 isSelected: false,
                 editing: true,
+                label: '',
               },
             })
             toggleSidebar()
@@ -123,28 +134,24 @@ const Search = ({
 
 const StyledFlex = styled.div`
   position: relative;
-  margin-left: 40px;
-  width: 240px;
-  height: 24px;
+  margin-left: 30px;
+  width: 220px;
+  height: 20px;
   display: flex;
   gap: 0 10px;
-  background-color: #363c44;
   border-radius: 5px;
-  z-index: 3;
 `
 
 const StyledInput = styled.input`
   white-space: nowrap;
   font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  color: white;
-  background-color: #363c44;
+  font-size: 12px;
   resize: none;
   outline: none;
   border: none;
   width: 180px;
   height: 1em;
-  margin-top: 4px;
+  margin-top: 3px;
 `
 
 export default React.memo(Search)

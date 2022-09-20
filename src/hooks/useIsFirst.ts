@@ -1,11 +1,11 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useState } from 'react'
 
 function useIsFirst() {
-  const isFirst = useRef(true)
+  const [isFirst, setIsFirst] = useState(true)
   useEffect(() => {
-    if (isFirst.current) isFirst.current = false
-  })
-  return isFirst.current
+    if (isFirst) setIsFirst(false)
+  }, [isFirst])
+  return isFirst
 }
 
 export default useIsFirst

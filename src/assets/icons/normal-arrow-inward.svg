@@ -1,7 +1,7 @@
-<svg width="239" height="69" xmlns="http://www.w3.org/2000/svg"
+<svg id="relation" viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg"
      xml:space="preserve" overflow="hidden"><defs><clipPath id="clip0"><rect x="3776" y="1819" width="239" height="69"/></clipPath></defs>
-    <g clip-path="url(#clip0)" transform="translate(-3776 -1819)"><path d="M4015 1868.5C4015 1870.43 4013.43 1872 4011.5 1872L3805.5 1872C3803.57 1872 3802 1870.43 3802 1868.5L3802 1868.5C3802 1866.57 3803.57 1865 3805.5 1865L4011.5 1865C4013.43 1865 4015 1866.57 4015 1868.5Z" fill="#ffffff" fill-rule="evenodd" fill-opacity="1"/>
-        <path d="M3816 1885 3781 1868.5 3816 1852Z" fill="#ffffff" fill-rule="evenodd" fill-opacity="1"/>
-        <rect x="3859.5" y="1823.5" width="93.9998" height="28.9999" stroke="#ffffff" stroke-width="1.14583"
+    <g clip-path="url(#clip0)" transform="translate(-3776 -1819)"><path d="M4015 1868.5C4015 1870.43 4013.43 1872 4011.5 1872L3805.5 1872C3803.57 1872 3802 1870.43 3802 1868.5L3802 1868.5C3802 1866.57 3803.57 1865 3805.5 1865L4011.5 1865C4013.43 1865 4015 1866.57 4015 1868.5Z" fill="currentColor" fill-rule="evenodd" fill-opacity="1"/>
+        <path d="M3816 1885 3781 1868.5 3816 1852Z" fill="currentColor" fill-rule="evenodd" fill-opacity="1"/>
+        <rect x="3859.5" y="1823.5" width="93.9998" height="28.9999" stroke="currentColor" stroke-width="1.14583"
               stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8" stroke-dasharray="4.58333 3.4375"
               stroke-opacity="1" fill="none"/></g></svg>

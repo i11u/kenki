@@ -1,11 +1,11 @@
 import React from 'react'
 import { match } from 'ts-pattern'
 import styled from 'styled-components'
-import Icon from '../common/icon'
 import normalArrowInward from '../../assets/icons/normal-arrow-inward.svg'
 import normalArrowOutward from '../../assets/icons/normal-arrow-outward.svg'
 import thickArrowOutward from '../../assets/icons/thick-arrow-outward.svg'
-import { ContentData } from './sidebar'
+import { ContentData } from './sidebarLeft'
+import { colorThemeSelector } from '../../jotai-hooks/colorTheme/selector'
 
 const Content = ({ buffer, content, isSelected }: { buffer: string; content: ContentData; isSelected: boolean }) => {
   const { key, description } = content
@@ -16,21 +16,33 @@ const Content = ({ buffer, content, isSelected }: { buffer: string; content: Con
     .otherwise(() => '')
 
   const arr = description.split(buffer)
+  const colorTheme = colorThemeSelector.useColorTheme()
 
   return (
-    <StyledFlex style={{ backgroundColor: isSelected ? '#363c44' : '' }}>
-      <Icon
-        src={svg}
-        alt="arrow svg"
+    <StyledFlex style={{ backgroundColor: isSelected ? colorTheme.itemSelected : '' }}>
+      <svg
         style={{
           position: 'relative',
+          color: colorTheme.icon,
           width: '30%',
-          height: 'fit-content',
-          marginTop: '-16px',
+          height: '60%',
           marginLeft: '10%',
         }}
-      />
-      <StyledText>
+      >
+        <use xlinkHref={`${svg}#relation`} />
+      </svg>
+      {/* <Icon */}
+      {/*  src={svg} */}
+      {/*  alt="arrow svg" */}
+      {/*  style={{ */}
+      {/*    position: 'relative', */}
+      {/*    width: '30%', */}
+      {/*    height: 'fit-content', */}
+      {/*    marginTop: '-16px', */}
+      {/*    marginLeft: '10%', */}
+      {/*  }} */}
+      {/* /> */}
+      <StyledText style={{ color: colorTheme.textPrimary }}>
         {arr.map((str, index) => {
           if (index === arr.length - 1) {
             return <span>{str}</span>
@@ -59,7 +71,6 @@ const StyledFlex = styled.div`
 
 const StyledText = styled.div`
   position: relative;
-  color: white;
   width: 50%;
   margin-right: 5%;
 `

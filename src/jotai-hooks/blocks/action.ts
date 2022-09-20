@@ -1,7 +1,7 @@
 import { useAtomCallback } from 'jotai/utils'
 import { useCallback } from 'react'
 import { match } from 'ts-pattern'
-import { Block, blockAtomsAtom, blockByIdAtom, Position } from './atom'
+import { Block, blockAtomsAtom, blockByIdAtom, blocksAtom, Position } from './atom'
 
 type BlocksActions = {
   useAddBlock: () => ({ block }: { block: Block }) => void
@@ -25,6 +25,32 @@ export type Direction = 'left' | 'down' | 'up' | 'right'
 
 export const useCreateBlock = (): ((block: Block) => void) =>
   useAtomCallback(useCallback((get, set, block: Block) => set(blockAtomsAtom, { type: 'insert', value: block }), []))
+
+export const useRemoveBlock = (): ((blockId: string) => void) =>
+  useAtomCallback(
+    useCallback((get, set, blockId) => {
+      const blockAtom = blockByIdAtom(blockId)
+      set(blockAtomsAtom, { type: 'remove', atom: get(blockAtom) })
+    }, [])
+  )
+
+export const useRemoveAllBlocks = (): (() => void) =>
+  useAtomCallback(
+    useCallback((get, set) => {
+      set(blocksAtom, [])
+    }, [])
+  )
+
+export const useUpdateInnerHTML = (): (({ blockId, innerHTML }: { blockId: string; innerHTML: string }) => void) =>
+  useAtomCallback(
+    useCallback((get, set, { blockId, innerHTML }) => {
+      const blockAtom = get(blockByIdAtom(blockId))
+      set(blockAtom, (prev: Block) => ({
+        ...prev,
+        innerHTML,
+      }))
+    }, [])
+  )
 
 export const useMoveBlock = (): (({
   blockId,

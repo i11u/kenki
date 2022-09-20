@@ -1,13 +1,14 @@
 import styled from 'styled-components'
-import React, { memo, useEffect, useRef } from 'react'
+import React, { memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { PrimitiveAtom, useAtomValue } from 'jotai'
 import { BlockUtils } from '../../../utils/block'
 import { blockSelectors } from '../../../jotai-hooks/blocks/selector'
-import { blocksActions } from '../../../jotai-hooks/blocks/action'
+import { blocksActions, useRemoveBlock, useUpdateInnerHTML } from '../../../jotai-hooks/blocks/action'
 import { pageConfigActions } from '../../../jotai-hooks/pageConfig/action'
 import { pageConfigSelectors } from '../../../jotai-hooks/pageConfig/selector'
-import { Block } from '../../../jotai-hooks/blocks/atom'
+import { Block, Position } from '../../../jotai-hooks/blocks/atom'
 import { modeSelectors } from '../../../jotai-hooks/mode/selector'
+import { colorThemeSelector } from '../../../jotai-hooks/colorTheme/selector'
 
 const StyledBlockSelection = styled.div`
   position: absolute;
@@ -20,11 +21,7 @@ const StyledBlockWrapper = styled.div`
   position: absolute;
   display: flex;
   flex-wrap: wrap;
-  border-color: gray;
-  border-width: 1px;
   z-index: 2;
-  background-color: #25292e;
-  color: white;
 `
 
 const StyledBlock = styled.div`
@@ -46,9 +43,49 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
   const changeBlockStatus = blocksActions.useChangeBlockStatus()
   const addBlock = blocksActions.useAddBlock()
   const blockRef = useRef<HTMLDivElement>(null)
+  const innerHTMLRef = useRef(block.innerHTML)
   const gridNum = pageConfigSelectors.useGridNum()
   const changeScale = pageConfigActions.useChangeScale()
   const mode = modeSelectors.useCurrentMode()
+  const colorTheme = colorThemeSelector.useColorTheme()
+  const [previousPosition, setPreviousPosition] = useState<Position>(block.position)
+  const updateInnerHTML = useUpdateInnerHTML()
+  const removeBlock = useRemoveBlock()
+
+  useEffect(() => {
+    if (mode === 'CURSOR' && !block.isSelected && !block.editing && block.innerHTML === '') {
+      console.log()
+      removeBlock(block.id)
+    }
+  }, [block, mode, removeBlock])
+
+  /*
+   * Update previousPosition
+   * */
+  useEffect(() => setPreviousPosition(block.position), [block])
+
+  /*
+   * Return to the previous block position when new position is out of the range
+   * */
+  useLayoutEffect(() => {
+    if (
+      block.position.col < 0 ||
+      block.position.col >= gridNum.colNum ||
+      block.position.row < 0 ||
+      block.position.row >= gridNum.rowNum
+    ) {
+      window.alert('position is out of range')
+      changeBlockPosition({ blockId: block.id, position: previousPosition })
+    }
+  }, [
+    block.id,
+    block.position.col,
+    block.position.row,
+    changeBlockPosition,
+    gridNum.colNum,
+    gridNum.rowNum,
+    previousPosition,
+  ])
 
   /*
    * When block.editing is true, then the contenteditable element automatically gets focused.
@@ -62,6 +99,7 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
   }, [block.editing, mode])
 
   const style = BlockUtils.style(block, gridNum)
+  const blockBorderIsVisible = pageConfigSelectors.useBlockBorderIsVisible()
 
   return (
     <>
@@ -75,12 +113,20 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
           display: block.isSelected ? '' : 'none',
         }}
       />
+
       <StyledBlockWrapper
         id={`block-${block.id}-wrapper`}
         className="block-wrapper"
-        style={{ ...style, borderStyle: mode === 'SELECT' && block.isSelected ? 'dotted' : 'solid' }}
+        style={{
+          ...style,
+          borderWidth: blockBorderIsVisible ? '1px' : '0px',
+          borderColor: colorTheme.blockBorder,
+          borderStyle: mode === 'SELECT' && block.isSelected ? 'dotted' : 'solid',
+          backgroundColor: colorTheme.background,
+          color: colorTheme.textPrimary,
+        }}
         onDoubleClick={(e: React.MouseEvent<HTMLDivElement>) =>
-          BlockUtils.handleOnClick({
+          BlockUtils.handleOnDoubleClick({
             e,
             id: block.id,
             changeScale,
@@ -104,6 +150,7 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
           id={`block-${block.id}`}
           className="block"
           contentEditable
+          dangerouslySetInnerHTML={{ __html: innerHTMLRef.current }}
           spellCheck={false}
           ref={blockRef}
           onInput={(e: React.FormEvent<HTMLDivElement>) =>
@@ -112,6 +159,7 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
               id: block.id,
               changeBlockSize,
               cellLength: (document.getElementById('page') as HTMLDivElement).clientWidth / gridNum.colNum,
+              updateInnerHTML,
             })
           }
           onKeyDown={(e) =>

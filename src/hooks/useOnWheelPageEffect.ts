@@ -27,7 +27,7 @@ const useOnWheelPageEffect = (
             throttle(
               () =>
                 setPageConfig((prev: PageConfig) => {
-                  if (prev.scale <= 0.35) return prev
+                  if (prev.scale <= 0.51) return prev
                   setPreviousPageConfig(prev)
                   return { ...prev, scale: prev.scale - 0.02 }
                 }),

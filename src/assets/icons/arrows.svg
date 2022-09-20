@@ -1,6 +1,7 @@
-<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="325" height="532" xmlns="http://www.w3.org/2000/svg"
+<svg id="arrow" viewBox="0 0 100 100" width="325" height="532"
+     xmlns="http://www.w3.org/2000/svg"
      xml:space="preserve" overflow="hidden"><defs><clipPath id="clip0"><rect x="2713" y="737" width="325" height="532"/></clipPath></defs>
-    <g clip-path="url(#clip0)" transform="translate(-2713 -737)"><path d="M2724.48 982.231 2901.93 823.589 2863.33 780.409 3013.69 745.562 2962.28 891.091 2923.68 847.911 2746.22 1006.55Z" stroke="#ffffff" stroke-width="4.58333" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8" stroke-opacity="1" fill="#ffffff" fill-rule="evenodd" fill-opacity="1"/>
+    <g clip-path="url(#clip0)" transform="translate(-2713 -737)"><path d="M2724.48 982.231 2901.93 823.589 2863.33 780.409 3013.69 745.562 2962.28 891.091 2923.68 847.911 2746.22 1006.55Z" stroke="currentColor" stroke-width="4.58333" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8" stroke-opacity="1" fill="currentColor" fill-rule="evenodd" fill-opacity="1"/>
         <path d="M2725.62 1224.88 2916.43 1054.3 2881.76 1015.52 3028.38 983.06 2979.76 1125.15 2945.09 1086.37 2754.29 1256.94Z"
-              stroke="#ffffff" stroke-width="11.4583" stroke-linecap="butt" stroke-linejoin="miter"
+              stroke="currentColor" stroke-width="11.4583" stroke-linecap="butt" stroke-linejoin="miter"
               stroke-miterlimit="8" stroke-opacity="1" fill="none" fill-rule="evenodd"/></g></svg>

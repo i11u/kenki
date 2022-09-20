@@ -1,7 +1,7 @@
-<svg width="234" height="64" xmlns="http://www.w3.org/2000/svg"
+<svg id="relation" viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg"
      xml:space="preserve" overflow="hidden"><defs><clipPath id="clip0"><rect x="3776" y="1682" width="234" height="64"/></clipPath></defs>
-    <g clip-path="url(#clip0)" transform="translate(-3776 -1682)"><path d="M3990 1730C3990 1732.21 3988.21 1734 3986 1734L3781 1734C3778.79 1734 3777 1732.21 3777 1730L3777 1730C3777 1727.79 3778.79 1726 3781 1726L3986 1726C3988.21 1726 3990 1727.79 3990 1730Z" fill="#ffffff" fill-rule="evenodd" fill-opacity="1"/>
-        <path d="M3973 1714 4008 1730 3973 1746Z" fill="#ffffff" fill-rule="evenodd" fill-opacity="1"/>
-        <rect x="3846.5" y="1684.5" width="94.9998" height="29.0002" stroke="#ffffff" stroke-width="1.14583"
+    <g clip-path="url(#clip0)" transform="translate(-3776 -1682)"><path d="M3990 1730C3990 1732.21 3988.21 1734 3986 1734L3781 1734C3778.79 1734 3777 1732.21 3777 1730L3777 1730C3777 1727.79 3778.79 1726 3781 1726L3986 1726C3988.21 1726 3990 1727.79 3990 1730Z" fill="currentColor" fill-rule="evenodd" fill-opacity="1"/>
+        <path d="M3973 1714 4008 1730 3973 1746Z" fill="currentColor" fill-rule="evenodd" fill-opacity="1"/>
+        <rect x="3846.5" y="1684.5" width="94.9998" height="29.0002" stroke="currentColor" stroke-width="1.14583"
               stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8" stroke-dasharray="4.58333 3.4375"
               stroke-opacity="1" fill="none"/></g></svg>

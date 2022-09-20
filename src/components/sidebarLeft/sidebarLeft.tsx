@@ -10,6 +10,7 @@ import Contents from './contents'
 import Title from './title'
 import Search from './search'
 import { RelationType } from '../../jotai-hooks/relations/atom'
+import { colorThemeSelector } from '../../jotai-hooks/colorTheme/selector'
 
 export type ContentData = {
   key: RelationType
@@ -31,17 +32,20 @@ export const contents: ContentData[] = [
   },
 ]
 
-const Sidebar = () => {
+const SidebarLeft = () => {
   const sidebarRef = useRef<HTMLDivElement>(null)
   usePreventPinch(sidebarRef)
   const gridNum = pageConfigSelectors.useGridNum()
   useOnResizeEffect(gridNum.rowNum, sidebarRef)
 
-  // Sidebar Animation
-  const sidebarIsOpen = editorConfigSelectors.useSidebarIsOpen()
+  // SidebarLeft Animation
+  const sidebarLeftIsOpen = editorConfigSelectors.useSidebarLeftIsOpen()
   const style = useIsFirst()
     ? { width: '0' }
-    : { animationName: sidebarIsOpen === undefined ? '' : sidebarIsOpen ? 'animate-sidebar-1' : 'animate-sidebar-2' }
+    : {
+        animationName:
+          sidebarLeftIsOpen === undefined ? '' : sidebarLeftIsOpen ? 'animate-sidebar-1' : 'animate-sidebar-2',
+      }
 
   // Search relations
   const mode = modeSelectors.useCurrentMode()
@@ -50,6 +54,7 @@ const Sidebar = () => {
   const [selectedContentIndex, setSelectedContentIndex] = useState<number>(-1)
   const matchingContents =
     buffer === 'Enter keyword' || '' ? contents : contents.filter((command) => command.description.match(buffer))
+  const colorTheme = colorThemeSelector.useColorTheme()
 
   useEffect(() => {
     if (selectedContentIndex === -1) {
@@ -60,7 +65,15 @@ const Sidebar = () => {
   }, [buffer, matchingContents, selectedContentIndex, setSelectedContentIndex])
 
   return (
-    <StyledSidebar id="sidebar" ref={sidebarRef} style={style}>
+    <StyledSidebar
+      id="sidebar-left"
+      ref={sidebarRef}
+      style={{
+        ...style,
+        backgroundColor: colorTheme.sidebar,
+        borderRight: sidebarLeftIsOpen === true ? `0.5px solid ${colorTheme.border}` : '',
+      }}
+    >
       {mode === 'INSERT' ? (
         <StyledFlex>
           <Title />
@@ -81,24 +94,23 @@ const Sidebar = () => {
 }
 
 const StyledSidebar = styled.div`
-  top: 5%;
-  height: 95%;
+  top: 34px;
+  height: calc(100% - 50px);
   animation-duration: 0.5s;
   animation-fill-mode: forwards;
-  background-color: #25292e;
   position: fixed;
-  border-right: 2px solid #363c44;
   box-sizing: border-box;
-  z-index: 0;
+  z-index: 1;
 `
 
 const StyledFlex = styled.div`
-  position: absolute;
-  width: 100%;
+  position: relative;
+  width: calc(100% - 1px);
   height: 100%;
   display: flex;
   flex-direction: column;
   gap: 24px 0;
+  z-index: 0;
 `
 
-export default React.memo(Sidebar)
+export default React.memo(SidebarLeft)

@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import Content from './content'
-import { ContentData } from './sidebar'
+import { ContentData } from './sidebarLeft'
 
 const Contents = ({
   buffer,
@@ -12,7 +12,7 @@ const Contents = ({
   selectedContentIndex: number
   matchingContents: ContentData[]
 }) => (
-  <StyledFlex style={{ width: `${window.innerWidth * 0.2}px` }}>
+  <StyledFlex style={{ width: `calc(${window.innerWidth * 0.2}px - 0.5px)` }}>
     {matchingContents.map((content, index) => (
       <Content
         // eslint-disable-next-line react/no-array-index-key
@@ -29,7 +29,7 @@ const StyledFlex = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  height: fit-content;
+  height: 80px;
 `
 
 export default React.memo(Contents)

@@ -20,6 +20,7 @@ export type Block = {
   isEmpty: boolean
   isSelected: boolean
   editing: boolean
+  innerHTML: string
 }
 
 /*

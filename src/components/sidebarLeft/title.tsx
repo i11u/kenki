@@ -4,16 +4,20 @@ import React from 'react'
 import { modeSelectors } from '../../jotai-hooks/mode/selector'
 import Icon from '../common/icon'
 import relationSvg from '../../assets/icons/arrows.svg'
+import { colorThemeSelector } from '../../jotai-hooks/colorTheme/selector'
 
 const Title = () => {
   const mode = modeSelectors.useCurrentMode()
   const title = match(mode)
     .with('INSERT', () => 'Insert Relation')
+    .with('SETTINGS', () => 'Settings')
+    .with('HELP', () => 'Help')
     .otherwise(() => '')
+  const colorTheme = colorThemeSelector.useColorTheme()
 
   return (
     <StyledFlex>
-      <StyledTitle>{title}</StyledTitle>
+      <StyledTitle style={{ color: colorTheme.textPrimary }}>{title}</StyledTitle>
       <Icon
         src={relationSvg}
         alt={relationSvg}
@@ -36,7 +40,6 @@ const StyledTitle = styled.div`
   white-space: nowrap;
   font-family: 'Inter', sans-serif;
   font-size: 18px;
-  color: white;
 `
 
 export default React.memo(Title)
