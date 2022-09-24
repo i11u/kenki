@@ -18,11 +18,13 @@ const Help = () => {
       style={{ color: colorTheme.icon, height: '50%', transform: 'translateY(50%)' }}
       onClick={() => {
         if (mode === 'HELP') {
-          changeMode('CURSOR')
+          changeMode('NORMAL')
           toggleSidebarRight()
+        } else if (mode === 'SETTINGS') {
+          changeMode('HELP')
         } else {
           changeMode('HELP')
-          if (sidebarRightIsOpen) toggleSidebarRight()
+          toggleSidebarRight()
         }
       }}
     >

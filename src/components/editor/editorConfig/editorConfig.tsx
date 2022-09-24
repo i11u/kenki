@@ -3,8 +3,8 @@ import styled from 'styled-components'
 import DecrementScale from './decrementScale'
 import CurrentScale from './currentScale'
 import IncrementScale from './incrementScale'
-import More from './more'
 import { colorThemeSelector } from '../../../jotai-hooks/colorTheme/selector'
+import More from './more'
 
 const StyledWrapper = styled.div`
   position: absolute;
@@ -21,7 +21,7 @@ const StyledFlex = styled.div`
   width: 100%;
   height: 80%;
   display: flex;
-  gap: 0 20px;
+  gap: 0 16px;
   justify-content: space-between;
   align-items: center;
   transform: translateY(-10%);
@@ -40,6 +40,7 @@ const EditorConfig = () => {
         <DecrementScale />
         <CurrentScale />
         <IncrementScale />
+        {/* <AspectRatio /> */}
         <More />
       </StyledFlex>
     </StyledWrapper>

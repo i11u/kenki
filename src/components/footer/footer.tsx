@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { match } from 'ts-pattern'
+import { useAtomValue } from 'jotai'
 import Commands from './commands'
 import { modeSelectors } from '../../jotai-hooks/mode/selector'
 import { colorThemeSelector } from '../../jotai-hooks/colorTheme/selector'
@@ -9,6 +10,11 @@ import { colorThemeActions } from '../../jotai-hooks/colorTheme/action'
 import { useRemoveAllBlocks } from '../../jotai-hooks/blocks/action'
 import { useRemoveAllRelations } from '../../jotai-hooks/relations/action'
 import { editorConfigActions } from '../../jotai-hooks/editorConfig/action'
+import { editorConfigSelectors } from '../../jotai-hooks/editorConfig/selector'
+import { pageConfigActions } from '../../jotai-hooks/pageConfig/action'
+import { pageConfigSelectors } from '../../jotai-hooks/pageConfig/selector'
+import { blocksAtom } from '../../jotai-hooks/blocks/atom'
+import { relationsAtom } from '../../jotai-hooks/relations/atom'
 
 export type CommandData = {
   name: string
@@ -35,7 +41,7 @@ export const commands: CommandData[] = [
   {
     name: 'help',
     description: 'show help',
-    shortcut: '⌘+H',
+    shortcut: '⌘+.',
   },
   // {
   //   name: 'hint',
@@ -52,13 +58,18 @@ export const commands: CommandData[] = [
     description: 'edit the title',
     shortcut: '⌘+T',
   },
+  {
+    name: 'aspect-ratio',
+    description: 'flip the aspect ratio of the page (document/slide)',
+    shortcut: '⌘+A',
+  },
 ]
 
 const Footer = () => {
   const colorTheme = colorThemeSelector.useColorTheme()
   const mode = modeSelectors.useCurrentMode()
   const { backgroundColor, color } = match(mode)
-    .with('CURSOR', () => ({
+    .with('NORMAL', () => ({
       backgroundColor: colorTheme.footer,
       color: colorTheme.textPrimary,
     }))
@@ -109,6 +120,8 @@ const Footer = () => {
   const removeBlocks = useRemoveAllBlocks()
   const removeRelations = useRemoveAllRelations()
   const toggleSidebarRight = editorConfigActions.useToggleSidebarRight()
+  const blocks = useAtomValue(blocksAtom)
+  const relations = useAtomValue(relationsAtom)
 
   useEffect(() => {
     if (mode === 'COMMAND') {
@@ -130,12 +143,23 @@ const Footer = () => {
     }
   }, [buffer, matchingCommands, selectedCommandIndex])
 
+  const separationIsVisible = editorConfigSelectors.useSeparationIsVisible()
+  const aspectRatio = pageConfigSelectors.useAspectRatio()
+  const changeAspectRatio = pageConfigActions.useChangeAspectRatio()
+  const toggleEditingTitle = pageConfigActions.useToggleEditingTitle()
+
   return (
     <>
       {mode === 'COMMAND' ? (
         <Commands buffer={buffer} selectedCommandIndex={selectedCommandIndex} matchingCommands={matchingCommands} />
       ) : null}
-      <StyledFlex style={{ backgroundColor, color, borderTop: `0.5px solid ${colorTheme.border}` }}>
+      <StyledFlex
+        style={{
+          backgroundColor,
+          color,
+          borderTop: `0.5px solid ${separationIsVisible ? colorTheme.border : 'transparent'}`,
+        }}
+      >
         <StyledText> -- {mode} --</StyledText>
         {mode === 'COMMAND' ? (
           <StyledInput
@@ -158,14 +182,19 @@ const Footer = () => {
                   // commands[sellectedCommandIndex]それぞれの処理を行う
                   match(matchingCommands[selectedCommandIndex].name)
                     .with('save-page', () => {
-                      console.log('aaa')
+                      const json = JSON.stringify({ blocks, relations })
+                      const copyToClipboard = async () => navigator.clipboard.writeText(json)
+                      copyToClipboard()
+                        .then((r) => window.alert('Copied current page to clipboard in json format.'))
+                        .catch((error) => window.alert('Failed to copy current page to clipboard.'))
+                      changeMode('NORMAL')
                     })
                     .with('discard-page', () => {
                       if (window.confirm('Do you want to clear the current contents?')) {
                         removeBlocks()
                         removeRelations()
                       }
-                      changeMode('CURSOR')
+                      changeMode('NORMAL')
                     })
                     .with('settings', () => {
                       changeMode('SETTINGS')
@@ -182,19 +211,29 @@ const Footer = () => {
                       toggleColorTheme()
                     })
                     .with('edit-title', () => {
-                      console.log('aaa')
+                      changeMode('NORMAL')
+                      toggleEditingTitle()
+                    })
+                    .with('aspect-ratio', () => {
+                      changeAspectRatio(aspectRatio === 'document' ? 'slide' : 'document')
                     })
                     .otherwise(() => undefined)
                 } else {
                   match(word)
                     .with('save-page', () => {
-                      console.log('aaa')
+                      const json = JSON.stringify({ blocks, relations })
+                      const copyToClipboard = async () => navigator.clipboard.writeText(json)
+                      copyToClipboard()
+                        .then((r) => window.alert('Copied current page to clipboard in json format.'))
+                        .catch((error) => window.alert('Failed to copy current page to clipboard.'))
+                      changeMode('NORMAL')
                     })
                     .with('discard-page', () => {
                       if (window.confirm('Do you want to clear the current contents?')) {
                         removeBlocks()
                         removeRelations()
                       }
+                      changeMode('NORMAL')
                     })
                     .with('settings', () => {
                       changeMode('SETTINGS')
@@ -211,7 +250,12 @@ const Footer = () => {
                       toggleColorTheme()
                     })
                     .with('edit-title', () => {
-                      console.log('aaa')
+                      changeMode('NORMAL')
+                      toggleEditingTitle()
+                    })
+                    .with('aspect-ratio', () => {
+                      changeAspectRatio(aspectRatio === 'document' ? 'slide' : 'document')
+                      changeMode('NORMAL')
                     })
                     .otherwise(() => window.alert(`${word}: no such command`))
                 }

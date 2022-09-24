@@ -38,6 +38,7 @@ const Search = ({
   const changeBlockStatus = blocksActions.useChangeBlockStatus()
   const createBlock = blocksActions.useAddBlock()
   const colorTheme = colorThemeSelector.useColorTheme()
+  const toggleSidebarLeft = editorConfigActions.useToggleSidebarLeft()
 
   useEffect(() => {
     if (mode === 'INSERT') {
@@ -82,6 +83,9 @@ const Search = ({
             e.preventDefault()
             if (matchingContents.length === 0) return
             setSelectedContentIndex((prev) => (prev === matchingContents.length - 1 ? 0 : prev + 1))
+          } else if (e.key === 'Escape') {
+            changeMode('SELECT')
+            toggleSidebarLeft()
           } else if (e.key === 'Enter') {
             if (selectedContentIndex === -1) {
               alert('Select a relation. If you want to exit, press Escape of Ctrl+[')
@@ -116,7 +120,7 @@ const Search = ({
                 type: matchingContents[selectedContentIndex].key,
                 startBlockId: startBlock.id,
                 endBlockId: endBlock.id,
-                isSelected: false,
+                isSelected: true,
                 editing: true,
                 label: '',
               },

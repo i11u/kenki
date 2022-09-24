@@ -9,6 +9,7 @@ type EditorConfigSelectors = {
   useSidebarRightConfig: () => SidebarConfig
   useSidebarLeftIsOpen: () => boolean | undefined
   useSidebarRightIsOpen: () => boolean | undefined
+  useSeparationIsVisible: () => boolean
 }
 
 const useEditorConfigSelector = () =>
@@ -51,10 +52,19 @@ const useSidebarRightIsOpenSelector = () =>
     )
   )
 
+const useSeparationIsVisibleSelector = () =>
+  useAtomValue<boolean>(
+    selectAtom(
+      editorConfigAtom,
+      useCallback((config) => config.separationIsVisible, [])
+    )
+  )
+
 export const editorConfigSelectors: EditorConfigSelectors = {
   useEditorConfig: useEditorConfigSelector,
   useSidebarLeftConfig: useSidebarLeftConfigSelector,
   useSidebarRightConfig: useSidebarRightConfigSelector,
   useSidebarLeftIsOpen: useSidebarLeftIsOpenSelector,
   useSidebarRightIsOpen: useSidebarRightIsOpenSelector,
+  useSeparationIsVisible: useSeparationIsVisibleSelector,
 }

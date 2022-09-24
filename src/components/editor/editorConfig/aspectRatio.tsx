@@ -1,17 +1,27 @@
 import React from 'react'
-import styled from 'styled-components'
-import { pageConfigActions } from '../../../jotai-hooks/pageConfig/action'
+import aspectRatioSvg from '../../../assets/icons/editorConfig/aspect-ratio.svg'
+import { colorThemeSelector } from '../../../jotai-hooks/colorTheme/selector'
 import { pageConfigSelectors } from '../../../jotai-hooks/pageConfig/selector'
+import { pageConfigActions } from '../../../jotai-hooks/pageConfig/action'
 
 const AspectRatio = () => {
+  const colorTheme = colorThemeSelector.useColorTheme()
   const aspectRatio = pageConfigSelectors.useAspectRatio()
   const changeAspectRatio = pageConfigActions.useChangeAspectRatio()
 
-  return <StyledWrapper>aaa</StyledWrapper>
+  return (
+    <svg
+      style={{
+        color: colorTheme.icon,
+        height: '70%',
+        transform: 'translateY(22%)',
+        pointerEvents: 'all',
+      }}
+      onClick={() => changeAspectRatio(aspectRatio === 'document' ? 'slide' : 'document')}
+    >
+      <use xlinkHref={`${aspectRatioSvg}#aspect-ratio`} />
+    </svg>
+  )
 }
-
-const StyledWrapper = styled.div`
-  box-shadow: darkslategray;
-`
 
 export default React.memo(AspectRatio)

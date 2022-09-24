@@ -18,11 +18,13 @@ export type PageConfig = {
   scale: number
   grid: boolean
   blockBorder: boolean
+  editingTitle: boolean
 }
 
 export const pageConfigAtom = atom<PageConfig>({
-  aspectRatio: 'slide',
+  aspectRatio: 'document',
   scale: 1,
-  grid: true,
-  blockBorder: true,
+  grid: false,
+  blockBorder: false,
+  editingTitle: false,
 })

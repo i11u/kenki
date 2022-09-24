@@ -4,11 +4,12 @@ import * as d3 from 'd3'
 import { Relation } from '../../../jotai-hooks/relations/atom'
 import { blockSelectors } from '../../../jotai-hooks/blocks/selector'
 import { pageConfigSelectors } from '../../../jotai-hooks/pageConfig/selector'
-import { Block } from '../../../jotai-hooks/blocks/atom'
 import { relationActions, useRemoveRelation, useUpdateLabelInRelation } from '../../../jotai-hooks/relations/action'
 import { blocksActions } from '../../../jotai-hooks/blocks/action'
 import { modeActions } from '../../../jotai-hooks/mode/action'
 import { colorThemeSelector } from '../../../jotai-hooks/colorTheme/selector'
+import useRelationPosition from '../../../hooks/useRelationPosition'
+import { Block } from '../../../jotai-hooks/blocks/atom'
 
 const RelationTSX = ({ relationAtom }: { relationAtom: PrimitiveAtom<Relation> }) => {
   const relation = useAtomValue(relationAtom)
@@ -19,16 +20,13 @@ const RelationTSX = ({ relationAtom }: { relationAtom: PrimitiveAtom<Relation> }
   if (startBlock === undefined || endBlock === undefined) removeRelation(relation.id)
 
   const gridNum = pageConfigSelectors.useGridNum()
-  const top = `calc(${(100 / gridNum.rowNum) * ((startBlock as Block).position.row + (startBlock as Block).height)}% )`
-  const left = `calc(${(100 / gridNum.colNum) * ((startBlock as Block).position.col + (startBlock as Block).width)}% )`
-  const width = `calc(${
-    (100 / gridNum.colNum) *
-    ((endBlock as Block).position.col - (startBlock as Block).position.col - (startBlock as Block).width)
-  }%)`
-  const height = `calc(${
-    (100 / gridNum.rowNum) *
-    ((endBlock as Block).position.row - (startBlock as Block).position.row - (startBlock as Block).height)
-  }%)`
+
+  const [top, left, width, height, x1, y1, x2, y2] = useRelationPosition(
+    gridNum,
+    startBlock as Block,
+    endBlock as Block
+  )
+
   const ref = useRef<HTMLInputElement>(null)
   const updateLabelText = useUpdateLabelInRelation()
   const changeRelationStatus = relationActions.useChangeRelationStatus()
@@ -64,16 +62,16 @@ const RelationTSX = ({ relationAtom }: { relationAtom: PrimitiveAtom<Relation> }
       .enter()
       .append('line')
       .merge(line)
-      .attr('x1', 0)
-      .attr('y1', 0)
-      .attr('x2', '100%')
-      .attr('y2', '100%')
+      .attr('x1', x1)
+      .attr('y1', y1)
+      .attr('x2', x2)
+      .attr('y2', y2)
       .attr('stroke', colorTheme.textPrimary)
       .attr('stroke-width', '1px')
       .attr('marker-end', 'url(#triangle)')
 
     line.exit().remove()
-  }, [colorTheme.textPrimary, relation])
+  }, [colorTheme.textPrimary, relation, x1, x2, y1, y2])
 
   return (
     <div
@@ -84,6 +82,9 @@ const RelationTSX = ({ relationAtom }: { relationAtom: PrimitiveAtom<Relation> }
         left,
         width,
         height,
+        // border: '1px solid black',
+        display:
+          top === 'calc(0%)' || left === 'calc(0%)' || width === 'calc(0%)' || height === 'calc(0%)' ? 'none' : 'block',
       }}
     >
       <input
@@ -94,17 +95,17 @@ const RelationTSX = ({ relationAtom }: { relationAtom: PrimitiveAtom<Relation> }
           position: 'absolute',
           top: '50%',
           left: '50%',
+          transform: 'translate(-50%, -50%)',
           width: 'auto',
           height: '14px',
-          fontSize: '8px',
+          fontSize: '12px',
           resize: 'none',
           outline: 'none',
           border: relation.editing ? `0.5px dashed ${colorTheme.textPrimary}` : 'none',
-          backgroundColor: 'transparent',
+          backgroundColor: colorTheme.page,
           color: colorTheme.textPrimary,
           textAlign: 'center',
-          transform: 'rotate(0.125turn)',
-          transformOrigin: '0 0',
+          zIndex: 2,
         }}
         onKeyDown={(e) => {
           if (e.key === 'Tab') {
@@ -123,11 +124,11 @@ const RelationTSX = ({ relationAtom }: { relationAtom: PrimitiveAtom<Relation> }
           }
         }}
       />
-      <svg id={`relation-${relation.id}`} style={{ position: 'absolute', width: '100%', height: '100%' }}>
+      <svg id={`relation-${relation.id}`} style={{ position: 'absolute', width: '100%', height: '100%', zIndex: 1 }}>
         <defs>
           <marker
             id="triangle"
-            viewBox="0 0 15 7.5"
+            viewBox="0 0 15 15"
             refX="15"
             refY="7.5"
             markerWidth="7.5"

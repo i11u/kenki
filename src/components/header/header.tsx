@@ -7,15 +7,16 @@ import Settings from './settings'
 import Help from './help'
 import { colorThemeSelector } from '../../jotai-hooks/colorTheme/selector'
 import PageTitle from './pageTitle'
+import { editorConfigSelectors } from '../../jotai-hooks/editorConfig/selector'
 
 const Header = React.memo(() => {
   const headerRef = useRef<HTMLDivElement>(null)
   const colorTheme = colorThemeSelector.useColorTheme()
+  const separationIsVisible = editorConfigSelectors.useSeparationIsVisible()
   const style = {
-    // backgroundColor: colorTheme.header,
-    backgroundColor: 'transparent',
-    borderBottom: `0.5px solid ${colorTheme.border}`,
-    // borderBottom: `0px solid ${colorTheme.border}`,
+    backgroundColor: colorTheme.header,
+    // backgroundColor: 'transparent',
+    borderBottom: `0.5px solid ${separationIsVisible ? colorTheme.border : 'transparent'}`,
   }
   usePreventPinch(headerRef)
 

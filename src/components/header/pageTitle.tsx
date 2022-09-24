@@ -1,13 +1,25 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { modeActions } from '../../jotai-hooks/mode/action'
 import { colorThemeSelector } from '../../jotai-hooks/colorTheme/selector'
+import { pageConfigSelectors } from '../../jotai-hooks/pageConfig/selector'
+import { pageConfigActions } from '../../jotai-hooks/pageConfig/action'
 
 const PageTitle = () => {
   const [title, setTitle] = useState('Untitled')
   const changeMode = modeActions.useSwitchModes()
   const colorTheme = colorThemeSelector.useColorTheme()
   const ref = useRef<HTMLInputElement>(null)
+  const editingTitle = pageConfigSelectors.useEditingTitle()
+  const toggleEditingTitle = pageConfigActions.useToggleEditingTitle()
+
+  useEffect(() => {
+    if (editingTitle) {
+      ref.current?.focus()
+    } else {
+      ref.current?.blur()
+    }
+  }, [editingTitle])
 
   return (
     <StyledTitle
@@ -15,21 +27,21 @@ const PageTitle = () => {
       style={{
         // backgroundColor: colorTheme.header,
         backgroundColor: 'transparent',
-        color: colorTheme.textPrimary,
+        color: colorTheme.textSecondary,
       }}
       value={title}
       onFocus={(e) => {
-        changeMode('EDIT')
+        if (!editingTitle) toggleEditingTitle()
       }}
       onChange={(e) => {
         setTitle(e.target.value)
       }}
       onKeyDown={(e) => {
         if (e.key === 'Escape') {
-          changeMode('CURSOR')
+          toggleEditingTitle()
           ref.current?.blur()
         } else if (e.key === 'Enter') {
-          changeMode('CURSOR')
+          toggleEditingTitle()
           ref.current?.blur()
         }
       }}

@@ -10,6 +10,7 @@ type PageConfigSelectors = {
   usePageScale: () => number
   useGridIsVisible: () => boolean
   useBlockBorderIsVisible: () => boolean
+  useEditingTitle: () => boolean
 }
 const usePageConfigSelector = () =>
   useAtomValue(
@@ -65,6 +66,14 @@ const useBlockBorderIsVisibleSelector = () =>
     )
   )
 
+const useEditingTitleSelector = () =>
+  useAtomValue(
+    selectAtom(
+      pageConfigAtom,
+      useCallback((config) => config.editingTitle, [])
+    )
+  )
+
 export const pageConfigSelectors: PageConfigSelectors = {
   usePageConfig: usePageConfigSelector,
   useGridNum: useGridNumSelector,
@@ -72,4 +81,5 @@ export const pageConfigSelectors: PageConfigSelectors = {
   usePageScale: usePageScaleSelector,
   useGridIsVisible: useGridIsVisibleSelector,
   useBlockBorderIsVisible: useBlockBorderIsVisibleSelector,
+  useEditingTitle: useEditingTitleSelector,
 }

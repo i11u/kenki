@@ -5,9 +5,9 @@ import { Block, Position } from '../jotai-hooks/blocks/atom'
 export class BlockUtils {
   private static isInterrupted = false
 
-  public static style = (block: Block, gridNum: { rowNum: number; colNum: number }) => ({
-    top: `${block.position.row * (100 / gridNum.rowNum)}%`,
-    left: `${block.position.col * (100 / gridNum.colNum)}%`,
+  public static style = (block: Block, gridNum: { rowNum: number; colNum: number }, blockBorderIsVisible: boolean) => ({
+    top: `calc(${block.position.row * (100 / gridNum.rowNum)}% ${blockBorderIsVisible ? '' : '+ 1px'})`,
+    left: `calc(${block.position.col * (100 / gridNum.colNum)}% ${blockBorderIsVisible ? '' : '+ 1px'})`,
     width: `calc(${100 / gridNum.colNum}% - 1px + ${(100 / gridNum.colNum) * (block.width - 1)}%)`,
     height: `calc(${100 / gridNum.rowNum}% - 1px + ${(100 / gridNum.rowNum) * (block.height - 1)}%)`,
     minWidth: `calc(${100 / gridNum.colNum}% - 1px)`,
@@ -117,18 +117,18 @@ export class BlockUtils {
 
     if (block.isSelected) {
       switch (key) {
-        case 9: // Tab
-          e.preventDefault()
-          changeBlockStatus({ blockId: id, isEmpty: block.isEmpty, isSelected: false, editing: false })
-          if (nextBlock.id !== id) {
-            changeBlockStatus({
-              blockId: nextBlock.id,
-              isEmpty: nextBlock.isEmpty,
-              isSelected: true,
-              editing: true,
-            })
-          }
-          break
+        // case 9: // Tab
+        //   e.preventDefault()
+        //   changeBlockStatus({ blockId: id, isEmpty: block.isEmpty, isSelected: false, editing: false })
+        //   if (nextBlock.id !== id) {
+        //     changeBlockStatus({
+        //       blockId: nextBlock.id,
+        //       isEmpty: nextBlock.isEmpty,
+        //       isSelected: true,
+        //       editing: true,
+        //     })
+        //   }
+        //   break
         case 37: // ArrowLeft
           e.preventDefault()
           if (col > 0) {
@@ -222,21 +222,21 @@ export class BlockUtils {
     switch (key) {
       case 9:
         e.preventDefault()
-        changeBlockStatus({
-          blockId: block.id,
-          isEmpty: block.isEmpty,
-          isSelected: block.isSelected,
-          editing: false,
-        })
-        // eslint-disable-next-line no-case-declarations
-        const nextPosition =
-          col + block.width + 3 > colNum - 3
-            ? { row: row + block.height + 3, col: 3 }
-            : {
-                row,
-                col: col + block.width + 1,
-              }
-        addBlock({ block: BlockUtils.emptyBlock({ position: nextPosition }) })
+        // changeBlockStatus({
+        //   blockId: block.id,
+        //   isEmpty: block.isEmpty,
+        //   isSelected: block.isSelected,
+        //   editing: false,
+        // })
+        // // eslint-disable-next-line no-case-declarations
+        // const nextPosition =
+        //   col + block.width + 3 > colNum - 3
+        //     ? { row: row + block.height + 3, col: 3 }
+        //     : {
+        //         row,
+        //         col: col + block.width + 1,
+        //       }
+        // addBlock({ block: BlockUtils.emptyBlock({ position: nextPosition }) })
         break
       default:
     }

@@ -4,9 +4,11 @@ import { AspectRatioType, pageConfigAtom } from './atom'
 
 type PageConfigActions = {
   useChangeAspectRatio: () => (aspectRatio: AspectRatioType) => void
+  useToggleAspectRatio: () => () => void
   useChangeScale: () => (scale: number) => void
   useToggleGridIsVisible: () => () => void
   useToggleBlockBorderIsVisible: () => () => void
+  useToggleEditingTitle: () => () => void
 }
 
 export const pageConfigActions: PageConfigActions = {
@@ -17,6 +19,17 @@ export const pageConfigActions: PageConfigActions = {
           set(pageConfigAtom, (prev) => ({
             ...prev,
             aspectRatio,
+          })),
+        []
+      )
+    ),
+  useToggleAspectRatio: () =>
+    useAtomCallback(
+      useCallback(
+        (get, set) =>
+          set(pageConfigAtom, (prev) => ({
+            ...prev,
+            aspectRatio: prev.aspectRatio === 'slide' ? 'document' : 'slide',
           })),
         []
       )
@@ -47,6 +60,15 @@ export const pageConfigActions: PageConfigActions = {
         set(pageConfigAtom, (prev) => ({
           ...prev,
           blockBorder: !prev.blockBorder,
+        }))
+      }, [])
+    ),
+  useToggleEditingTitle: () =>
+    useAtomCallback(
+      useCallback((get, set) => {
+        set(pageConfigAtom, (prev) => ({
+          ...prev,
+          editingTitle: !prev.editingTitle,
         }))
       }, [])
     ),

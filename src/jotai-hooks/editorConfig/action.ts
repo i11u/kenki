@@ -7,6 +7,7 @@ type EditorConfigActions = {
   useToggleHeader: () => () => void
   useToggleSidebarLeft: () => () => void
   useToggleSidebarRight: () => () => void
+  useToggleSeparationIsVisible: () => () => void
 }
 
 export const editorConfigActions: EditorConfigActions = {
@@ -59,6 +60,17 @@ export const editorConfigActions: EditorConfigActions = {
               sidebarRightConfig,
             }
           }),
+        []
+      )
+    ),
+  useToggleSeparationIsVisible: () =>
+    useAtomCallback(
+      useCallback(
+        (get, set) =>
+          set(editorConfigAtom, (prev) => ({
+            ...prev,
+            separationIsVisible: !prev.separationIsVisible,
+          })),
         []
       )
     ),

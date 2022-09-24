@@ -1,5 +1,5 @@
-import styled from 'styled-components'
 import React, { useRef } from 'react'
+import styled from 'styled-components'
 import usePreventPinch from '../../hooks/usePreventPinch'
 import { pageConfigSelectors } from '../../jotai-hooks/pageConfig/selector'
 import useOnResizeEffect from '../../hooks/useOnResizeEffect'
@@ -7,18 +7,17 @@ import { editorConfigSelectors } from '../../jotai-hooks/editorConfig/selector'
 import useIsFirst from '../../hooks/useIsFirst'
 import { colorThemeSelector } from '../../jotai-hooks/colorTheme/selector'
 import { modeSelectors } from '../../jotai-hooks/mode/selector'
-import { editorConfigActions } from '../../jotai-hooks/editorConfig/action'
 
 const SidebarRight = () => {
   const sidebarRef = useRef<HTMLDivElement>(null)
   usePreventPinch(sidebarRef)
   const gridNum = pageConfigSelectors.useGridNum()
   useOnResizeEffect(gridNum.rowNum, sidebarRef)
-  const toggleSidebarRight = editorConfigActions.useToggleSidebarRight()
   const mode = modeSelectors.useCurrentMode()
   const colorTheme = colorThemeSelector.useColorTheme()
   const gridIsVisible = pageConfigSelectors.useGridIsVisible()
   const blockBorderIsVisible = pageConfigSelectors.useBlockBorderIsVisible()
+  const separationIsVisible = editorConfigSelectors.useSeparationIsVisible()
 
   // SidebarRight Animation
   const sidebarRightIsOpen = editorConfigSelectors.useSidebarRightIsOpen()
@@ -30,35 +29,53 @@ const SidebarRight = () => {
       }
 
   return (
-    <StyledSidebar
-      id="sidebar-right"
-      ref={sidebarRef}
-      style={{
-        ...style,
-        backgroundColor: colorTheme.sidebar,
-        borderLeft: sidebarRightIsOpen === true ? `0.5px solid ${colorTheme.border}` : '',
-      }}
-    >
+    <>
+      <StyledSidebar
+        id="sidebar-right"
+        ref={sidebarRef}
+        style={{
+          ...style,
+          backgroundColor: colorTheme.sidebar,
+          borderLeft:
+            sidebarRightIsOpen === true ? `0.5px solid ${separationIsVisible ? colorTheme.border : 'transparent'}` : '',
+        }}
+      />
       {mode === 'SETTINGS' ? (
-        <StyledFlex>
-          <StyledTitle style={{ color: colorTheme.textPrimary }}>Settings</StyledTitle>
-          <StyledLabel style={{ color: colorTheme.textSecondary }}>Global</StyledLabel>
-          <StyledItem style={{ color: colorTheme.textPrimary }}>Color theme (⌘+L): {colorTheme.name}</StyledItem>
-          <StyledLabel style={{ color: colorTheme.textSecondary }}>Editor</StyledLabel>
-          <StyledItem style={{ color: colorTheme.textPrimary }}>
-            Grid (⌘+G): {gridIsVisible ? 'visible' : 'hidden'}
-          </StyledItem>
-          <StyledItem style={{ color: colorTheme.textPrimary }}>
-            Block border (⌘+B): {blockBorderIsVisible ? 'visible' : 'hidden'}
-          </StyledItem>
+        <StyledFlex style={{ width: `${window.innerWidth * 0.2}px` }}>
+          <StyledFlex2>
+            <StyledTitle style={{ color: colorTheme.textPrimary }}>Settings</StyledTitle>
+            <StyledLabel style={{ color: colorTheme.textSecondary }}>Global</StyledLabel>
+            <StyledItem style={{ color: colorTheme.textPrimary }}>Color theme (⌘+L): {colorTheme.name}</StyledItem>
+            <StyledItem style={{ color: colorTheme.textPrimary }}>
+              Separation (⌘+S): {separationIsVisible ? 'on' : 'off'}
+            </StyledItem>
+            <StyledLabel style={{ color: colorTheme.textSecondary }}>Editor</StyledLabel>
+            <StyledItem style={{ color: colorTheme.textPrimary }}>
+              Grid (⌘+G): {gridIsVisible ? 'visible' : 'hidden'}
+            </StyledItem>
+            <StyledItem style={{ color: colorTheme.textPrimary }}>
+              Block border (⌘+V): {blockBorderIsVisible ? 'visible' : 'hidden'}
+            </StyledItem>
+          </StyledFlex2>
         </StyledFlex>
       ) : mode === 'HELP' ? (
-        <StyledFlex>
-          <StyledTitle style={{ color: colorTheme.textPrimary }}>Help</StyledTitle>
-          <StyledLabel style={{ color: colorTheme.textSecondary }}>How to use</StyledLabel>
+        <StyledFlex style={{ width: `calc(${window.innerWidth * 0.2}px - 0.5px)` }}>
+          <StyledFlex2>
+            <StyledTitle style={{ color: colorTheme.textPrimary }}>Help</StyledTitle>
+            <StyledLabel style={{ color: colorTheme.textSecondary }}>Modes</StyledLabel>
+            <StyledItem style={{ color: colorTheme.textPrimary }}>
+              kenki is built upon vim-like mode transitions.
+            </StyledItem>
+            <StyledItem style={{ color: colorTheme.textPrimary }}>
+              Please visit our <a href="https://github.com/i11u/kiji">wiki</a> to know more.
+            </StyledItem>
+
+            <StyledLabel style={{ color: colorTheme.textSecondary }}>Cursor mode</StyledLabel>
+            <StyledItem style={{ color: colorTheme.textPrimary }}>Move cursor: vim</StyledItem>
+          </StyledFlex2>
         </StyledFlex>
       ) : null}
-    </StyledSidebar>
+    </>
   )
 }
 
@@ -70,10 +87,21 @@ const StyledSidebar = styled.div`
   animation-fill-mode: forwards;
   position: fixed;
   box-sizing: border-box;
-  z-index: 1;
+  z-index: 0;
 `
 
 const StyledFlex = styled.div`
+  position: fixed;
+  top: 34px;
+  right: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px 0;
+  z-index: 1;
+`
+
+const StyledFlex2 = styled.div`
   position: relative;
   margin-top: 40px;
   margin-left: 40px;
@@ -84,18 +112,18 @@ const StyledFlex = styled.div`
 `
 
 const StyledTitle = styled.div`
-  white-space: nowrap;
+  width: 100%;
   font-family: 'Inter', sans-serif;
   font-size: 18px;
 `
 
 const StyledLabel = styled.div`
-  white-space: nowrap;
+  width: 100%;
   font-size: 18px;
 `
 
 const StyledItem = styled.div`
-  white-space: nowrap;
+  width: 80%;
   font-size: 14px;
   margin-left: 12px;
 `

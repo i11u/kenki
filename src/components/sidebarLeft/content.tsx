@@ -31,17 +31,6 @@ const Content = ({ buffer, content, isSelected }: { buffer: string; content: Con
       >
         <use xlinkHref={`${svg}#relation`} />
       </svg>
-      {/* <Icon */}
-      {/*  src={svg} */}
-      {/*  alt="arrow svg" */}
-      {/*  style={{ */}
-      {/*    position: 'relative', */}
-      {/*    width: '30%', */}
-      {/*    height: 'fit-content', */}
-      {/*    marginTop: '-16px', */}
-      {/*    marginLeft: '10%', */}
-      {/*  }} */}
-      {/* /> */}
       <StyledText style={{ color: colorTheme.textPrimary }}>
         {arr.map((str, index) => {
           if (index === arr.length - 1) {

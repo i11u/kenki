@@ -1,7 +1,7 @@
 import { atom } from 'jotai'
 
 export type Mode =
-  | 'CURSOR'
+  | 'NORMAL'
   | 'EDIT'
   | 'COMMAND'
   | 'SELECT'
@@ -11,4 +11,4 @@ export type Mode =
   | 'SETTINGS'
   | 'HELP'
 
-export const modeAtom = atom<Mode>('CURSOR')
+export const modeAtom = atom<Mode>('NORMAL')

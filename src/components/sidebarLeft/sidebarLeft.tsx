@@ -64,6 +64,8 @@ const SidebarLeft = () => {
     }
   }, [buffer, matchingContents, selectedContentIndex, setSelectedContentIndex])
 
+  const separationIsVisible = editorConfigSelectors.useSeparationIsVisible()
+
   return (
     <StyledSidebar
       id="sidebar-left"
@@ -71,7 +73,8 @@ const SidebarLeft = () => {
       style={{
         ...style,
         backgroundColor: colorTheme.sidebar,
-        borderRight: sidebarLeftIsOpen === true ? `0.5px solid ${colorTheme.border}` : '',
+        borderRight:
+          sidebarLeftIsOpen === true ? `0.5px solid ${separationIsVisible ? colorTheme.border : 'transparent'}` : '',
       }}
     >
       {mode === 'INSERT' ? (

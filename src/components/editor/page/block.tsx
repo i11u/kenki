@@ -27,7 +27,7 @@ const StyledBlockWrapper = styled.div`
 const StyledBlock = styled.div`
   outline: none;
   white-space: nowrap;
-  font-family: '凸版文久ゴシック', sans-serif;
+  font-family: '凸版文久ゴシック', serif;
   text-justify: inter-ideograph;
   z-index: 1;
 `
@@ -53,7 +53,7 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
   const removeBlock = useRemoveBlock()
 
   useEffect(() => {
-    if (mode === 'CURSOR' && !block.isSelected && !block.editing && block.innerHTML === '') {
+    if (mode === 'NORMAL' && !block.isSelected && !block.editing && block.innerHTML === '') {
       console.log()
       removeBlock(block.id)
     }
@@ -98,22 +98,22 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
     }
   }, [block.editing, mode])
 
-  const style = BlockUtils.style(block, gridNum)
   const blockBorderIsVisible = pageConfigSelectors.useBlockBorderIsVisible()
+
+  const style = BlockUtils.style(block, gridNum, blockBorderIsVisible)
 
   return (
     <>
       <StyledBlockSelection
         style={{
           ...style,
-          width: `calc(${style.width} + 2px)`,
-          height: `calc(${style.height} + 2px)`,
-          minWidth: `calc(${style.minWidth} + 2px)`,
-          minHeight: `calc(${style.minHeight} + 2px)`,
+          width: `calc(${style.width} + 1px)`,
+          height: `calc(${style.height} + 1px)`,
+          minWidth: `calc(${style.minWidth} + 1px)`,
+          minHeight: `calc(${style.minHeight} + 1px)`,
           display: block.isSelected ? '' : 'none',
         }}
       />
-
       <StyledBlockWrapper
         id={`block-${block.id}-wrapper`}
         className="block-wrapper"
@@ -124,6 +124,7 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
           borderStyle: mode === 'SELECT' && block.isSelected ? 'dotted' : 'solid',
           backgroundColor: colorTheme.background,
           color: colorTheme.textPrimary,
+          opacity: mode === 'SELECT' && !block.isSelected ? '0.2' : '',
         }}
         onDoubleClick={(e: React.MouseEvent<HTMLDivElement>) =>
           BlockUtils.handleOnDoubleClick({
@@ -150,8 +151,11 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
           id={`block-${block.id}`}
           className="block"
           contentEditable
-          dangerouslySetInnerHTML={{ __html: innerHTMLRef.current }}
+          // dangerouslySetInnerHTML={{ __html: innerHTMLRef.current }}
           spellCheck={false}
+          autoCorrect="off"
+          autoCapitalize="off"
+          aria-autocomplete="none"
           ref={blockRef}
           onInput={(e: React.FormEvent<HTMLDivElement>) =>
             BlockUtils.handleOnInput({
@@ -162,19 +166,21 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
               updateInnerHTML,
             })
           }
-          onKeyDown={(e) =>
-            BlockUtils.handleOnKeyDown({
-              e,
-              block,
-              changeBlockStatus,
-              addBlock,
-              rowNum: gridNum.rowNum,
-              colNum: gridNum.colNum,
-            })
-          }
+          // onKeyDown={(e) =>
+          //   BlockUtils.handleOnKeyDown({
+          //     e,
+          //     block,
+          //     changeBlockStatus,
+          //     addBlock,
+          //     rowNum: gridNum.rowNum,
+          //     colNum: gridNum.colNum,
+          //   })
+          // }
           onPaste={(e: React.ClipboardEvent<HTMLDivElement>) => BlockUtils.handleOnPaste({ e })}
-          onKeyUp={(e) => BlockUtils.handleOnKeyUp({ e, block, changeBlockStatus })}
-        />
+          // onKeyUp={(e) => BlockUtils.handleOnKeyUp({ e, block, changeBlockStatus })}
+        >
+          {innerHTMLRef.current}
+        </StyledBlock>
       </StyledBlockWrapper>
     </>
   )

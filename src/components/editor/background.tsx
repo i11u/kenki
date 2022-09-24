@@ -58,9 +58,9 @@ const StyledBackground = styled.div`
   animation-duration: 0.5s;
   animation-fill-mode: forwards;
   position: absolute;
-  //top: 34px;
-  //height: calc(100% - 50px);
-  height: calc(100% - 16px);
+  top: 34px;
+  height: calc(100% - 50px);
+  //height: calc(100% - 16px);
   overflow: auto;
   display: flex;
   z-index: 1;

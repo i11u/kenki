@@ -41,10 +41,35 @@ const App = () => {
   const toggleColorTheme = colorThemeActions.useToggleColorTheme()
   const toggleGridIsVisible = pageConfigActions.useToggleGridIsVisible()
   const toggleBlockBorderIsVisible = pageConfigActions.useToggleBlockBorderIsVisible()
+  const toggleSeparationIsVisible = editorConfigActions.useToggleSeparationIsVisible()
+  const toggleAspectRatio = pageConfigActions.useToggleAspectRatio()
+  const editingTitle = pageConfigSelectors.useEditingTitle()
 
   const addEventListeners = () => console.log('')
 
   const removeEventListeners = () => console.log('')
+
+  const linkHintCharacters = 'sadfjklewcmpgh'
+
+  const hintStrings = (linkCount: number) => {
+    let hints = ['']
+    let offset = 0
+    while (hints.length - offset < linkCount || hints.length === 1) {
+      // eslint-disable-next-line no-plusplus
+      const hint = hints[offset++]
+      // eslint-disable-next-line no-restricted-syntax
+      for (const ch of linkHintCharacters) {
+        hints.push(ch + hint)
+      }
+    }
+    hints = hints.slice(offset, offset + linkCount)
+    return hints.sort().map((str) =>
+      str
+        .split('')
+        .reverse()
+        .reduce((prev, curr) => prev + curr, '')
+    )
+  }
 
   /*
    * Define functions when App component is mounted/unmounted.
@@ -63,7 +88,8 @@ const App = () => {
       console.log(buffer)
       return (
         match(mode)
-          .with('CURSOR', () =>
+          .with('NORMAL', () => {
+            if (editingTitle) return
             match(buffer)
               .with(':', () => {
                 e.preventDefault()
@@ -109,25 +135,26 @@ const App = () => {
                 changeMode('BLOCKHINT')
                 //  Activate block hints
                 const blockDOMs = Array.from(document.getElementsByClassName('block-wrapper'))
-                const hints = blockDOMs.map((blockDOM) => {
+                const labels = hintStrings(blockDOMs.length)
+                const hints = blockDOMs.map((blockDOM, i) => {
                   const hint = document.createElement('div')
                   hint.id = blockDOM.id.slice(6, -8)
-                  hint.className = 'hint'
+                  hint.className = `hint ${labels[i]}`
+                  hint.innerHTML = labels[i]
                   hint.style.color = 'black'
                   hint.style.position = 'absolute'
                   hint.style.backgroundColor = '#ffdf5e'
                   const cellWidth = document.getElementById('cursor')?.clientWidth as number
                   const cellHeight = document.getElementById('cursor')?.clientHeight as number
-                  hint.style.width = `${cellWidth}px`
+                  hint.style.width = `calc(${cellWidth}px + ${cellWidth * (labels[i].length - 1) * 0.5}px)`
                   hint.style.height = `${cellHeight}px`
                   hint.style.marginTop = '-20px'
                   hint.style.marginLeft = '-20px'
                   hint.style.border = '1px solid gray'
                   hint.style.borderRadius = '2px'
                   hint.style.fontFamily = 'Monaco, sans-serif'
-                  const rawLabel = document.createElement('span')
-                  rawLabel.innerText = hint.id.slice(0, 2)
-                  hint.appendChild(rawLabel)
+                  hint.style.fontSize = 'auto'
+                  hint.style.textAlign = 'center'
                   return hint
                 })
                 hints.map((hint) =>
@@ -157,12 +184,38 @@ const App = () => {
                 }
                 buffer = ''
               })
+              .with('s', () => {
+                if (e.shiftKey && e.metaKey) {
+                  e.preventDefault()
+                  toggleSeparationIsVisible()
+                }
+                buffer = ''
+              })
+              .with('a', () => {
+                if (e.shiftKey && e.metaKey) {
+                  e.preventDefault()
+                  toggleAspectRatio()
+                }
+                buffer = ''
+              })
               .with(',', () => {
                 if (e.metaKey) {
                   e.preventDefault()
                   changeMode('SETTINGS')
                   toggleSidebarRight()
                 }
+                buffer = ''
+              })
+              .with('.', () => {
+                if (e.metaKey) {
+                  e.preventDefault()
+                  changeMode('HELP')
+                  toggleSidebarRight()
+                }
+                buffer = ''
+              })
+              .with('Tab', () => {
+                e.preventDefault()
                 buffer = ''
               })
               .otherwise(() => {
@@ -225,7 +278,7 @@ const App = () => {
                   buffer = ''
                 }
               })
-          )
+          })
           .with('INSERT', () =>
             match(buffer)
               .with('Escape', () => {
@@ -250,7 +303,7 @@ const App = () => {
           .with('COMMAND', () =>
             match(buffer)
               .with('Escape', () => {
-                changeMode('CURSOR')
+                changeMode('NORMAL')
                 buffer = ''
               })
               .with('l', () => {
@@ -274,7 +327,7 @@ const App = () => {
                     isSelected: false,
                     editing: false,
                   })
-                  changeMode('CURSOR')
+                  changeMode('NORMAL')
                   moveCursorByPosition({
                     row: editingBlock.position.row + editingBlock.height - 1,
                     col: editingBlock.position.col + editingBlock.width - 1,
@@ -300,6 +353,10 @@ const App = () => {
                 }
                 buffer = ''
               })
+              .with('Tab', () => {
+                e.preventDefault()
+                buffer = ''
+              })
               //  In EDIT mode, keystrokes are handled by listeners defined in each component.
               .otherwise(() => {
                 buffer = ''
@@ -319,7 +376,7 @@ const App = () => {
                   row: selectedBlock.position.row + selectedBlock.height - 1,
                   col: selectedBlock.position.col + selectedBlock.width - 1,
                 })
-                changeMode('CURSOR')
+                changeMode('NORMAL')
                 buffer = ''
               })
               .with('i', () => {
@@ -363,13 +420,17 @@ const App = () => {
                 const block = selectedBlocks[0]
                 removeBlock(block.id)
                 moveCursorByPosition(block.position)
-                changeMode('CURSOR')
+                changeMode('NORMAL')
                 buffer = ''
               })
               .with('l', () => {
                 if (e.shiftKey && e.metaKey) {
                   toggleColorTheme()
                 }
+                buffer = ''
+              })
+              .with('Tab', () => {
+                e.preventDefault()
                 buffer = ''
               })
               .otherwise(() => {
@@ -437,7 +498,7 @@ const App = () => {
           //  MULTISELECT mode is disabled for now
           .with('MULTISELECT', () =>
             match(buffer)
-              .with('Escape', () => changeMode('CURSOR'))
+              .with('Escape', () => changeMode('NORMAL'))
               .with('v', () => changeMode('SELECT'))
               .otherwise(() => e.preventDefault())
           )
@@ -445,67 +506,106 @@ const App = () => {
             match(e.key)
               .with('Escape', () => {
                 DomUtils.removeElements(document.getElementsByClassName('hint'))
-                changeMode('CURSOR')
-                buffer = ''
-              })
-              .with('l', () => {
-                if (e.shiftKey && e.metaKey) {
-                  toggleColorTheme()
-                }
+                changeMode('NORMAL')
                 buffer = ''
               })
               .otherwise(() => {
                 const hints = Array.from(document.getElementsByClassName('hint'))
+                console.log(buffer)
+                // If buffer hits any hint, flag becomes true
+                let noMatch = true
                 hints.map((hint) => {
-                  const reg = new RegExp(`^${hint.id.slice(0, 2)}$`)
-                  console.log(hint.id)
-                  console.log(buffer)
-                  if (reg.test(buffer)) {
-                    console.log(hint.id)
-                    console.log(buffer)
-                    changeBlockStatus({
-                      blockId: hint.id,
-                      isEmpty: false,
-                      isSelected: true,
-                      editing: false,
-                    })
-                    selectedBlocks.forEach((block) => {
-                      if (block.id !== hint.id) {
-                        changeBlockStatus({
-                          blockId: block.id,
-                          isEmpty: block.isEmpty,
-                          isSelected: false,
-                          editing: false,
-                        })
-                      }
-                    })
-                    DomUtils.removeElements(document.getElementsByClassName('hint'))
-                    changeMode('SELECT')
-                    buffer = ''
-                    return false
+                  const reg1 = new RegExp(`^${buffer}`)
+                  const reg2 = new RegExp(`^${hint.className.slice(5)}$`)
+                  if (reg1.test(hint.className.slice(5))) {
+                    noMatch = false
+                    if (reg2.test(buffer)) {
+                      changeBlockStatus({
+                        blockId: hint.id,
+                        isEmpty: false,
+                        isSelected: true,
+                        editing: false,
+                      })
+                      selectedBlocks.forEach((block) => {
+                        if (block.id !== hint.id) {
+                          changeBlockStatus({
+                            blockId: block.id,
+                            isEmpty: block.isEmpty,
+                            isSelected: false,
+                            editing: false,
+                          })
+                        }
+                      })
+                      DomUtils.removeElements(document.getElementsByClassName('hint'))
+                      changeMode('SELECT')
+                      buffer = ''
+                    } else {
+                      // eslint-disable-next-line no-param-reassign
+                      hint.innerHTML = `<span style="color: red">${buffer}</span>${hint.className
+                        .slice(5)
+                        .slice(buffer.length)}`
+                    }
+                  } else {
+                    hint.remove()
                   }
                   return false
                 })
+                if (noMatch) {
+                  DomUtils.removeElements(document.getElementsByClassName('hint'))
+                  changeMode('NORMAL')
+                  buffer = ''
+                  return false
+                }
+                return false
               })
           })
           .with('SETTINGS', () =>
             match(buffer)
               .with('Escape', () => {
                 toggleSidebarRight()
-                changeMode('CURSOR')
-                buffer = ''
-              })
-              .with('l', () => {
-                if (e.shiftKey && e.metaKey) {
-                  toggleColorTheme()
-                }
+                changeMode('NORMAL')
                 buffer = ''
               })
               .with(',', () => {
                 if (e.metaKey) {
                   e.preventDefault()
-                  changeMode('CURSOR')
+                  changeMode('NORMAL')
                   toggleSidebarRight()
+                }
+                buffer = ''
+              })
+              .with('.', () => {
+                if (e.metaKey) {
+                  e.preventDefault()
+                  changeMode('HELP')
+                }
+                buffer = ''
+              })
+              .with('l', () => {
+                if (e.shiftKey && e.metaKey) {
+                  e.preventDefault()
+                  toggleColorTheme()
+                }
+                buffer = ''
+              })
+              .with('s', () => {
+                if (e.shiftKey && e.metaKey) {
+                  e.preventDefault()
+                  toggleSeparationIsVisible()
+                }
+                buffer = ''
+              })
+              .with('g', () => {
+                if (e.shiftKey && e.metaKey) {
+                  e.preventDefault()
+                  toggleGridIsVisible()
+                }
+                buffer = ''
+              })
+              .with('v', () => {
+                if (e.shiftKey && e.metaKey) {
+                  e.preventDefault()
+                  toggleBlockBorderIsVisible()
                 }
                 buffer = ''
               })
@@ -518,12 +618,27 @@ const App = () => {
             match(buffer)
               .with('Escape', () => {
                 toggleSidebarRight()
-                changeMode('CURSOR')
+                changeMode('NORMAL')
                 buffer = ''
               })
               .with('l', () => {
                 if (e.shiftKey && e.metaKey) {
                   toggleColorTheme()
+                }
+                buffer = ''
+              })
+              .with('.', () => {
+                if (e.metaKey) {
+                  e.preventDefault()
+                  changeMode('NORMAL')
+                  toggleSidebarRight()
+                }
+                buffer = ''
+              })
+              .with(',', () => {
+                if (e.metaKey) {
+                  e.preventDefault()
+                  changeMode('SETTINGS')
                 }
                 buffer = ''
               })
@@ -561,6 +676,9 @@ const App = () => {
     toggleColorTheme,
     toggleGridIsVisible,
     toggleBlockBorderIsVisible,
+    toggleSeparationIsVisible,
+    toggleAspectRatio,
+    editingTitle,
   ])
 
   return (

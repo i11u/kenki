@@ -53,8 +53,8 @@ export const light: ColorTheme = {
   textSecondary: 'rgba(115, 120, 105)',
 
   // border: '#dcdcdc',
-  // border: 'rgba(130, 135, 120)',
-  border: '#000000',
+  border: 'rgba(130, 135, 120)',
+  // border: 'transparent',
 
   shadow: '#dcdcdc',
 
@@ -93,7 +93,9 @@ export const dark: ColorTheme = {
   textPrimary: '#ffffff',
   textSecondary: 'rgb(183,187,175)',
   // border: '#363c44',
-  border: 'rgb(35,35,36)',
+  // border: 'transparent',
+  border: '#ffffff',
+
   shadow: '#3d444d',
   // sidebarLeft: '#25292e',
   sidebar: 'rgba(55, 59, 64)',

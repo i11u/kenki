@@ -16,11 +16,14 @@ const Settings = () => {
       style={{ color: colorTheme.icon, height: '50%', transform: 'translateY(50%)' }}
       onClick={() => {
         if (mode === 'SETTINGS') {
-          changeMode('CURSOR')
+          changeMode('NORMAL')
+          toggleSidebarRight()
+        } else if (mode === 'HELP') {
+          changeMode('SETTINGS')
         } else {
           changeMode('SETTINGS')
+          toggleSidebarRight()
         }
-        toggleSidebarRight()
       }}
     >
       <use xlinkHref={`${settingsSvg}#settings`} />
