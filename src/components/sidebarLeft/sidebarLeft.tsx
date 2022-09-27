@@ -9,25 +9,33 @@ import { modeSelectors } from '../../jotai-hooks/mode/selector'
 import Contents from './contents'
 import Title from './title'
 import Search from './search'
-import { RelationType } from '../../jotai-hooks/relations/atom'
 import { colorThemeSelector } from '../../jotai-hooks/colorTheme/selector'
+import { RelationOrient, RelationType } from '../../jotai-hooks/relations/atom'
 
 export type ContentData = {
-  key: RelationType
+  key: string
+  orient: RelationOrient
+  type: RelationType
   description: string
 }
 
 export const contents: ContentData[] = [
   {
     key: 'normal-arrow-outward',
+    orient: 'outward',
+    type: 'normal',
     description: 'outward arrow with a label placeholder',
   },
   {
     key: 'normal-arrow-inward',
+    orient: 'inward',
+    type: 'normal',
     description: 'inward arrow with a label placeholder',
   },
   {
     key: 'thick-arrow-outward',
+    orient: 'outward',
+    type: 'thick',
     description: 'thick outward arrow with a label placeholder',
   },
 ]

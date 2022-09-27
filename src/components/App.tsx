@@ -85,12 +85,15 @@ const App = () => {
     let buffer = ''
     const callback = (e: KeyboardEvent): void => {
       buffer += e.key
-      console.log(buffer)
       return (
         match(mode)
           .with('NORMAL', () => {
+            console.log(buffer)
             if (editingTitle) return
             match(buffer)
+              .with('Shift', () => {
+                buffer = ''
+              })
               .with(':', () => {
                 e.preventDefault()
                 changeMode('COMMAND')
@@ -114,6 +117,38 @@ const App = () => {
                 } else {
                   moveCursor({ direction: 'right', offset: 1 })
                 }
+                buffer = ''
+              })
+              .with('H', () => {
+                document.getElementById('background')?.scrollBy({
+                  top: 0,
+                  left: -100,
+                  behavior: 'smooth',
+                })
+                buffer = ''
+              })
+              .with('J', () => {
+                document.getElementById('background')?.scrollBy({
+                  top: 100,
+                  left: 0,
+                  behavior: 'smooth',
+                })
+                buffer = ''
+              })
+              .with('K', () => {
+                document.getElementById('background')?.scrollBy({
+                  top: -100,
+                  left: 0,
+                  behavior: 'smooth',
+                })
+                buffer = ''
+              })
+              .with('L', () => {
+                document.getElementById('background')?.scrollBy({
+                  top: 0,
+                  left: 100,
+                  behavior: 'smooth',
+                })
                 buffer = ''
               })
               .with('+', () => {
@@ -337,6 +372,7 @@ const App = () => {
               })
               .with('v', () => {
                 if (e.ctrlKey) {
+                  e.preventDefault()
                   changeBlockStatus({
                     blockId: editingBlockId as string,
                     isEmpty: false,
@@ -404,6 +440,22 @@ const App = () => {
               })
               .with('l', () => {
                 moveBlock({ blockId: selectedBlocks[0].id, direction: 'right', offset: 1 })
+                buffer = ''
+              })
+              .with('H', () => {
+                moveBlock({ blockId: selectedBlocks[0].id, direction: 'left', offset: 3 })
+                buffer = ''
+              })
+              .with('J', () => {
+                moveBlock({ blockId: selectedBlocks[0].id, direction: 'down', offset: 3 })
+                buffer = ''
+              })
+              .with('K', () => {
+                moveBlock({ blockId: selectedBlocks[0].id, direction: 'up', offset: 3 })
+                buffer = ''
+              })
+              .with('L', () => {
+                moveBlock({ blockId: selectedBlocks[0].id, direction: 'right', offset: 3 })
                 buffer = ''
               })
               .with('r', () => {

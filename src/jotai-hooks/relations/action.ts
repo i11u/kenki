@@ -8,10 +8,12 @@ type RealtionActions = {
     relationId,
     isSelected,
     editing,
+    scale,
   }: {
     relationId: string
     isSelected: boolean
     editing: boolean
+    scale: number
   }) => void
 }
 
@@ -51,12 +53,13 @@ export const relationActions: RealtionActions = {
 
   useChangeRelationStatus: () =>
     useAtomCallback(
-      useCallback((get, set, { relationId, isSelected, editing }) => {
+      useCallback((get, set, { relationId, isSelected, editing, scale }) => {
         const relationAtom = get(relationAtomById(relationId))
         set(relationAtom, (prev) => ({
           ...prev,
           isSelected,
           editing,
+          scale,
         }))
       }, [])
     ),

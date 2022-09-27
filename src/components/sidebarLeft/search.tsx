@@ -11,6 +11,7 @@ import { blockSelectors } from '../../jotai-hooks/blocks/selector'
 import { blocksActions } from '../../jotai-hooks/blocks/action'
 import { BlockUtils } from '../../utils/block'
 import { colorThemeSelector } from '../../jotai-hooks/colorTheme/selector'
+import { pageConfigSelectors } from '../../jotai-hooks/pageConfig/selector'
 
 const Search = ({
   word,
@@ -39,6 +40,7 @@ const Search = ({
   const createBlock = blocksActions.useAddBlock()
   const colorTheme = colorThemeSelector.useColorTheme()
   const toggleSidebarLeft = editorConfigActions.useToggleSidebarLeft()
+  const scale = pageConfigSelectors.usePageScale()
 
   useEffect(() => {
     if (mode === 'INSERT') {
@@ -117,12 +119,14 @@ const Search = ({
             createRelation({
               relation: {
                 id: v4(),
-                type: matchingContents[selectedContentIndex].key,
+                orient: matchingContents[selectedContentIndex].orient,
+                type: matchingContents[selectedContentIndex].type,
                 startBlockId: startBlock.id,
                 endBlockId: endBlock.id,
                 isSelected: true,
                 editing: true,
                 label: '',
+                scale,
               },
             })
             toggleSidebar()

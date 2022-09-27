@@ -3,7 +3,7 @@ import {Block} from '../jotai-hooks/blocks/atom'
 /*
  * Calculate top, left, width, height of a relation from current gridNum and start/end block
  * */
-function useRelationPosition(gridNum: { rowNum: number; colNum: number }, startBlock: Block, endBlock: Block) {
+function relationPosition(gridNum: { rowNum: number; colNum: number }, startBlock: Block, endBlock: Block) {
   const x1 = startBlock.position.col
   const y1 = startBlock.position.row
   const w1 = startBlock.width
@@ -143,4 +143,4 @@ function useRelationPosition(gridNum: { rowNum: number; colNum: number }, startB
   return [top, left, width, height, ...arr()]
 }
 
-export default useRelationPosition
+export default relationPosition

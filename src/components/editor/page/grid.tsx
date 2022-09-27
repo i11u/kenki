@@ -20,7 +20,7 @@ const Grid = () => {
           col={col}
           colNum={gridNum.colNum}
           rowNum={gridNum.rowNum}
-          style={{ backgroundColor: gridIsVisible ? colorTheme.grid : '' }}
+          style={{ display: gridIsVisible ? '' : 'none', backgroundColor: colorTheme.grid }}
         />
       ))}
       {Array.from(Array(gridNum.rowNum).keys()).map((row) => (
@@ -29,7 +29,7 @@ const Grid = () => {
           row={row}
           colNum={gridNum.colNum}
           rowNum={gridNum.rowNum}
-          style={{ backgroundColor: gridIsVisible ? colorTheme.grid : '' }}
+          style={{ display: gridIsVisible ? '' : 'none', backgroundColor: colorTheme.grid }}
         />
       ))}
     </>

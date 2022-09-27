@@ -1,19 +1,22 @@
 import { atom, PrimitiveAtom } from 'jotai'
 import { splitAtom } from 'jotai/utils'
 
-export type RelationType = 'normal-arrow-outward' | 'normal-arrow-inward' | 'thick-arrow-outward'
+export type RelationOrient = 'inward' | 'outward'
+export type RelationType = 'normal' | 'thick'
 
 /**
  * Type definition of Relation between objects, i.e., blocks.
  * */
 export type Relation = {
   id: string
+  orient: RelationOrient
   type: RelationType
   startBlockId: string | undefined
   endBlockId: string | undefined
   isSelected: boolean
   editing: boolean
   label: string
+  scale: number
 }
 
 /*

@@ -67,7 +67,7 @@ const SidebarRight = () => {
               kenki is built upon vim-like mode transitions.
             </StyledItem>
             <StyledItem style={{ color: colorTheme.textPrimary }}>
-              Please visit our <a href="https://github.com/i11u/kiji">wiki</a> to know more.
+              Please visit our <a href="https://github.com/i11u/kenki">wiki</a> to know more.
             </StyledItem>
 
             <StyledLabel style={{ color: colorTheme.textSecondary }}>Cursor mode</StyledLabel>

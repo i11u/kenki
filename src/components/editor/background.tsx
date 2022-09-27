@@ -111,7 +111,7 @@ const Background = React.memo(({ children }: Props) => {
       }
 
   return (
-    <StyledBackground ref={backgroundRef} style={style}>
+    <StyledBackground id="background" ref={backgroundRef} style={style}>
       {children}
     </StyledBackground>
   )

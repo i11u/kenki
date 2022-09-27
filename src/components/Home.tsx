@@ -11,8 +11,8 @@ const Home = () => {
       <StyledFlex>
         <StyledTitle>键记</StyledTitle>
         <p>
-          键记 (kǐ-jì, kiji) is a keyboard-driven, graphical note-taking app. <br /> kiji is greatly inspired by
-          qutebrowser in its user interface and typora in its undistracted design.
+          鍵記 (kenki) is a keyboard-driven, graphical note-taking app. <br /> kenki is greatly inspired by qutebrowser
+          in its user interface and typora in its undistracted design.
         </p>
         <Link to="./page">
           <StyledButton style={{ backgroundColor: colorTheme.background, color: colorTheme.textPrimary }}>
