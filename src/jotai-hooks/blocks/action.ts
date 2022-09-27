@@ -29,8 +29,8 @@ export const useCreateBlock = (): ((block: Block) => void) =>
 export const useRemoveBlock = (): ((blockId: string) => void) =>
   useAtomCallback(
     useCallback((get, set, blockId) => {
-      const blockAtom = blockByIdAtom(blockId)
-      set(blockAtomsAtom, { type: 'remove', atom: get(blockAtom) })
+      const newBlocks = get(blocksAtom).filter((block) => block.id !== blockId)
+      set(blocksAtom, newBlocks)
     }, [])
   )
 

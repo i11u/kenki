@@ -24,7 +24,8 @@ export class BlockUtils {
     isEmpty: boolean,
     isSelected: boolean,
     editing: boolean,
-    text: string
+    defaultInnerHTML: string,
+    innerHTML: string
   ): Block => ({
     id,
     page,
@@ -35,11 +36,12 @@ export class BlockUtils {
     isEmpty,
     isSelected,
     editing,
-    innerHTML: text,
+    defaultInnerHTML,
+    innerHTML,
   })
 
   public static emptyBlock = ({ position }: { position: Position }) =>
-    this.composeBlock(v4(), 0, position, 1, 1, null, true, false, true, '')
+    this.composeBlock(v4(), 0, position, 1, 1, null, true, false, true, '', '')
 
   /**
    * When any input comes in unsettledBlock,
@@ -59,7 +61,7 @@ export class BlockUtils {
     updateInnerHTML: ({ blockId, innerHTML }: { blockId: string; innerHTML: string }) => void
   }) => {
     const block = document.getElementById(`block-${id}`) as HTMLDivElement
-    updateInnerHTML({ blockId: id, innerHTML: block.innerHTML ? block.innerHTML : '' })
+    // updateInnerHTML({ blockId: id, innerHTML: block.innerHTML ? block.innerHTML : '' })
     return block.textContent === '' && block.childElementCount === 0
       ? changeBlockSize({ blockId: id, width: 1, height: 1 })
       : changeBlockSize({

@@ -1,6 +1,7 @@
 import styled from 'styled-components'
-import React, { memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { PrimitiveAtom, useAtomValue } from 'jotai'
+import DOMPurify from 'dompurify'
 import { BlockUtils } from '../../../utils/block'
 import { blockSelectors } from '../../../jotai-hooks/blocks/selector'
 import { blocksActions, useRemoveBlock, useUpdateInnerHTML } from '../../../jotai-hooks/blocks/action'
@@ -9,6 +10,7 @@ import { pageConfigSelectors } from '../../../jotai-hooks/pageConfig/selector'
 import { Block, Position } from '../../../jotai-hooks/blocks/atom'
 import { modeSelectors } from '../../../jotai-hooks/mode/selector'
 import { colorThemeSelector } from '../../../jotai-hooks/colorTheme/selector'
+import { modeActions } from '../../../jotai-hooks/mode/action'
 
 const StyledBlockSelection = styled.div`
   position: absolute;
@@ -30,9 +32,10 @@ const StyledBlock = styled.div`
   font-family: '凸版文久ゴシック', serif;
   text-justify: inter-ideograph;
   z-index: 1;
+  pointer-events: none;
 `
 
-const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
+const BlockTSX = ({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
   const block = useAtomValue(blockAtom)
   const nextBlock = {
     id: blockSelectors.useNextBlockId(block.id),
@@ -43,7 +46,7 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
   const changeBlockStatus = blocksActions.useChangeBlockStatus()
   const addBlock = blocksActions.useAddBlock()
   const blockRef = useRef<HTMLDivElement>(null)
-  const innerHTMLRef = useRef(block.innerHTML)
+  const innerHTMLRef = useRef(block.defaultInnerHTML)
   const gridNum = pageConfigSelectors.useGridNum()
   const changeScale = pageConfigActions.useChangeScale()
   const mode = modeSelectors.useCurrentMode()
@@ -51,14 +54,18 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
   const [previousPosition, setPreviousPosition] = useState<Position>(block.position)
   const updateInnerHTML = useUpdateInnerHTML()
   const removeBlock = useRemoveBlock()
+  const [defaultValue, setDefaultValue] = useState(block.defaultInnerHTML)
+  const changeMode = modeActions.useSwitchModes()
+
+  // useEffect(() => {
+  //   blockRef.current?.remove()
+  // })
 
   useEffect(() => {
-    if (mode === 'NORMAL' && !block.isSelected && !block.editing && block.innerHTML === '') {
-      console.log()
+    if (mode === 'NORMAL' && !block.isSelected && !block.editing && block.defaultInnerHTML === '') {
       removeBlock(block.id)
     }
   }, [block, mode, removeBlock])
-
   /*
    * Update previousPosition
    * */
@@ -126,13 +133,13 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
           color: colorTheme.textPrimary,
           opacity: mode === 'SELECT' && !block.isSelected ? '0.2' : '',
         }}
-        onDoubleClick={(e: React.MouseEvent<HTMLDivElement>) =>
-          BlockUtils.handleOnDoubleClick({
-            e,
-            id: block.id,
-            changeScale,
-          })
-        }
+        // onDoubleClick={(e: React.MouseEvent<HTMLDivElement>) =>
+        //   BlockUtils.handleOnDoubleClick({
+        //     e,
+        //     id: block.id,
+        //     changeScale,
+        //   })
+        // }
         onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) =>
           BlockUtils.handleOnKeyDownWrapper({
             e,
@@ -146,16 +153,23 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
             colNum: gridNum.colNum,
           })
         }
+        onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+          if (mode === 'NORMAL') {
+            changeMode('SELECT')
+            changeBlockStatus({ blockId: block.id, isEmpty: block.isEmpty, isSelected: true, editing: false })
+          }
+        }}
       >
         <StyledBlock
           id={`block-${block.id}`}
           className="block"
           contentEditable
-          // dangerouslySetInnerHTML={{ __html: innerHTMLRef.current }}
           spellCheck={false}
           autoCorrect="off"
           autoCapitalize="off"
           aria-autocomplete="none"
+          placeholder={block.defaultInnerHTML}
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(block.defaultInnerHTML) }}
           ref={blockRef}
           onInput={(e: React.FormEvent<HTMLDivElement>) =>
             BlockUtils.handleOnInput({
@@ -178,12 +192,10 @@ const BlockTSX = memo(({ blockAtom }: { blockAtom: PrimitiveAtom<Block> }) => {
           // }
           onPaste={(e: React.ClipboardEvent<HTMLDivElement>) => BlockUtils.handleOnPaste({ e })}
           // onKeyUp={(e) => BlockUtils.handleOnKeyUp({ e, block, changeBlockStatus })}
-        >
-          {innerHTMLRef.current}
-        </StyledBlock>
+        />
       </StyledBlockWrapper>
     </>
   )
-})
+}
 
-export default BlockTSX
+export default React.memo(BlockTSX)

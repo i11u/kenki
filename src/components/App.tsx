@@ -467,9 +467,9 @@ const App = () => {
                 e.preventDefault()
                 buffer = ''
               })
-
               .with('Backspace', () => {
                 const block = selectedBlocks[0]
+                // document.getElementById(`block-${block.id}`)?.remove()
                 removeBlock(block.id)
                 moveCursorByPosition(block.position)
                 changeMode('NORMAL')
