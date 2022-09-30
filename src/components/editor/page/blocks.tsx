@@ -1,9 +1,11 @@
 import React from 'react'
+import { splitAtom } from 'jotai/utils'
+import { useAtomValue } from 'jotai'
 import BlockTSX from './block'
-import { blockSelectors } from '../../../jotai-hooks/blocks/selector'
+import { blocksAtom } from '../../../jotai-hooks/blocks/atom'
 
 const Blocks = () => {
-  const blocks = blockSelectors.useBlockAtoms()
+  const blocks = useAtomValue(splitAtom(blocksAtom))
 
   return (
     <div>

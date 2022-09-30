@@ -113,6 +113,7 @@ const Search = ({
               true,
               false,
               false,
+              '',
               ''
             )
             createBlock({ block: endBlock })

@@ -22,7 +22,7 @@ export type PageConfig = {
 }
 
 export const pageConfigAtom = atom<PageConfig>({
-  aspectRatio: 'document',
+  aspectRatio: 'slide',
   scale: 1,
   grid: false,
   blockBorder: false,

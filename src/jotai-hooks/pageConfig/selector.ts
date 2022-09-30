@@ -26,8 +26,10 @@ const useGridNumSelector = () =>
       pageConfigAtom,
       useCallback(
         (config) => ({
-          rowNum: aspectRatioValue(config.aspectRatio).height * 5,
-          colNum: aspectRatioValue(config.aspectRatio).width * 5,
+          // rowNum: aspectRatioValue(config.aspectRatio).height * 5,
+          // colNum: aspectRatioValue(config.aspectRatio).width * 5,
+          rowNum: aspectRatioValue(config.aspectRatio).height * 3,
+          colNum: aspectRatioValue(config.aspectRatio).width * 3,
         }),
         []
       )

@@ -85,21 +85,19 @@ const SidebarLeft = () => {
           sidebarLeftIsOpen === true ? `0.5px solid ${separationIsVisible ? colorTheme.border : 'transparent'}` : '',
       }}
     >
-      {mode === 'INSERT' ? (
-        <StyledFlex>
-          <Title />
-          <Search
-            word={word}
-            setWord={setWord}
-            buffer={buffer}
-            setBuffer={setBuffer}
-            selectedContentIndex={selectedContentIndex}
-            setSelectedContentIndex={setSelectedContentIndex}
-            matchingContents={matchingContents}
-          />
-          <Contents buffer={buffer} selectedContentIndex={selectedContentIndex} matchingContents={matchingContents} />
-        </StyledFlex>
-      ) : null}
+      <StyledFlex>
+        <Title />
+        <Search
+          word={word}
+          setWord={setWord}
+          buffer={buffer}
+          setBuffer={setBuffer}
+          selectedContentIndex={selectedContentIndex}
+          setSelectedContentIndex={setSelectedContentIndex}
+          matchingContents={matchingContents}
+        />
+        <Contents buffer={buffer} selectedContentIndex={selectedContentIndex} matchingContents={matchingContents} />
+      </StyledFlex>
     </StyledSidebar>
   )
 }

@@ -11,6 +11,7 @@ import { colorThemeSelector } from '../../../jotai-hooks/colorTheme/selector'
 import relationPosition from '../../../hooks/relationPosition'
 import { Block } from '../../../jotai-hooks/blocks/atom'
 import relationParam from '../../../hooks/relationParam'
+import { modeSelectors } from '../../../jotai-hooks/mode/selector'
 
 const RelationTSX = ({ relationAtom }: { relationAtom: PrimitiveAtom<Relation> }) => {
   const relation = useAtomValue(relationAtom)
@@ -32,6 +33,7 @@ const RelationTSX = ({ relationAtom }: { relationAtom: PrimitiveAtom<Relation> }
 
   const [top, left, width, height, x1, y1, x2, y2] = relationPosition(gridNum, startBlock as Block, endBlock as Block)
   const scale = pageConfigSelectors.usePageScale()
+  const mode = modeSelectors.useCurrentMode()
 
   const aspectRatio = pageConfigSelectors.useAspectRatio()
 
@@ -166,6 +168,7 @@ const RelationTSX = ({ relationAtom }: { relationAtom: PrimitiveAtom<Relation> }
         display:
           top === 'calc(0%)' || left === 'calc(0%)' || width === 'calc(0%)' || height === 'calc(0%)' ? 'none' : 'block',
         zIndex: 0,
+        opacity: mode === 'SELECT' ? '0.2' : '',
       }}
     >
       <input
@@ -179,7 +182,7 @@ const RelationTSX = ({ relationAtom }: { relationAtom: PrimitiveAtom<Relation> }
           transform: 'translate(-60%, -40%)',
           width: 'auto',
           height: '14px',
-          fontSize: aspectRatio === 'document' ? '12px' : '10px',
+          fontSize: aspectRatio === 'document' ? '14px' : '10px',
           resize: 'none',
           outline: 'none',
           border: relation.editing ? `0.5px dashed ${colorTheme.textPrimary}` : 'none',
@@ -203,7 +206,14 @@ const RelationTSX = ({ relationAtom }: { relationAtom: PrimitiveAtom<Relation> }
               editing: false,
             })
             changeMode('SELECT')
+          } else if (e.key === 'Escape') {
+            removeRelation(relation.id)
+            changeMode('NORMAL')
           }
+        }}
+        onClick={(e) => {
+          changeRelationStatus({ relationId: relation.id, isSelected: false, editing: true, scale })
+          changeMode('EDIT')
         }}
       />
       <svg
