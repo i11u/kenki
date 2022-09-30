@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styled, { Keyframes } from 'styled-components'
 import { useAtom } from 'jotai'
-import { PageUtils } from '../../../utils/page'
+import { PageUtils } from '../../../apis/page'
 import { blockSelectors } from '../../../jotai-hooks/blocks/selector'
 import { blocksActions } from '../../../jotai-hooks/blocks/action'
 import { PageConfig, pageConfigAtom } from '../../../jotai-hooks/pageConfig/atom'

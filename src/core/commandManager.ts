@@ -1,4 +1,4 @@
-const CommandsManager = {
+const CommandManager = {
   loadKeyMapings(customKeyMappings: string) {
     console.log('loadKeyMappings')
   },
@@ -36,4 +36,4 @@ const defaultExCommands = {}
 
 const commandDescriptions = {}
 
-export default CommandsManager
+export default CommandManager

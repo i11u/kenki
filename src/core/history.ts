@@ -1,4 +1,4 @@
-export class Document {
+export class History {
   private name: string
 
   constructor() {

@@ -24,7 +24,8 @@ export class BlockUtils {
     isEmpty: boolean,
     isSelected: boolean,
     editing: boolean,
-    text: string
+    defaultInnerHTML: string,
+    innerHTML: string
   ): Block => ({
     id,
     page,
@@ -35,11 +36,12 @@ export class BlockUtils {
     isEmpty,
     isSelected,
     editing,
-    innerHTML: text,
+    defaultInnerHTML,
+    innerHTML,
   })
 
   public static emptyBlock = ({ position }: { position: Position }) =>
-    this.composeBlock(v4(), 0, position, 1, 1, null, true, false, true, '')
+    this.composeBlock(v4(), 0, position, 1, 1, null, true, false, true, '', '')
 
   /**
    * When any input comes in unsettledBlock,

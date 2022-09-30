@@ -20,8 +20,8 @@ type RealtionActions = {
 export const useRemoveRelation = (): ((relationId: string) => void) =>
   useAtomCallback(
     useCallback((get, set, relationId: string) => {
-      const relationAtom = get(relationAtomById(relationId))
-      set(relationAtomsAtom, { type: 'remove', atom: relationAtom })
+      const newRelations = get(relationsAtom).filter((relation) => relation.id !== relationId)
+      set(relationsAtom, newRelations)
     }, [])
   )
 

@@ -36,5 +36,5 @@ export const editorConfigAtom = atom<EditorConfig>({
   headerConfig: { display: 'open' },
   sidebarLeftConfig: { isOpen: undefined },
   sidebarRightConfig: { isOpen: undefined },
-  separationIsVisible: false,
+  separationIsVisible: true,
 })

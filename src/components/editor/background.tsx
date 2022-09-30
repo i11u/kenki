@@ -4,7 +4,7 @@ import { editorConfigSelectors } from '../../jotai-hooks/editorConfig/selector'
 import { aspectRatioValue } from '../../jotai-hooks/pageConfig/atom'
 import { pageConfigSelectors } from '../../jotai-hooks/pageConfig/selector'
 import usePreventPinch from '../../hooks/usePreventPinch'
-import { PageUtils } from '../../utils/page'
+import { PageUtils } from '../../apis/page'
 import useIsFirst from '../../hooks/useIsFirst'
 import { colorThemeSelector } from '../../jotai-hooks/colorTheme/selector'
 

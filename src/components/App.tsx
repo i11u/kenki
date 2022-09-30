@@ -10,9 +10,9 @@ import { blockSelectors } from '../jotai-hooks/blocks/selector'
 import { blocksActions, Direction, useCreateBlock, useMoveBlock, useRemoveBlock } from '../jotai-hooks/blocks/action'
 import EditorConfig from './editor/editorConfig/editorConfig'
 import { useMoveCursor, useMoveCursorByPosition } from '../jotai-hooks/cursor/action'
-import { BlockUtils } from '../utils/block'
+import { BlockUtils } from '../apis/block'
 import { cursorSelector } from '../jotai-hooks/cursor/selector'
-import { DomUtils } from '../utils/dom'
+import { DomUtils } from '../apis/dom'
 import { pageConfigSelectors } from '../jotai-hooks/pageConfig/selector'
 import { editorConfigActions } from '../jotai-hooks/editorConfig/action'
 import Footer from './footer/footer'
@@ -120,35 +120,51 @@ const App = () => {
                 buffer = ''
               })
               .with('H', () => {
-                document.getElementById('background')?.scrollBy({
-                  top: 0,
-                  left: -100,
-                  behavior: 'smooth',
-                })
+                if (e.metaKey) {
+                  document.getElementById('background')?.scrollBy({
+                    top: 0,
+                    left: -100,
+                    behavior: 'smooth',
+                  })
+                } else {
+                  moveCursor({ direction: 'left', offset: 3 })
+                }
                 buffer = ''
               })
               .with('J', () => {
-                document.getElementById('background')?.scrollBy({
-                  top: 100,
-                  left: 0,
-                  behavior: 'smooth',
-                })
+                if (e.metaKey) {
+                  document.getElementById('background')?.scrollBy({
+                    top: 100,
+                    left: 0,
+                    behavior: 'smooth',
+                  })
+                } else {
+                  moveCursor({ direction: 'down', offset: 3 })
+                }
                 buffer = ''
               })
               .with('K', () => {
-                document.getElementById('background')?.scrollBy({
-                  top: -100,
-                  left: 0,
-                  behavior: 'smooth',
-                })
+                if (e.metaKey) {
+                  document.getElementById('background')?.scrollBy({
+                    top: -100,
+                    left: 0,
+                    behavior: 'smooth',
+                  })
+                } else {
+                  moveCursor({ direction: 'up', offset: 3 })
+                }
                 buffer = ''
               })
               .with('L', () => {
-                document.getElementById('background')?.scrollBy({
-                  top: 0,
-                  left: 100,
-                  behavior: 'smooth',
-                })
+                if (e.metaKey) {
+                  document.getElementById('background')?.scrollBy({
+                    top: 0,
+                    left: 100,
+                    behavior: 'smooth',
+                  })
+                } else {
+                  moveCursor({ direction: 'right', offset: 3 })
+                }
                 buffer = ''
               })
               .with('+', () => {
@@ -467,9 +483,9 @@ const App = () => {
                 e.preventDefault()
                 buffer = ''
               })
-
               .with('Backspace', () => {
                 const block = selectedBlocks[0]
+                // document.getElementById(`block-${block.id}`)?.remove()
                 removeBlock(block.id)
                 moveCursorByPosition(block.position)
                 changeMode('NORMAL')

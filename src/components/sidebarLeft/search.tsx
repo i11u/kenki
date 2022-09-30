@@ -9,7 +9,7 @@ import { relationActions } from '../../jotai-hooks/relations/action'
 import { editorConfigActions } from '../../jotai-hooks/editorConfig/action'
 import { blockSelectors } from '../../jotai-hooks/blocks/selector'
 import { blocksActions } from '../../jotai-hooks/blocks/action'
-import { BlockUtils } from '../../utils/block'
+import { BlockUtils } from '../../apis/block'
 import { colorThemeSelector } from '../../jotai-hooks/colorTheme/selector'
 import { pageConfigSelectors } from '../../jotai-hooks/pageConfig/selector'
 
@@ -113,6 +113,7 @@ const Search = ({
               true,
               false,
               false,
+              '',
               ''
             )
             createBlock({ block: endBlock })
